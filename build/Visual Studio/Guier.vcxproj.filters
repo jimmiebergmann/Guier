@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{d294e779-e4cf-4b7d-85d9-2ef37f4cfaeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Control">
+      <UniqueIdentifier>{a13a72cb-b21f-4b04-964b-c5608e11a7bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Thirdparty">
+      <UniqueIdentifier>{821325b5-f98e-4f4c-b3a5-c95fa46719bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Thirdparty\LodePng">
+      <UniqueIdentifier>{d29e512a-b990-49bc-81d7-41028eabf3ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Thirdparty\Freetype">
+      <UniqueIdentifier>{6f3e5df9-8bc7-4744-a580-a93dd069eb37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Thirdparty\OpenGL">
+      <UniqueIdentifier>{1d619824-575d-4d6f-bdbb-a425452b03a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Skins">
+      <UniqueIdentifier>{021a4fb5-9250-44e4-85ea-d4c5836644a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Renderer">
+      <UniqueIdentifier>{e90d8e66-c503-4c8f-adf7-d055ac662f51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderers">
+      <UniqueIdentifier>{bd88e728-fd86-4467-bc9b-a87579168f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderers\OpenGL">
+      <UniqueIdentifier>{0e248b92-46c8-4e23-8d10-04f7cbfe5667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window">
+      <UniqueIdentifier>{049d5976-98dd-416b-bb29-18001d84aad3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\Guier\Control.hpp" />
+    <ClInclude Include="..\..\include\Guier\Guier.hpp" />
+    <ClInclude Include="..\..\include\Guier\Input.hpp" />
+    <ClInclude Include="..\..\include\Guier\Renderer.hpp" />
+    <ClInclude Include="..\..\include\Guier\Signal.hpp" />
+    <ClInclude Include="..\..\include\Guier\Skin.hpp" />
+    <ClInclude Include="..\..\include\Guier\Vector2.hpp" />
+    <ClInclude Include="..\..\include\Guier\Window.hpp" />
+    <ClInclude Include="..\..\include\Guier\Control\Button.hpp">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Control\Size.hpp">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Control\Text.hpp">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Matrix4x4.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Quadtree.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\RenderTarget.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\glext.h">
+      <Filter>Core\Thirdparty\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\glxext.h">
+      <Filter>Core\Thirdparty\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\wglext.h">
+      <Filter>Core\Thirdparty\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\Lodepng\lodepng.h">
+      <Filter>Core\Thirdparty\LodePng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\Freetype\FreeTypeAmalgam.h">
+      <Filter>Core\Thirdparty\Freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Build.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Skins\DefaultSkin.hpp">
+      <Filter>Skins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Renderer\VertexArray.hpp">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Renderer\VertexBuffer.hpp">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Renderer\Texture.hpp">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLRenderer.hpp">
+      <Filter>Renderers\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLTexture.hpp">
+      <Filter>Renderers\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLVertexArray.hpp">
+      <Filter>Renderers\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLVertexBuffer.hpp">
+      <Filter>Renderers\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Context.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\WindowImpl.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\WindowBase.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Window\Win32WindowImpl.hpp">
+      <Filter>Core\Window</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\Guier\Core\Quadtree.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\RenderTarget.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Thirdparty\Lodepng\lodepng.cpp">
+      <Filter>Core\Thirdparty\LodePng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Control\Button.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Control\Size.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Control\Text.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Control.cpp" />
+    <ClCompile Include="..\..\source\Guier\Font.cpp" />
+    <ClCompile Include="..\..\source\Guier\Input.cpp" />
+    <ClCompile Include="..\..\source\Guier\PlatformWindow.cpp" />
+    <ClCompile Include="..\..\source\Guier\Renderer.cpp" />
+    <ClCompile Include="..\..\source\Guier\Signal.cpp" />
+    <ClCompile Include="..\..\source\Guier\Skin.cpp" />
+    <ClCompile Include="..\..\source\Guier\Window.cpp" />
+    <ClCompile Include="..\..\source\Guier\Skins\DefaultSkin.cpp">
+      <Filter>Skins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLTexture.cpp">
+      <Filter>Renderers\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLVertexArray.cpp">
+      <Filter>Renderers\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLVertexBuffer.cpp">
+      <Filter>Renderers\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLRenderer.cpp">
+      <Filter>Renderers\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Renderer\VertexArray.cpp">
+      <Filter>Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Renderer\VertexBuffer.cpp">
+      <Filter>Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Renderer\Texture.cpp">
+      <Filter>Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Context.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\WindowImpl.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\WindowBase.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Window\Win32WindowImpl.cpp">
+      <Filter>Core\Window</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\include\Guier\Core\Matrix4x4.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="..\..\include\Guier\Core\Vector2.inl">
+      <Filter>Core</Filter>
+    </None>
+  </ItemGroup>
+</Project>

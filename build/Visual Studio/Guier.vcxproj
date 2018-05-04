@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|Win32">
+      <Configuration>Static Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Dynamic Debug|Win32">
+      <Configuration>Dynamic Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Dynamic Debug|x64">
+      <Configuration>Dynamic Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Dynamic Release|Win32">
+      <Configuration>Dynamic Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Dynamic Release|x64">
+      <Configuration>Dynamic Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|Win32">
+      <Configuration>Static Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\Guier\Context.hpp" />
+    <ClInclude Include="..\..\include\Guier\Control.hpp" />
+    <ClInclude Include="..\..\include\Guier\Control\Button.hpp" />
+    <ClInclude Include="..\..\include\Guier\Control\Size.hpp" />
+    <ClInclude Include="..\..\include\Guier\Control\Text.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Build.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Matrix4x4.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Quadtree.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Renderer\Texture.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Renderer\VertexArray.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Renderer\VertexBuffer.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\RenderTarget.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\Freetype\FreeTypeAmalgam.h" />
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\Lodepng\lodepng.h" />
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\glext.h" />
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\glxext.h" />
+    <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\wglext.h" />
+    <ClInclude Include="..\..\include\Guier\Core\WindowBase.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\WindowImpl.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Window\Win32WindowImpl.hpp" />
+    <ClInclude Include="..\..\include\Guier\Guier.hpp" />
+    <ClInclude Include="..\..\include\Guier\Input.hpp" />
+    <ClInclude Include="..\..\include\Guier\Renderer.hpp" />
+    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLRenderer.hpp" />
+    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLTexture.hpp" />
+    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLVertexArray.hpp" />
+    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLVertexBuffer.hpp" />
+    <ClInclude Include="..\..\include\Guier\Signal.hpp" />
+    <ClInclude Include="..\..\include\Guier\Skin.hpp" />
+    <ClInclude Include="..\..\include\Guier\Skins\DefaultSkin.hpp" />
+    <ClInclude Include="..\..\include\Guier\Vector2.hpp" />
+    <ClInclude Include="..\..\include\Guier\Window.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\Guier\Context.cpp" />
+    <ClCompile Include="..\..\source\Guier\Control.cpp" />
+    <ClCompile Include="..\..\source\Guier\Control\Button.cpp" />
+    <ClCompile Include="..\..\source\Guier\Control\Size.cpp" />
+    <ClCompile Include="..\..\source\Guier\Control\Text.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Quadtree.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Renderer\Texture.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Renderer\VertexArray.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Renderer\VertexBuffer.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\RenderTarget.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Thirdparty\Lodepng\lodepng.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\WindowBase.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\WindowImpl.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Window\Win32WindowImpl.cpp" />
+    <ClCompile Include="..\..\source\Guier\Font.cpp" />
+    <ClCompile Include="..\..\source\Guier\Input.cpp" />
+    <ClCompile Include="..\..\source\Guier\PlatformWindow.cpp" />
+    <ClCompile Include="..\..\source\Guier\Renderer.cpp" />
+    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLRenderer.cpp" />
+    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLTexture.cpp" />
+    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLVertexArray.cpp" />
+    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLVertexBuffer.cpp" />
+    <ClCompile Include="..\..\source\Guier\Signal.cpp" />
+    <ClCompile Include="..\..\source\Guier\Skin.cpp" />
+    <ClCompile Include="..\..\source\Guier\Skins\DefaultSkin.cpp" />
+    <ClCompile Include="..\..\source\Guier\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\include\Guier\Core\Matrix4x4.inl" />
+    <None Include="..\..\include\Guier\Core\Vector2.inl" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{1490403A-6CD0-4A9B-9754-15D9DA491138}</ProjectGuid>
+    <RootNamespace>Guier</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
+    <OutDir>..\..\lib\</OutDir>
+    <IntDir>..\..\obj\guier\x86\debug\static\</IntDir>
+    <TargetName>$(ProjectName)-x86-s-d</TargetName>
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
+    <OutDir>..\..\lib</OutDir>
+    <IntDir>..\..\obj\guier\x86\release\static</IntDir>
+    <TargetName>$(ProjectName)-x86-s</TargetName>
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+    <OutDir>..\..\lib\</OutDir>
+    <IntDir>..\..\obj\guier\x64\debug\static\</IntDir>
+    <TargetName>$(ProjectName)-x64-s-d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+    <OutDir>..\..\lib\</OutDir>
+    <IntDir>..\..\obj\guier\x64\release\static\</IntDir>
+    <TargetName>$(ProjectName)-x64-s</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|x64'">
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+    <OutDir>..\..\lib\</OutDir>
+    <IntDir>..\..\obj\guier\x64\release\dynamic\</IntDir>
+    <TargetName>$(ProjectName)-x64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|x64'">
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+    <OutDir>..\..\lib\</OutDir>
+    <IntDir>..\..\obj\guier\x64\debug\dynamic\</IntDir>
+    <TargetName>$(ProjectName)-x64-d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|Win32'">
+    <TargetName>$(ProjectName)-x86-d</TargetName>
+    <IntDir>..\..\obj\guier\x86\debug\dynamic\</IntDir>
+    <OutDir>..\..\lib\</OutDir>
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|Win32'">
+    <TargetName>$(ProjectName)-x86</TargetName>
+    <IntDir>..\..\obj\guier\x86\release\dynamic\</IntDir>
+    <OutDir>..\..\lib\</OutDir>
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GUIER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>GUIER_API_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <OutputFile>..\..\bin\$(ProjectName)-x86-d.dll</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>GUIER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>GUIER_API_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <OutputFile>..\..\bin\$(ProjectName)-x64-d.dll</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GUIER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>GUIER_API_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>..\..\bin\$(ProjectName)-x86.dll</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>GUIER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>GUIER_API_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>..\..\bin\$(ProjectName)-x64.dll</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
