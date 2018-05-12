@@ -62,7 +62,7 @@
     <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLTexture.hpp" />
     <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLVertexArray.hpp" />
     <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLVertexBuffer.hpp" />
-    <ClInclude Include="..\..\include\Guier\Signal.hpp" />
+    <ClInclude Include="..\..\include\Guier\Callback.hpp" />
     <ClInclude Include="..\..\include\Guier\Skin.hpp" />
     <ClInclude Include="..\..\include\Guier\Skins\DefaultSkin.hpp" />
     <ClInclude Include="..\..\include\Guier\Vector2.hpp" />
@@ -91,12 +91,13 @@
     <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLVertexBuffer.cpp" />
-    <ClCompile Include="..\..\source\Guier\Signal.cpp" />
+    <ClCompile Include="..\..\source\Guier\Callback.cpp" />
     <ClCompile Include="..\..\source\Guier\Skin.cpp" />
     <ClCompile Include="..\..\source\Guier\Skins\DefaultSkin.cpp" />
     <ClCompile Include="..\..\source\Guier\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\include\Guier\Core\Callback.inl" />
     <None Include="..\..\include\Guier\Core\Matrix4x4.inl" />
     <None Include="..\..\include\Guier\Core\Vector2.inl" />
   </ItemGroup>

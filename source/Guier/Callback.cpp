@@ -23,55 +23,58 @@
 *
 */
 
-#pragma once
-
-#include <Guier/Core/WindowBase.hpp>
 #include <Guier/Callback.hpp>
 
 namespace Guier
 {
 
-    class GUIER_API Window : public Callback::Slot, public Core::WindowBase
+    namespace Callback
     {
 
-    public:
+        // Slot implementations
+        Slot::~Slot()
+        {
+            for (auto it = m_pConnections.begin(); it != m_pConnections.end(); it++)
+            {
+                (*it)->DisconnectFromSlot();
+            }
+        }
 
-        Window(const Vector2i & size = { 800, 600 }, const std::wstring & title = L"", const Settings & settings = {});
-        Window(const Settings & settings, const Vector2i & size = { 800, 600 }, const std::wstring & title = L"");
+        void Slot::RemoveConnection(ConnectionBase * p_pConnection)
+        {
+            auto it = m_pConnections.find(p_pConnection);
+            if (it == m_pConnections.end())
+            {
+                return;
+            }
 
-        ~Window();
+            m_pConnections.erase(it);
+        }
 
-        const Vector2i & Size() const;
+        // Connection implementation
+        void Connection::Disconnect()
+        {
+            if (m_pSignal)
+            {
+                m_pSignal->Disconnect(this);
+            }
+        }
 
-        const std::wstring & Title() const;
+        void Connection::DisconnectFromSlot()
+        {
+            if (m_pSignal)
+            {
+                m_pSignal->DisconnectFromSlot(this);
+            }
+        }
 
-        bool IsOpen() const;
+        Connection::Connection() :
+            m_pSignal(nullptr),
+            m_pSlot(nullptr)
+        {
 
-        void Resize(const Vector2i & size);
+        }
 
-        void Show(const bool show = true);
-
-        void Minimize();
-
-        void Maximize();
-
-        void Hide(const bool hide = true);
-
-        void Focus();
-
-        void Open();
-        void Open(const Vector2i & size, const std::wstring & title, const Settings & settings);
-
-        void Close();
-
-        Callback::Signal<void(const Vector2i &)> Resized;
-
-        Callback::Signal<void(bool)> Showing;
-
-        Callback::Signal<void(bool)> Focused;
-
-        Callback::Signal<void(bool)> Opened;
-
-    };
+    }
 
 }

@@ -25,6 +25,7 @@
 
 
 #include <Guier/Core/Window/Win32WindowImpl.hpp>
+#include <Guier/Window.hpp>
 #include <sstream>
 
 #ifdef GUIER_PLATFORM_WINDOWS
@@ -48,9 +49,10 @@ namespace Guier
         }
 
 
-        Win32WindowImpl::Win32WindowImpl(const Vector2i & size, const std::string & title) :
+        Win32WindowImpl::Win32WindowImpl(Window * window, const Vector2i & size, const std::wstring & title, const WindowBase::Settings & settings) :
             m_Size(size),
-            m_Title(title)
+            m_Title(title),
+            m_Showing(false)
         {
             static const unsigned char bgRed = 150;
             static const unsigned char bgGreen = 170;
@@ -58,7 +60,7 @@ namespace Guier
 
 
             // Convert the title itnro a wide string
-            std::wstring convertedTitle = StringToWideString(title).c_str();
+            //std::wstring convertedTitle = StringToWideString(title).c_str();
 
             // Create an unique window class name
             static unsigned int uniqueNumber = 0;
@@ -93,8 +95,8 @@ namespace Guier
             m_WindowClassName = className;
 
             // Let's set the windows style
-            DWORD	exStyle = 0;
-            DWORD	style = 0;
+            DWORD	win32ExStyle = 0;
+            DWORD	win32Style = 0;
             RECT	windowRect;
             windowRect.left = static_cast<LONG>(0);
             windowRect.right = static_cast<LONG>(size.x);
@@ -104,42 +106,46 @@ namespace Guier
             // Create background brush
             m_BackgroundBrush = ::CreateSolidBrush(RGB((BYTE)bgRed, (BYTE)bgGreen, (BYTE)bgBlue));
 
+            const unsigned int style = settings.style;
+
             // Set the window decoration style
-           /////////////////// if (m_Settings.Style == Style::Default)
+            if (style == Window::Style::Default)
             {
-                exStyle = WS_EX_APPWINDOW;
-                style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_BORDER;
+                win32ExStyle = /*WS_EX_NOACTIVATE*/ /*WS_EX_TOOLWINDOW*/ WS_EX_APPWINDOW;
+                win32Style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_BORDER;
             }
-            /*else
+            else
             {
-               //////////////////if (m_Settings.Style & Style::Minimize)
+                if (style & Window::Style::Minimize)
                 {
-                    style |= WS_MINIMIZEBOX;
+                    win32Style |= WS_MINIMIZEBOX;
                 }
 
-                ///////////////if (m_Settings.Style & Style::Resize)
+                if (style & Window::Style::Resize)
                 {
-                    style |= WS_MAXIMIZEBOX | WS_SIZEBOX;
+                    win32Style |= WS_MAXIMIZEBOX | WS_SIZEBOX;
                 }
 
-               ///////////////// if (m_Settings.Style & Style::TitleBar)
+                if (style & Window::Style::TitleBar)
                 {
-                    style |= WS_CAPTION | WS_SYSMENU | WS_BORDER;
+                    win32Style |= WS_CAPTION | WS_SYSMENU | WS_BORDER;
                 }
-            }*/
+            }
 
             // Apply yhe style
-            AdjustWindowRectEx(&windowRect, style, FALSE, exStyle);
+            AdjustWindowRectEx(&windowRect, win32Style, FALSE, win32ExStyle);
+
+            m_pWindow = window;
 
             // Let's create the window.
             m_WindowHandle = CreateWindowEx(
-                exStyle,
+                win32ExStyle,
                 className.c_str(),
-                convertedTitle.c_str(),
+                title.c_str(),
 
                 WS_CLIPSIBLINGS |
                 WS_CLIPCHILDREN |
-                style,
+                win32Style,
                 CW_USEDEFAULT, CW_USEDEFAULT,
 
                 windowRect.right - windowRect.left,
@@ -158,8 +164,7 @@ namespace Guier
 
             // Did we disable the [X](close) button?
             // We have to apply this property after the window creation.
-            // So here it comes.
-            //////////////////////////////////////////if (!(m_Settings.Style & Style::Close))
+            if (!(style & Window::Style::Close))
             {
                 UINT dwExtra = MF_DISABLED | MF_GRAYED;
                 HMENU hMenu = GetSystemMenu(m_WindowHandle, false);
@@ -169,10 +174,8 @@ namespace Guier
             // Get the device context
             m_DeviceContextHandle = GetDC(m_WindowHandle);
 
-
-
             // Filling the pixel fromat structure.
-            static PIXELFORMATDESCRIPTOR PFD = {
+            /*static PIXELFORMATDESCRIPTOR PFD = {
                 sizeof(PIXELFORMATDESCRIPTOR),
                 1,
                 PFD_DRAW_TO_WINDOW |
@@ -194,7 +197,7 @@ namespace Guier
             };
 
             // Choose and set the pixel format
-             /* GLuint PixelFormat;
+              GLuint PixelFormat;
 
             if ((PixelFormat = ChoosePixelFormat(m_DeviceContextHandle, &PFD)) == 0)
             {
@@ -289,9 +292,13 @@ namespace Guier
             */
 
             // Now, show the window and focus it
-            ShowWindow(m_WindowHandle, SW_SHOW);
-            SetForegroundWindow(m_WindowHandle);
-            SetFocus(m_WindowHandle);
+            m_Showing = !settings.minimized;
+            if (m_Showing)
+            {
+                ShowWindow(m_WindowHandle, SW_SHOW);
+                SetForegroundWindow(m_WindowHandle);
+                SetFocus(m_WindowHandle);
+            }
         }
 
         Win32WindowImpl::~Win32WindowImpl()
@@ -320,14 +327,65 @@ namespace Guier
             }
         }
 
-        const Vector2i Win32WindowImpl::Size() const
+        const Vector2i & Win32WindowImpl::Size() const
         {
             return m_Size;
         }
 
-        const std::string & Win32WindowImpl::Title() const
+        const std::wstring & Win32WindowImpl::Title() const
         {
             return m_Title;
+        }
+
+        bool Win32WindowImpl::IsOpen() const
+        {
+            return false;
+        }
+
+        void Win32WindowImpl::Resize(const Vector2i & size)
+        {
+
+        }
+
+        void Win32WindowImpl::Show(const bool show)
+        {
+            ShowWindow(m_WindowHandle, show ? SW_SHOW : SW_HIDE);
+        }
+
+        void Win32WindowImpl::Minimize()
+        {
+            ShowWindow(m_WindowHandle, SW_MINIMIZE);
+        }
+
+        void Win32WindowImpl::Maximize()
+        {
+            ShowWindow(m_WindowHandle, SW_MAXIMIZE);
+        }
+
+        void Win32WindowImpl::Hide(const bool hide)
+        {
+            ShowWindow(m_WindowHandle, hide ? SW_HIDE : SW_SHOW);
+        }
+
+        void Win32WindowImpl::Focus()
+        {
+            SetForegroundWindow(m_WindowHandle);
+            SetFocus(m_WindowHandle);
+        }
+
+        void Win32WindowImpl::Open()
+        {
+
+        }
+
+        void Win32WindowImpl::Open(const Vector2i & size, const std::wstring & title, const WindowBase::Settings & settings)
+        {
+
+        }
+
+        void Win32WindowImpl::Close()
+        {
+
         }
 
 
@@ -376,11 +434,12 @@ namespace Guier
  //               m_EventHandler.Push(e);
 
                 // Do not forward the event.
-                //return 0;
+                return 0;
             }
             break;
             case WM_SETFOCUS:
             {
+                m_pWindow->Focused(true);
                 // Push gained focus event
 //                e.Type = Event::GainedFocus;
 //                m_EventHandler.Push(e);
@@ -388,6 +447,7 @@ namespace Guier
             break;
             case WM_KILLFOCUS:
             {
+                m_pWindow->Focused(false);
                 // Push gained lost event
  //               e.Type = Event::LostFocus;
 //                m_EventHandler.Push(e);
@@ -395,10 +455,32 @@ namespace Guier
             break;
             case WM_SIZE:
             {
-                auto oldSize = Vector2<int>(m_Size);
-                auto newSize = Vector2<int>(static_cast<int>(LOWORD(p_LParam)),
-                    static_cast<int>(HIWORD(p_LParam)));
+                const auto oldSize = Vector2i(m_Size);
+                const auto newSize = Vector2i(static_cast<int>(LOWORD(p_LParam)),
+                                        static_cast<int>(HIWORD(p_LParam)));
+                
+                // Check if minimized.
+                if (newSize == Vector2i(0, 0))
+                {
+                    m_Showing = false;
+                    m_pWindow->Showing(false);
+                    break;
+                }
+                
+                // Not minimized, just resized.
                 m_Size = newSize;
+                
+                if (m_Showing == false)
+                {
+                    m_Showing = true;
+                    m_pWindow->Showing(true);
+                }
+                else
+                {
+                    m_pWindow->Resized(m_Size);
+                }
+                
+
 
                 // Set the default viewport to the window's size
  /*               glViewport(0, 0, m_Settings.Size.x, m_Settings.Size.y);
@@ -417,6 +499,8 @@ namespace Guier
                 {
                     m_pCanvas->Render();
                 }*/
+
+                
             }
             break;
             // Key events

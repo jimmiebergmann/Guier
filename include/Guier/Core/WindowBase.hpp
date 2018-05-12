@@ -26,15 +26,18 @@
 #pragma once
 
 #include <Guier/Core/RenderTarget.hpp>
-#include <Guier/Core/WindowImpl.hpp>
+#include <Guier/Vector2.hpp>
+#include <string>
 
 namespace Guier
 {
-
+    class Window;
     class Context;
 
     namespace Core
     {
+
+        class WindowImpl;
 
         class GUIER_API WindowBase : public RenderTarget
         {
@@ -43,7 +46,33 @@ namespace Guier
 
             friend class Guier::Context; ///< Friend class of context.
 
-            WindowBase(const Vector2i & size, const std::string & title);
+            WindowBase();
+
+            struct Style
+            {
+                enum eStyle
+                {
+                    None = 0,
+                    Close = 1,
+                    Minimize = 2,
+                    Resize = 4,
+                    TitleBar = 8,
+                    Default = 15,
+                    Fullscreen = 16
+                };
+            };
+
+            struct Settings
+            {
+                Settings(const unsigned int style = Style::Default, const bool minimized = false, const bool hidden = false);
+                Settings(const bool minimized, const bool hidden = false, const unsigned int style = Style::Default);
+
+                bool         minimized; ///< Window is initially minimized.
+                bool         hidden;    ///< Indicate if window should be hidden from task bar.
+                unsigned int style;     ///< Window style bitfield.
+                                        ///< @see Style
+
+            };
 
             virtual ~WindowBase();
 

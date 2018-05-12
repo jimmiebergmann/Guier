@@ -40,7 +40,6 @@
     <ClInclude Include="..\..\include\Guier\Guier.hpp" />
     <ClInclude Include="..\..\include\Guier\Input.hpp" />
     <ClInclude Include="..\..\include\Guier\Renderer.hpp" />
-    <ClInclude Include="..\..\include\Guier\Signal.hpp" />
     <ClInclude Include="..\..\include\Guier\Skin.hpp" />
     <ClInclude Include="..\..\include\Guier\Vector2.hpp" />
     <ClInclude Include="..\..\include\Guier\Window.hpp" />
@@ -114,6 +113,7 @@
     <ClInclude Include="..\..\include\Guier\Core\Window\Win32WindowImpl.hpp">
       <Filter>Core\Window</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Callback.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\Guier\Core\Quadtree.cpp">
@@ -139,7 +139,6 @@
     <ClCompile Include="..\..\source\Guier\Input.cpp" />
     <ClCompile Include="..\..\source\Guier\PlatformWindow.cpp" />
     <ClCompile Include="..\..\source\Guier\Renderer.cpp" />
-    <ClCompile Include="..\..\source\Guier\Signal.cpp" />
     <ClCompile Include="..\..\source\Guier\Skin.cpp" />
     <ClCompile Include="..\..\source\Guier\Window.cpp" />
     <ClCompile Include="..\..\source\Guier\Skins\DefaultSkin.cpp">
@@ -176,12 +175,16 @@
     <ClCompile Include="..\..\source\Guier\Core\Window\Win32WindowImpl.cpp">
       <Filter>Core\Window</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Callback.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\Guier\Core\Matrix4x4.inl">
       <Filter>Core</Filter>
     </None>
     <None Include="..\..\include\Guier\Core\Vector2.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="..\..\include\Guier\Core\Callback.inl">
       <Filter>Core</Filter>
     </None>
   </ItemGroup>

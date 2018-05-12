@@ -24,34 +24,40 @@
 */
 
 #include <Guier/Core/WindowBase.hpp>
-
-#if defined(GUIER_PLATFORM_WINDOWS)
-#include <Guier/Core/Window/Win32WindowImpl.hpp>
-#endif
+#include <Guier/Core/WindowImpl.hpp>
 
 namespace Guier
 {
 
+    class Window;
+
     namespace Core
     {
 
-        WindowBase::WindowBase(const Vector2i & size, const std::string & title) :
+        WindowBase::WindowBase() :
             m_pImpl(nullptr),
             m_Deleted(false)
         {
-            #if defined(GUIER_PLATFORM_WINDOWS)
-                m_pImpl = new Win32WindowImpl(size, title);
-            #else
-                #error Unkown platform.
-            #endif
+
         }
 
         WindowBase::~WindowBase()
         {
-            if (m_pImpl)
-            {
-                delete m_pImpl;
-            }
+        }
+
+        WindowBase::Settings::Settings(const unsigned int p_Style, const bool p_Minimized, const bool p_Hidden) :
+            style(p_Style),
+            minimized(p_Minimized),
+            hidden(p_Hidden)
+        {
+
+        }
+        WindowBase::Settings::Settings(const bool p_Minimized, const bool p_Hidden, const unsigned int p_Style) :
+            style(p_Style),
+            minimized(p_Minimized),
+            hidden(p_Hidden)
+        {
+
         }
 
         void WindowBase::Update()

@@ -30,10 +30,13 @@
 #ifdef GUIER_PLATFORM_WINDOWS
 
 #include <Guier/Core/WindowImpl.hpp>
+#include <Guier/Core/WindowBase.hpp>
 #include <Windows.h>
 
 namespace Guier
 {
+
+    class Window;
 
     namespace Core
     {
@@ -43,15 +46,34 @@ namespace Guier
 
         public:
 
-            Win32WindowImpl(const Vector2i & size, const std::string & title);
+            Win32WindowImpl(Window * window, const Vector2i & size, const std::wstring & title, const WindowBase::Settings & settings);
 
             ~Win32WindowImpl();
 
             virtual void Update();
 
-            virtual const Vector2i Size() const;
+            virtual const Vector2i & Size() const;
 
-            virtual const std::string & Title() const;
+            virtual const std::wstring & Title() const;
+
+            virtual bool IsOpen() const;
+
+            virtual void Resize(const Vector2i & size);
+
+            virtual void Show(const bool show);
+
+            virtual void Minimize();
+
+            virtual void Maximize();
+
+            virtual void Hide(const bool hide);
+
+            virtual void Focus();
+
+            virtual void Open();
+            virtual void Open(const Vector2i & size, const std::wstring & title, const WindowBase::Settings & settings);
+
+            virtual void Close();
 
 
             HWND GetWindowHandle() const;
@@ -59,8 +81,8 @@ namespace Guier
 
         private:
 
-            Vector2i    m_Size;     ///< Size of window.
-            std::string m_Title;    ///< Title of window.
+            Vector2i        m_Size;     ///< Size of window.
+            std::wstring    m_Title;    ///< Title of window.
 
             static LRESULT WindowProcStatic(HWND p_HWND, UINT p_Message,
                 WPARAM p_WParam, LPARAM p_LParam);
@@ -70,12 +92,15 @@ namespace Guier
 
             void FillWin32Background(const Vector2i & p_OldSize, const Vector2i & p_NewSize);
 
+            Window *        m_pWindow; ///< Pointer to window.
             HWND			m_WindowHandle;
             HDC				m_DeviceContextHandle;
             //HGLRC			m_OpenGLContext;
             HBRUSH			m_BackgroundBrush;
             std::wstring	m_WindowClassName;
             bool			m_RedrawStatus;
+
+            bool            m_Showing;
 
         };
 
