@@ -25,16 +25,19 @@
 
 #pragma once
 
-#include <Guier/Core/Build.hpp>
-#include <set>
+#include <Guier/Core/ContextBase.hpp>
 
 namespace Guier
 {
-    class Renderer;
-    class Skin;
-    class Window;
 
-    class GUIER_API Context
+    /**
+    * The Guier Context is the very core of the library.
+    * Create one or more contexts per application.
+    * Added objects are owned by context and deleted when the context is unallocated.
+    * The context class handles window management, skins, rendering, inputs, etc...
+    *
+    */
+    class GUIER_API Context : public Core::ContextBase
     {
 
     public:
@@ -42,15 +45,8 @@ namespace Guier
         /**
         * Constructor.  
         *
-        * @param renderer   The default renderer, defined in Build.hpp, will be allocated and set if renderer == nullptr.
-        *                   Context has full responsibility of renderer unallocating.
-        *
-        * @throw std::runtime_error If renderer == nullptr, and there is no default renderer available.
-        *
         */
-        Context(Renderer * renderer = nullptr, Skin * skin = nullptr);
-        Context(Skin * skin);
-
+        Context();
 
         /**
         * Destructor.
@@ -59,45 +55,12 @@ namespace Guier
         ~Context();
 
         /**
-        * Update context.
-        *
-        * Handle inputs, signals, etc..
-        *
-        */
-        void Update();
-
-        /**
-        * Render context.
-        *
-        * @throw std::runtime_error If current renderer == nullptr.
+        * Add new window to context.
+        * The window is now shown until calling Show() of window.
         *
         */
-        void Render();
-
-        /**
-        * Clear context.
-        *
-        * @brief Clearing and unallocating any attached renderer/window.
-        *
-        */
-        Context & Clear();
-
-        /**
-        * Add object to context.
-        *
-        * @brief    Adding the same object twice has no effect.
-        *
-        * @param renderer   Add renderer to context. Current renderer is unallocated.
-        *                   If rendrer == nullptr, the default renderer, defined in Build.hpp, will be allocated and set.
-        * @param skin       Add skin to contect. 
-        *                   If skin == nullptr, the default skin will be allocated and set.
-        * @param window     Add window to context.
-        * @param show       Show window after adding to context.
-        *
-        */
-        Context & Add(Renderer * renderer);
-        Context & Add(Skin * skin);
-        Context & Add(Window * window, const bool show = true);
+        template<typename Type, class... Args>
+        std::shared_ptr<Window> Add(Args &&... args);
 
         /**
         * Remove object from context.
@@ -106,30 +69,15 @@ namespace Guier
         *           and context is no longer responsible for unallocating of the object.
         *
         */
-        Context & Remove(Renderer * renderer);
+       /* Context & Remove(Renderer * renderer);
         Context & Remove(Skin * skin);
-        Context & Remove(Window * window);
+        */Context & Remove(std::shared_ptr<Window> window);
+        
 
-        /**
-        * Get current renderer of context.
-        *
-        */
-        Renderer * GetRenderer() const;
-
-        /**
-        * Get current skin of context.
-        *
-        */
-        Skin * GetSkin() const;
-
-    private:
-
-        bool                m_DefaultRenderer;  ///< The context is currently using the default renderer.
-        bool                m_DefaultSkin;      ///< The context is currently using the default skin.
-        Renderer *          m_pRenderer;        ///< Pointer to renderer. Used for allocation of other renderers.
-        Skin *              m_pSkin;            ///< Pointer to skin.
-        std::set<Window *>  m_Windows;          ///< Set of attached windows.
 
     };
+
+    // Include inline implementations. 
+    #include <Guier/Core/Context.inl>
 
 }

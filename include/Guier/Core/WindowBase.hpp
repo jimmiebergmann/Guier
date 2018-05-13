@@ -28,15 +28,17 @@
 #include <Guier/Core/RenderTarget.hpp>
 #include <Guier/Vector2.hpp>
 #include <string>
+#include <memory>
+#include <atomic>
 
 namespace Guier
 {
-    class Window;
     class Context;
-
+    class Window;
+    
     namespace Core
     {
-
+        class ContextBase;
         class WindowImpl;
 
         class GUIER_API WindowBase : public RenderTarget
@@ -45,8 +47,11 @@ namespace Guier
         public:
 
             friend class Guier::Context; ///< Friend class of context.
+            friend class ContextBase; ///< Friend class of context base.
 
-            WindowBase();
+            WindowBase(Context * context, const Vector2i & size, const std::wstring & title);
+
+            virtual ~WindowBase();
 
             struct Style
             {
@@ -62,26 +67,20 @@ namespace Guier
                 };
             };
 
-            struct Settings
-            {
-                Settings(const unsigned int style = Style::Default, const bool minimized = false, const bool hidden = false);
-                Settings(const bool minimized, const bool hidden = false, const unsigned int style = Style::Default);
-
-                bool         minimized; ///< Window is initially minimized.
-                bool         hidden;    ///< Indicate if window should be hidden from task bar.
-                unsigned int style;     ///< Window style bitfield.
-                                        ///< @see Style
-
-            };
-
-            virtual ~WindowBase();
-
         protected:
 
-            void Update();
+            void CreatePlatformWindow(std::shared_ptr<Window> window);
 
-            WindowImpl *    m_pImpl;    ///< Implementation of platform dependent functionality.
-            bool            m_Deleted;  ///< Is the render target currently being deleted.
+            void DestroyPlatformWindow();
+
+            std::atomic<bool> & Removed();
+
+            static void HandleEvents();
+
+            Context *               m_pContext;         ///< Pointer to context interface.    
+            WindowImpl *            m_pImpl;            ///< Implementation of platform dependent functionality.
+            std::shared_ptr<Window> m_SharedPtrWindow;  ///< Shared pointer of window.
+            std::atomic<bool>       m_Removed;
         };
 
     }

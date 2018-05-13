@@ -26,44 +26,62 @@
 #include <Guier/Core/WindowBase.hpp>
 #include <Guier/Core/WindowImpl.hpp>
 
+#if defined(GUIER_PLATFORM_WINDOWS)
+#include <Guier/Core/Window/Win32WindowImpl.hpp>
+#endif
+
 namespace Guier
 {
-
-    class Window;
 
     namespace Core
     {
 
-        WindowBase::WindowBase() :
+        WindowBase::WindowBase(Context * context, const Vector2i & size, const std::wstring & title) :
+            m_pContext(context),
             m_pImpl(nullptr),
-            m_Deleted(false)
+            m_Removed(false)
         {
-
+            #if defined(GUIER_PLATFORM_WINDOWS)
+                m_pImpl = new Core::Win32WindowImpl(context, size, title);
+            #else
+                #error Unkown platform.
+            #endif
         }
 
         WindowBase::~WindowBase()
         {
-        }
+            if (m_pImpl)
+            {
+                delete m_pImpl;
+            }
+        }        
 
-        WindowBase::Settings::Settings(const unsigned int p_Style, const bool p_Minimized, const bool p_Hidden) :
-            style(p_Style),
-            minimized(p_Minimized),
-            hidden(p_Hidden)
+        void WindowBase::CreatePlatformWindow(std::shared_ptr<Window> window)
         {
-
+            m_SharedPtrWindow = window;
+            m_pImpl->PlatformCreate(window);
         }
-        WindowBase::Settings::Settings(const bool p_Minimized, const bool p_Hidden, const unsigned int p_Style) :
-            style(p_Style),
-            minimized(p_Minimized),
-            hidden(p_Hidden)
+
+        void WindowBase::DestroyPlatformWindow()
         {
-
+            m_SharedPtrWindow.reset();
+            m_pImpl->PlatformDestroy();
         }
 
-        void WindowBase::Update()
+        std::atomic<bool> & WindowBase::Removed()
         {
-            m_pImpl->Update();
+            return m_Removed;
         }
+
+        void WindowBase::HandleEvents()
+        {
+            #if defined(GUIER_PLATFORM_WINDOWS)
+                Core::Win32WindowImpl::HandleEvents();
+            #else
+                #error Unkown platform.
+            #endif
+        }
+
 
     }
 

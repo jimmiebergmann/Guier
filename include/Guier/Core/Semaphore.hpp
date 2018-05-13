@@ -25,67 +25,69 @@
 
 #pragma once
 
+//#include <Time.hpp>
 #include <Guier/Core/Build.hpp>
-#include <Guier/Core/WindowBase.hpp>
-#include <Guier/Vector2.hpp>
-#include <string>
-#include <memory>
+#include <mutex>
+#include <condition_variable>
+#include <chrono>
 
 namespace Guier
 {
 
-    class Window;
-
     namespace Core
     {
 
-        class GUIER_API WindowImpl
+        class GUIER_API Semaphore
         {
 
         public:
 
-            virtual ~WindowImpl();
-
-            virtual void PlatformCreate(std::shared_ptr<Guier::Window> window) = 0;
-
-            virtual void PlatformDestroy() = 0;
-
             /**
-            * Get or set current size of window.
+            * @breif Constructor.
             *
             */
-            virtual const Vector2i & Size() const = 0;
-            virtual void Size(const Vector2i & size) = 0;
+            Semaphore();
 
             /**
-            * Get or set current title of window.
+            * @breif Notify one wait.
             *
             */
-            virtual const std::wstring & Title() const = 0;
-            virtual void Title(const std::wstring & title) = 0;
-            virtual void Title(const std::string & title) = 0;
+            void NotifyOne();
 
             /**
-            * Get or set the current position of the window.
-            *
-            * @brief Has no effect if the window is closed.
+            * @breif Notify all waits.
             *
             */
-            virtual const Vector2i & Position() const = 0;
-            virtual void Position(const Vector2i & position) = 0;
+            void NotifyAll();
 
-            virtual void Show() = 0;
+            /**
+            * @breif Wait for notifies.
+            *
+            */
+            void Wait();
 
-            virtual void Minimize() = 0;
+            /**
+            * @breif Try to wait.
+            *
+            * @return False if function call will result in a wait, else true.
+            *
+            */
+            bool TryWait();
 
-            virtual void Maximize() = 0;
+            /**
+            * @breif Wait until given timeout is reached.
+            *
+            * @return False if timeout is reached, else false.
+            *
+            */
+            bool WaitFor(const unsigned int microseconds);
 
-            virtual void HideFromTaskbar(const bool hide) = 0;
+        private:
 
-            virtual void Close() = 0;
-
+            std::mutex m_Mutex;
+            std::condition_variable m_Condition;
+            unsigned long m_Count;
         };
 
     }
-
 }

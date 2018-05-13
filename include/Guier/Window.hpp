@@ -31,46 +31,170 @@
 namespace Guier
 {
 
+    /**
+    * Drawable window. Currently appearing as a platform independent window.
+    *
+    */
     class GUIER_API Window : public Callback::Slot, public Core::WindowBase
     {
 
     public:
 
-        Window(const Vector2i & size = { 800, 600 }, const std::wstring & title = L"", const Settings & settings = {});
-        Window(const Settings & settings, const Vector2i & size = { 800, 600 }, const std::wstring & title = L"");
+        // Forward declarations
+        friend class Core::ContextBase;
 
+        /**
+        * SHOULD BE Private destructor.
+        *
+        */
         ~Window();
 
+        /**
+        * Get or set current size of window.
+        *
+        * @param size   New size of window.
+        *
+        */
         const Vector2i & Size() const;
+        std::shared_ptr<Window> Size(const Vector2i & size);
 
+        /**
+        * Get or set current title of window.
+        *
+        * @param title   New title of window.
+        *
+        */
         const std::wstring & Title() const;
+        std::shared_ptr<Window> Title(const std::wstring & title);
+        std::shared_ptr<Window> Title(const std::string & title);
 
-        bool IsOpen() const;
+        /**
+        * Get or set the current position of the window.
+        *
+        * @brief Has no effect if the window is closed.
+        *
+        * @param position   New position of window.
+        *
+        */
+        const Vector2i & Position() const;
+        std::shared_ptr<Window> Position(const Vector2i & position);
 
-        void Resize(const Vector2i & size);
+        /**
+        * Show closed or minimized window.
+        *
+        * @brief    Window is created if called for the first time.
+        *           
+        *           Focus and put window to foreground of screen.
+        *           Window is restored and shown if minimized.
+        *
+        */
+        std::shared_ptr<Window> Show();
 
-        void Show(const bool show = true);
+        /**
+        * Minimize window.
+        *
+        * @brief    Window is created if called for the first time.
+        *
+        *           Window is found in task bar if HideFromTaskbar is set to false.
+        *
+        */
+        std::shared_ptr<Window> Minimize();
 
-        void Minimize();
+        /**
+        * Maximize window.
+        *
+        * @brief    Window is created if called for the first time.
+        *
+        */
+        std::shared_ptr<Window> Maximize();
 
-        void Maximize();
+        /**
+        * Hide window from task bar.
+        *
+        */
+        std::shared_ptr<Window> HideFromTaskbar(const bool hide = true);
 
-        void Hide(const bool hide = true);
+        /**
+        * Hide window from task bar and from the user when the window is closed.
+        *
+        * @brief The window is not internally unallocated and cleared when the window is closed, if this setting is set to true.
+        *
+        */
+        std::shared_ptr<Window> HideWhenClosed(const bool hideWhenClosed = true);
 
-        void Focus();
+        /**
+        * Close the window.
+        *
+        * @brief Internally calling the Closed signal.
+        *        Use the setting HideWhenClosed to connect hide and minimize logics to signal.
+        *
+        */
+        std::shared_ptr<Window> Close();
 
-        void Open();
-        void Open(const Vector2i & size, const std::wstring & title, const Settings & settings);
-
-        void Close();
-
+        /**
+        * Signal called when the window is resized.
+        *
+        * @param Vector2i   New size of window.
+        *
+        */
         Callback::Signal<void(const Vector2i &)> Resized;
 
-        Callback::Signal<void(bool)> Showing;
+        /**
+        * Signal called when the window is moved.
+        *
+        * @param Vector2i   New position of window.
+        *
+        */
+        Callback::Signal<void(const Vector2i &)> Moved;
 
+        /**
+        * Signal called when the window is showing.
+        *
+        */
+        Callback::Signal<void()> Showing;
+
+        /**
+        * Signal called when the window is minimized.
+        *
+        */
+        Callback::Signal<void()> Minimized;
+
+        /**
+        * Signal called when the window is focused, or lost focus.
+        *
+        * @param bool   Whether or not the window gained focus. 
+        *
+        */
         Callback::Signal<void(bool)> Focused;
 
-        Callback::Signal<void(bool)> Opened;
+        /**
+        * Signal called when the window is opened.
+        *
+        */
+        Callback::Signal<void()> Opened;
+
+        /**
+        * Signal called when the window is closed via X button or code.
+        *
+        * @brief A default function is attached when creating the window, calling the Remove method of Context.
+        *        Disconnect all connection of this signal to override behaivour.
+        *
+        */
+        Callback::Signal<void()> Closed;
+
+    private:
+
+        /**
+        * Private constructor, called via Context::Add(...).
+        *
+        * @param size[X][Y]     Initial size of window.
+        * @param title          Title of window, shown in title bar and task bar.
+        *
+        */
+        Window(Context * context, const Vector2i & size = { 800, 600 }, const std::wstring & title = L"");
+        Window(Context * context, const std::wstring & title, const Vector2i & size = { 800, 600 });
+        Window(Context * context, const int sizeX, const int sizeY, const std::wstring & title = L"");
+        Window(Context * context, const std::wstring & title, const int sizeX, const int sizeY);
 
     };
 

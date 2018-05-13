@@ -30,13 +30,14 @@
 #ifdef GUIER_PLATFORM_WINDOWS
 
 #include <Guier/Core/WindowImpl.hpp>
-#include <Guier/Core/WindowBase.hpp>
+#include <Guier/Callback.hpp>
 #include <Windows.h>
 
 namespace Guier
 {
 
     class Window;
+    class Context;
 
     namespace Core
     {
@@ -46,32 +47,44 @@ namespace Guier
 
         public:
 
-            Win32WindowImpl(Window * window, const Vector2i & size, const std::wstring & title, const WindowBase::Settings & settings);
+            Win32WindowImpl(Context * context, const Vector2i & size, const std::wstring & title);
 
             ~Win32WindowImpl();
 
-            virtual void Update();
+            static void HandleEvents();
+
+            virtual void PlatformCreate(std::shared_ptr<Guier::Window> window);
+
+            virtual void PlatformDestroy();
 
             virtual const Vector2i & Size() const;
+            virtual void Size(const Vector2i & size);
 
+            /**
+            * Get or set current title of window.
+            *
+            */
             virtual const std::wstring & Title() const;
+            virtual void Title(const std::wstring & title);
+            virtual void Title(const std::string & title);
 
-            virtual bool IsOpen() const;
+            /**
+            * Get or set the current position of the window.
+            *
+            * @param position   New position of window.
+            *                   x or y value less than = system default position.
+            *
+            */
+            virtual const Vector2i & Position() const;
+            virtual void Position(const Vector2i & position);
 
-            virtual void Resize(const Vector2i & size);
-
-            virtual void Show(const bool show);
+            virtual void Show();
 
             virtual void Minimize();
 
             virtual void Maximize();
 
-            virtual void Hide(const bool hide);
-
-            virtual void Focus();
-
-            virtual void Open();
-            virtual void Open(const Vector2i & size, const std::wstring & title, const WindowBase::Settings & settings);
+            virtual void HideFromTaskbar(const bool hide);
 
             virtual void Close();
 
@@ -81,26 +94,34 @@ namespace Guier
 
         private:
 
-            Vector2i        m_Size;     ///< Size of window.
-            std::wstring    m_Title;    ///< Title of window.
+            /**
+            * Internally set Win32 window position and size.
+            *
+            */
+            void UpdatePositionSize();
 
-            static LRESULT WindowProcStatic(HWND p_HWND, UINT p_Message,
-                WPARAM p_WParam, LPARAM p_LParam);
-
-            LRESULT WindowProc(HWND p_HWND, UINT p_Message,
-                WPARAM p_WParam, LPARAM p_LParam);
-
+            static LRESULT WindowProcStatic(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
+            LRESULT WindowProc(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
             void FillWin32Background(const Vector2i & p_OldSize, const Vector2i & p_NewSize);
 
-            Window *        m_pWindow; ///< Pointer to window.
-            HWND			m_WindowHandle;
-            HDC				m_DeviceContextHandle;
-            //HGLRC			m_OpenGLContext;
-            HBRUSH			m_BackgroundBrush;
-            std::wstring	m_WindowClassName;
-            bool			m_RedrawStatus;
+            bool            m_Showing;          ///< Window is currently showing.
+            bool            m_HideWhenClosed;   ///< Hide window when closing.
+            bool            m_HideFromTaskbar;  ///< Hide window from tastbar.
+            Vector2i        m_Position;         ///< Position of window.
+            Vector2i        m_Size;             ///< Size of window.
+            std::wstring    m_Title;            ///< Title of window.
+            std::shared_ptr<Guier::Callback::Connection> m_CloseConnection;
+            
 
-            bool            m_Showing;
+            Context * const         m_pContext; ///< Pointer to context.
+            std::shared_ptr<Window> m_Window; ///< Pointer to window.
+            HWND			        m_WindowHandle;
+            HDC				        m_DeviceContextHandle;
+            //HGLRC			        m_OpenGLContext;
+            HBRUSH			        m_BackgroundBrush;
+            std::wstring	        m_WindowClassName;
+            bool			        m_RedrawStatus;
+         
 
         };
 

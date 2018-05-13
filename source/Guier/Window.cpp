@@ -25,38 +25,36 @@
 
 #include <Guier/Window.hpp>
 #include <Guier/Context.hpp>
-
-#if defined(GUIER_PLATFORM_WINDOWS)
-#include <Guier/Core/Window/Win32WindowImpl.hpp>
-#endif
+#include <Guier/Core/WindowImpl.hpp>
 
 namespace Guier
 {
 
-    Window::Window(const Vector2i & size, const std::wstring & title, const Settings & settings) :
-        WindowBase()
+    Window::Window(Context * context, const Vector2i & size, const std::wstring & title) :
+        WindowBase(context, size, title)
     {
-        #if defined(GUIER_PLATFORM_WINDOWS)
-            m_pImpl = new Core::Win32WindowImpl(this, size, title, settings);
-        #else
-            #error Unkown platform.
-        #endif
     }
 
-    Window::Window(const Settings & settings, const Vector2i & size, const std::wstring & title) :
-        Window(size, title, settings)
+    Window::Window(Context * context, const std::wstring & title, const Vector2i & size) :
+        Window(context, size, title)
     {
+
+    }
+    Window::Window(Context * context, const int sizeX, const int sizeY, const std::wstring & title) :
+        Window(context, Vector2i(sizeX, sizeY), title)
+    {
+
+    }
+    Window::Window(Context * context, const std::wstring & title, const int sizeX, const int sizeY) :
+        Window(context, Vector2i(sizeX, sizeY), title)
+    {
+
     }
 
     Window::~Window()
     {
-        m_Deleted = true;
-        m_pContext->Remove(this);
-
-        if (m_pImpl)
-        {
-            delete m_pImpl;
-        }
+        //m_Deleted = true;
+        //m_pContext->Remove(this);
     }
 
     const Vector2i & Window::Size() const
@@ -64,58 +62,72 @@ namespace Guier
         return m_pImpl->Size();
     }
 
+    std::shared_ptr<Window> Window::Size(const Vector2i & size)
+    {
+        m_pImpl->Size(size);
+        return m_SharedPtrWindow;
+    }
+
     const std::wstring & Window::Title() const
     {
-        return m_pImpl->Title();
+       return m_pImpl->Title();
     }
 
-    bool Window::IsOpen() const
+    std::shared_ptr<Window> Window::Title(const std::wstring & title)
     {
-        return m_pImpl->IsOpen();
+        m_pImpl->Title(title);
+        return m_SharedPtrWindow;
     }
 
-    void Window::Resize(const Vector2i & size)
+    std::shared_ptr<Window> Window::Title(const std::string & title)
     {
-        m_pImpl->Resize(size);
+        m_pImpl->Title(title);
+        return m_SharedPtrWindow;
     }
 
-    void Window::Show(const bool show)
+    const Vector2i & Window::Position() const
     {
-        m_pImpl->Show(show);
+        return m_pImpl->Position();
     }
 
-    void Window::Minimize()
+    std::shared_ptr<Window> Window::Position(const Vector2i & position)
+    {
+        m_pImpl->Position(position);
+        return m_SharedPtrWindow;
+    }
+
+    std::shared_ptr<Window> Window::Show()
+    {
+        m_pImpl->Show();
+        return m_SharedPtrWindow;
+    }
+
+    std::shared_ptr<Window> Window::Minimize()
     {
         m_pImpl->Minimize();
+        return m_SharedPtrWindow;
     }
 
-    void Window::Maximize()
+    std::shared_ptr<Window> Window::Maximize()
     {
         m_pImpl->Maximize();
+        return m_SharedPtrWindow;
     }
 
-    void Window::Hide(const bool hide)
+    std::shared_ptr<Window> Window::HideFromTaskbar(const bool hide)
     {
-        m_pImpl->Hide(hide);
+        m_pImpl->HideFromTaskbar(hide);
+        return m_SharedPtrWindow;
     }
 
-    void Window::Focus()
+    std::shared_ptr<Window> Window::HideWhenClosed(const bool hideWhenClosed)
     {
-        m_pImpl->Focus();
+        return m_SharedPtrWindow;
     }
 
-    void Window::Open()
-    {
-        m_pImpl->Open();
-    }
-
-    void Window::Open(const Vector2i & size, const std::wstring & title, const Settings & settings)
-    {
-        m_pImpl->Open(size, title, settings);
-    }
-
-    void Window::Close()
+    std::shared_ptr<Window> Window::Close()
     {
         m_pImpl->Close();
+        return m_SharedPtrWindow;
     }
 }

@@ -25,14 +25,14 @@
 
 #pragma once
 
+#include <Guier/Core/Build.hpp>
+
 #include <algorithm>
 #include <iostream>
 #include <numeric>
 #include <string>
 #include <chrono>
 #include <iostream>
-
-
 #include <functional>
 #include <algorithm>
 #include <map>
@@ -40,8 +40,8 @@
 #include <list>
 #include <set>
 #include <memory>
-#include <Guier/Core/Build.hpp>
 #include <exception>
+#include <mutex>
 
 namespace Guier
 {
@@ -131,6 +131,7 @@ namespace Guier
             // Private variables
             typedef std::list<std::pair<std::shared_ptr<Connection>, CallbackFunction>> BindingsList;
             BindingsList m_Bindings;
+            std::mutex m_Mutex;
 
         };
 

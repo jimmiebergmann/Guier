@@ -23,25 +23,42 @@
 *
 */
 
-#include <Guier/Core/RenderTarget.hpp>
-
-namespace Guier
+template<typename Type, class... Args>
+std::shared_ptr<Window> Context::Add(Args &&... args)
 {
+    // std::lock_guard<std::mutex> sm(m_ObjectMutex);
 
-    namespace Core
+
+    Core::WindowCreation * pWindowCreation = new Core::WindowCreation(std::forward<Args>(args)...);
+
+    // Push and notify window thread.
     {
-
-        RenderTarget::RenderTarget() :
-           // m_pContext(nullptr),
-            m_pRenderer(nullptr)
-        {
-
-        }
-
-        RenderTarget::~RenderTarget()
-        {
-        }
-
+        std::lock_guard<std::mutex> sm(m_WindowCreationMutex);
+        m_WindowCreationQueue.push(pWindowCreation);
     }
+    
+    InterruptWindowEvents();
 
+    // Wait until created in main thread.
+    pWindowCreation->semaphore.Wait();
+    
+    // Get created window and return it.
+    auto window = pWindowCreation->window;
+    delete pWindowCreation;
+
+    return window;
+
+   //auto window = std::shared_ptr<Window>(new Window(std::forward<Args>(args)...));
+     /*//auto window = std::make_shared<Window>(std::forward<Args>(args)...);
+     */
+    // Set renderer of window.
+    /*Renderer * pNewRenderer = m_pRenderer->AllocateNew();
+    pNewRenderer->Load();
+    //window->m_pContext = this;
+    window->m_pRenderer = pNewRenderer;*/
+    /*
+    // Add window.
+    m_Windows.insert(window);*/
+
+    
 }

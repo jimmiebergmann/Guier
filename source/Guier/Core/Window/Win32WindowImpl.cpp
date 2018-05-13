@@ -26,6 +26,7 @@
 
 #include <Guier/Core/Window/Win32WindowImpl.hpp>
 #include <Guier/Window.hpp>
+#include <Guier/Context.hpp>
 #include <sstream>
 
 #ifdef GUIER_PLATFORM_WINDOWS
@@ -49,11 +50,62 @@ namespace Guier
         }
 
 
-        Win32WindowImpl::Win32WindowImpl(Window * window, const Vector2i & size, const std::wstring & title, const WindowBase::Settings & settings) :
+        Win32WindowImpl::Win32WindowImpl(Context * context, const Vector2i & size, const std::wstring & title) :
+            m_pContext(context),
+            m_Showing(false),
+            m_HideWhenClosed(false),
+            m_HideFromTaskbar(false),
+            m_Position(-1, -1),
             m_Size(size),
             m_Title(title),
-            m_Showing(false)
+            m_WindowHandle(0)
         {
+            if (m_pContext == nullptr)
+            {
+                throw std::runtime_error("Context is nullptr.");
+            }
+        }
+
+        Win32WindowImpl::~Win32WindowImpl()
+        {
+            
+        }
+
+        void Win32WindowImpl::HandleEvents()
+        {
+            // Go through all the window event messages
+            MSG message;
+            BOOL bRet = 0;
+            //while (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
+            while( (bRet = GetMessage(&message, NULL, 0, 0)) != 0)
+            {
+                if (bRet == -1)
+                {
+                    throw std::runtime_error("GetMessage returned -1.");
+                    
+                }
+                else
+                {
+                    // A modal function is being called when you press the alt key,
+                    // fix this by ignoring the alt(menu) key event.
+                    if (message.message == WM_SYSCOMMAND &&
+                        message.wParam == SC_KEYMENU)
+                    {
+                        break;
+                    }
+
+                    // Translate the dispatch the message
+                    // This will call the WindowProcStatic function
+                    TranslateMessage(&message);
+                    DispatchMessage(&message);
+                }
+            }
+        }
+
+        void Win32WindowImpl::PlatformCreate(std::shared_ptr<Guier::Window> window)
+        {
+            m_Window = window;
+
             static const unsigned char bgRed = 150;
             static const unsigned char bgGreen = 170;
             static const unsigned char bgBlue = 170;
@@ -99,54 +151,57 @@ namespace Guier
             DWORD	win32Style = 0;
             RECT	windowRect;
             windowRect.left = static_cast<LONG>(0);
-            windowRect.right = static_cast<LONG>(size.x);
+            windowRect.right = static_cast<LONG>(m_Size.x);
             windowRect.top = static_cast<LONG>(0);
-            windowRect.bottom = static_cast<LONG>(size.y);
+            windowRect.bottom = static_cast<LONG>(m_Size.y);
 
             // Create background brush
             m_BackgroundBrush = ::CreateSolidBrush(RGB((BYTE)bgRed, (BYTE)bgGreen, (BYTE)bgBlue));
 
-            const unsigned int style = settings.style;
+            /*const unsigned int style = settings.style;
 
             // Set the window decoration style
             if (style == Window::Style::Default)
-            {
-                win32ExStyle = /*WS_EX_NOACTIVATE*/ /*WS_EX_TOOLWINDOW*/ WS_EX_APPWINDOW;
-                win32Style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_BORDER;
-            }
+            {*/
+            win32ExStyle = /*WS_EX_NOACTIVATE*/ /*WS_EX_TOOLWINDOW*/ WS_EX_APPWINDOW;
+            win32Style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_BORDER;
+            /* }
             else
             {
-                if (style & Window::Style::Minimize)
-                {
-                    win32Style |= WS_MINIMIZEBOX;
-                }
-
-                if (style & Window::Style::Resize)
-                {
-                    win32Style |= WS_MAXIMIZEBOX | WS_SIZEBOX;
-                }
-
-                if (style & Window::Style::TitleBar)
-                {
-                    win32Style |= WS_CAPTION | WS_SYSMENU | WS_BORDER;
-                }
+            if (style & Window::Style::Minimize)
+            {
+            win32Style |= WS_MINIMIZEBOX;
             }
+
+            if (style & Window::Style::Resize)
+            {
+            win32Style |= WS_MAXIMIZEBOX | WS_SIZEBOX;
+            }
+
+            if (style & Window::Style::TitleBar)
+            {
+            win32Style |= WS_CAPTION | WS_SYSMENU | WS_BORDER;
+            }
+            }*/
 
             // Apply yhe style
             AdjustWindowRectEx(&windowRect, win32Style, FALSE, win32ExStyle);
 
-            m_pWindow = window;
+            const int xPos = m_Position.x < 0 ? CW_USEDEFAULT : m_Position.x;
+            const int yPos = m_Position.y < 0 ? CW_USEDEFAULT : m_Position.y;
+
 
             // Let's create the window.
             m_WindowHandle = CreateWindowEx(
                 win32ExStyle,
                 className.c_str(),
-                title.c_str(),
+                m_Title.c_str(),
 
                 WS_CLIPSIBLINGS |
                 WS_CLIPCHILDREN |
                 win32Style,
-                CW_USEDEFAULT, CW_USEDEFAULT,
+                CW_USEDEFAULT,
+                CW_USEDEFAULT,
 
                 windowRect.right - windowRect.left,
                 windowRect.bottom - windowRect.top,
@@ -161,63 +216,63 @@ namespace Guier
                 throw std::runtime_error("Failed to create window.");
                 return;
             }
-
+            /*
             // Did we disable the [X](close) button?
             // We have to apply this property after the window creation.
             if (!(style & Window::Style::Close))
             {
-                UINT dwExtra = MF_DISABLED | MF_GRAYED;
-                HMENU hMenu = GetSystemMenu(m_WindowHandle, false);
-                EnableMenuItem(hMenu, SC_CLOSE, MF_BYCOMMAND | dwExtra);
-            }
+            UINT dwExtra = MF_DISABLED | MF_GRAYED;
+            HMENU hMenu = GetSystemMenu(m_WindowHandle, false);
+            EnableMenuItem(hMenu, SC_CLOSE, MF_BYCOMMAND | dwExtra);
+            }*/
 
             // Get the device context
             m_DeviceContextHandle = GetDC(m_WindowHandle);
 
             // Filling the pixel fromat structure.
             /*static PIXELFORMATDESCRIPTOR PFD = {
-                sizeof(PIXELFORMATDESCRIPTOR),
-                1,
-                PFD_DRAW_TO_WINDOW |
-                PFD_SUPPORT_OPENGL |
-                PFD_DOUBLEBUFFER,
-                PFD_TYPE_RGBA,
-                24,
-                0, 0, 0, 0, 0, 0,
-                0,
-                0,
-                0,
-                0, 0, 0, 0,
-                8, //DepthBits,
-                8, //StencilBits,
-                0,
-                PFD_MAIN_PLANE,
-                0,
-                0, 0, 0
+            sizeof(PIXELFORMATDESCRIPTOR),
+            1,
+            PFD_DRAW_TO_WINDOW |
+            PFD_SUPPORT_OPENGL |
+            PFD_DOUBLEBUFFER,
+            PFD_TYPE_RGBA,
+            24,
+            0, 0, 0, 0, 0, 0,
+            0,
+            0,
+            0,
+            0, 0, 0, 0,
+            8, //DepthBits,
+            8, //StencilBits,
+            0,
+            PFD_MAIN_PLANE,
+            0,
+            0, 0, 0
             };
 
             // Choose and set the pixel format
-              GLuint PixelFormat;
+            GLuint PixelFormat;
 
             if ((PixelFormat = ChoosePixelFormat(m_DeviceContextHandle, &PFD)) == 0)
             {
-                GUIL_THROW_EXCEPTION("Can not choose pixel format.");
-                return;
+            GUIL_THROW_EXCEPTION("Can not choose pixel format.");
+            return;
             }
             if ((SetPixelFormat(m_DeviceContextHandle, PixelFormat, &PFD)) == false)
             {
-                GUIL_THROW_EXCEPTION("Can not set pixel format.");
-                return;
+            GUIL_THROW_EXCEPTION("Can not set pixel format.");
+            return;
             }
 
             // Create a temporary regual context.
             // We need this context to create any other context.
-          HGLRC temporaryContext = wglCreateContext(m_DeviceContextHandle);
+            HGLRC temporaryContext = wglCreateContext(m_DeviceContextHandle);
 
             if (temporaryContext == NULL)
             {
-                GUIL_THROW_EXCEPTION("Can not create a regular OpenGL context.");
-                return;
+            GUIL_THROW_EXCEPTION("Can not create a regular OpenGL context.");
+            return;
             }
 
             // Make the temporary context to the current one
@@ -227,9 +282,9 @@ namespace Guier
             // Attributes for the OGL 3.3 context
             int attribs[] =
             {
-                WGL_CONTEXT_MAJOR_VERSION_ARB, static_cast<int>(2),
-                WGL_CONTEXT_MINOR_VERSION_ARB, static_cast<int>(0),
-                0
+            WGL_CONTEXT_MAJOR_VERSION_ARB, static_cast<int>(2),
+            WGL_CONTEXT_MINOR_VERSION_ARB, static_cast<int>(0),
+            0
             };
 
             // We need the proc address for the function
@@ -237,15 +292,15 @@ namespace Guier
             PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
             if ((wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB")) == NULL)
             {
-                GUIL_THROW_EXCEPTION("Can not get the function for creating the context.");
-                return;
+            GUIL_THROW_EXCEPTION("Can not get the function for creating the context.");
+            return;
             }
 
             // Create the context
             if ((m_OpenGLContext = wglCreateContextAttribsARB(m_DeviceContextHandle, 0, attribs)) == NULL)
             {
-                GUIL_THROW_EXCEPTION("Failed to create OpenGL 2 context.");
-                return;
+            GUIL_THROW_EXCEPTION("Failed to create OpenGL 2 context.");
+            return;
             }
 
             // Delete the old temporary context
@@ -259,8 +314,8 @@ namespace Guier
             // Bind the OpenGL extensions
             if (OpenGL::BindOpenGLExtensions(2, 0) != true)
             {
-                GUIL_THROW_EXCEPTION("Binding opengl extensions failed.");
-                return;
+            GUIL_THROW_EXCEPTION("Binding opengl extensions failed.");
+            return;
             }
 
 
@@ -291,40 +346,75 @@ namespace Guier
             SetBkColor(m_DeviceContextHandle, color);
             */
 
+            // Default signal for closing the window
+            m_CloseConnection = m_Window->Closed.Connect([this]()
+            {
+                m_pContext->Remove(m_Window);
+            });
+
+
+
             // Now, show the window and focus it
-            m_Showing = !settings.minimized;
+            /*m_Showing = !settings.minimized;
             if (m_Showing)
+            {*/
+            ShowWindow(m_WindowHandle, SW_SHOW);
+            SetForegroundWindow(m_WindowHandle);
+            SetFocus(m_WindowHandle);
+            // }
+        }
+
+        void Win32WindowImpl::PlatformDestroy()
+        {
+            // Reset shared pointer to window.
+            m_Window->Closed.DisconnectAll();
+
+            if (m_BackgroundBrush)
             {
-                ShowWindow(m_WindowHandle, SW_SHOW);
-                SetForegroundWindow(m_WindowHandle);
-                SetFocus(m_WindowHandle);
+                DeleteObject(m_BackgroundBrush);
             }
-        }
 
-        Win32WindowImpl::~Win32WindowImpl()
-        {
-           
-        }
 
-        void Win32WindowImpl::Update()
-        {
-            // Go through all the window event messages
-            MSG message;
-            while (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
+
+
+            // Delete the context
+            /*if (m_OpenGLContext)
             {
-                // A modal function is being called when you press the alt key,
-                // fix this by ignoring the alt(menu) key event.
-                if (message.message == WM_SYSCOMMAND &&
-                    message.wParam == SC_KEYMENU)
+            // Release the context from the current thread
+            wglMakeCurrent(NULL, NULL);
+
+            // Delete the opengl context
+            wglDeleteContext(m_OpenGLContext);
+            }*/
+
+
+            // Get the module handler.
+            HINSTANCE Hinstance = GetModuleHandle(NULL);
+
+            // Change back to normal display settings.
+            ChangeDisplaySettings(NULL, 0);
+
+
+
+            // Destroy the window
+            if (m_WindowHandle)
+            {
+                // Release the device context
+                if (m_DeviceContextHandle)
                 {
-                    break;
+                    ReleaseDC(m_WindowHandle, m_DeviceContextHandle);
                 }
 
-                // Translate the dispatch the message
-                // This will call the WindowProcStatic function
-                TranslateMessage(&message);
-                DispatchMessage(&message);
+                DestroyWindow(m_WindowHandle);
             }
+
+            // Unregister the window class
+            if (m_WindowClassName.size())
+            {
+                UnregisterClass(m_WindowClassName.c_str(), Hinstance);
+            }
+
+            m_Window.reset();
         }
 
         const Vector2i & Win32WindowImpl::Size() const
@@ -332,24 +422,43 @@ namespace Guier
             return m_Size;
         }
 
+        void Win32WindowImpl::Size(const Vector2i & size)
+        {
+            m_Size = size;
+            UpdatePositionSize();
+        }
+
         const std::wstring & Win32WindowImpl::Title() const
         {
             return m_Title;
         }
 
-        bool Win32WindowImpl::IsOpen() const
-        {
-            return false;
-        }
-
-        void Win32WindowImpl::Resize(const Vector2i & size)
+        void Win32WindowImpl::Title(const std::wstring & title)
         {
 
         }
 
-        void Win32WindowImpl::Show(const bool show)
+        void Win32WindowImpl::Title(const std::string & title)
         {
-            ShowWindow(m_WindowHandle, show ? SW_SHOW : SW_HIDE);
+
+        }
+
+        const Vector2i & Win32WindowImpl::Position() const
+        {
+            return m_Position;
+        }
+
+        void Win32WindowImpl::Position(const Vector2i & position)
+        {
+            m_Position = position;
+            UpdatePositionSize();
+        }
+
+        void Win32WindowImpl::Show()
+        {
+            ShowWindow(m_WindowHandle, /*show ?*/ SW_RESTORE/* : SW_HIDE*/);
+            SetForegroundWindow(m_WindowHandle);
+            SetFocus(m_WindowHandle);
         }
 
         void Win32WindowImpl::Minimize()
@@ -362,30 +471,47 @@ namespace Guier
             ShowWindow(m_WindowHandle, SW_MAXIMIZE);
         }
 
-        void Win32WindowImpl::Hide(const bool hide)
+        void Win32WindowImpl::HideFromTaskbar(const bool hide)
         {
-            ShowWindow(m_WindowHandle, hide ? SW_HIDE : SW_SHOW);
-        }
+            if (hide && m_HideFromTaskbar == false)
+            {
+                m_CloseConnection->Disconnect();
+                m_CloseConnection.reset();
+                m_CloseConnection = m_Window->Closed.Connect([this]()
+                {
+                    m_Window->Minimize();
+                    //m_pContext->Remove()
+                    //m_pWindow->Close();
+                });
 
-        void Win32WindowImpl::Focus()
-        {
-            SetForegroundWindow(m_WindowHandle);
-            SetFocus(m_WindowHandle);
-        }
+                //m_pWindow->Closed.
+                /*m_CloseConnection = m_pWindow->Closed.Connect([this]()
+                {
+                    //m_pContext->Remove()
+                    //m_pWindow->Close();
+                });*/
 
-        void Win32WindowImpl::Open()
-        {
+                m_HideFromTaskbar = true;
+            }
+            else if (hide == false && m_HideFromTaskbar == true)
+            {
+                m_CloseConnection->Disconnect();
+                m_CloseConnection.reset();
+                m_CloseConnection = m_Window->Closed.Connect([this]()
+                {
+                    m_pContext->Remove(m_Window);
+                });
 
-        }
+                m_HideFromTaskbar = false;
+            }
 
-        void Win32WindowImpl::Open(const Vector2i & size, const std::wstring & title, const WindowBase::Settings & settings)
-        {
-
+            
+            //ShowWindow(m_WindowHandle, hide ? SW_HIDE : SW_SHOW);
         }
 
         void Win32WindowImpl::Close()
         {
-
+            m_Window->Closed();
         }
 
 
@@ -399,6 +525,30 @@ namespace Guier
             return m_DeviceContextHandle;
         }
 
+        void Win32WindowImpl::UpdatePositionSize()
+        {
+            if (m_WindowHandle == 0)
+            {
+                return;
+            }
+            
+            const Vector2i newPos(m_Position.x < 0 ? CW_USEDEFAULT : m_Position.x, m_Position.y < 0 ? CW_USEDEFAULT : m_Position.y);
+
+            BOOL ret = SetWindowPos(
+                m_WindowHandle,
+                m_WindowHandle,
+                newPos.x,
+                newPos.y,
+                m_Size.x,
+                m_Size.y,
+                0
+            );
+
+            if (ret == 0)
+            {
+                throw std::runtime_error("SetWindowPos returned != 0.");
+            }
+        }
 
         LRESULT Win32WindowImpl::WindowProcStatic(HWND p_HWND, UINT p_Message,
             WPARAM p_WParam, LPARAM p_LParam)
@@ -433,13 +583,16 @@ namespace Guier
  //               e.Type = Event::Closed;
  //               m_EventHandler.Push(e);
 
+                m_pContext->Remove(m_Window);
+                //m_Window->Closed();
+
                 // Do not forward the event.
                 return 0;
             }
             break;
             case WM_SETFOCUS:
             {
-                m_pWindow->Focused(true);
+                m_Window->Focused(true);
                 // Push gained focus event
 //                e.Type = Event::GainedFocus;
 //                m_EventHandler.Push(e);
@@ -447,23 +600,30 @@ namespace Guier
             break;
             case WM_KILLFOCUS:
             {
-                m_pWindow->Focused(false);
+                m_Window->Focused(false);
                 // Push gained lost event
  //               e.Type = Event::LostFocus;
 //                m_EventHandler.Push(e);
             }
             break;
+            case WM_MOVE:
+            {
+                const auto newPosition = Vector2i(  static_cast<int>(LOWORD(p_LParam)),
+                                                    static_cast<int>(HIWORD(p_LParam)));
+                m_Window->Moved(newPosition);
+            }
+            break;
             case WM_SIZE:
             {
                 const auto oldSize = Vector2i(m_Size);
-                const auto newSize = Vector2i(static_cast<int>(LOWORD(p_LParam)),
-                                        static_cast<int>(HIWORD(p_LParam)));
+                const auto newSize = Vector2i(  static_cast<int>(LOWORD(p_LParam)),
+                                                static_cast<int>(HIWORD(p_LParam)));
                 
                 // Check if minimized.
                 if (newSize == Vector2i(0, 0))
                 {
                     m_Showing = false;
-                    m_pWindow->Showing(false);
+                    m_Window->Minimized();
                     break;
                 }
                 
@@ -473,11 +633,11 @@ namespace Guier
                 if (m_Showing == false)
                 {
                     m_Showing = true;
-                    m_pWindow->Showing(true);
+                    m_Window->Showing();
                 }
                 else
                 {
-                    m_pWindow->Resized(m_Size);
+                    m_Window->Resized(m_Size);
                 }
                 
 

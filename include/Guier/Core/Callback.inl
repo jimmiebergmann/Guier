@@ -34,6 +34,7 @@ template <typename Return, typename... Arguments>
 template <typename Class, typename Function>
 std::shared_ptr<Connection> Signal<Return(Arguments...)>::Connect(Class * p_pClass, const Function & p_Function)
 {
+    std::lock_guard<std::mutex> sm(m_Mutex); // Lock mutex.
 
     auto binding = Bind(p_Function, p_pClass, MakeIntSequence<sizeof...(Arguments)>{});
     auto connection = std::make_shared<Connection>();
@@ -57,6 +58,8 @@ std::shared_ptr<Connection> Signal<Return(Arguments...)>::Connect(Class * p_pCla
 template <typename Return, typename... Arguments>
 std::shared_ptr<Connection> Signal<Return(Arguments...)>::Connect(const CallbackFunction & p_Function)
 {
+    std::lock_guard<std::mutex> sm(m_Mutex); // Lock mutex.
+
     auto connection = std::make_shared<Connection>();
     connection->m_pSignal = this;
     connection->m_pSlot = nullptr;
@@ -70,6 +73,8 @@ std::shared_ptr<Connection> Signal<Return(Arguments...)>::Connect(const Callback
 template <typename Return, typename... Arguments>
 void Signal<Return(Arguments...)>::DisconnectAll()
 {
+    std::lock_guard<std::mutex> sm(m_Mutex); // Lock mutex.
+
     for (auto it = m_Bindings.begin(); it != m_Bindings.end(); it++)
     {
         it->first.get()->m_pSignal = nullptr;
@@ -85,6 +90,8 @@ void Signal<Return(Arguments...)>::DisconnectAll()
 template <typename Return, typename... Arguments>
 Return Signal<Return(Arguments...)>::operator()(Arguments... p_Arguments)
 {
+    std::lock_guard<std::mutex> sm(m_Mutex); // Lock mutex.
+
     for (auto it = m_Bindings.begin(); it != m_Bindings.end(); it++)
     {
         it->second(std::forward<Arguments>(p_Arguments)...);
@@ -96,6 +103,8 @@ Return Signal<Return(Arguments...)>::operator()(Arguments... p_Arguments)
 template <typename Return, typename... Arguments>
 void Signal<Return(Arguments...)>::Disconnect(Connection * p_pConnection)
 {
+    std::lock_guard<std::mutex> sm(m_Mutex); // Lock mutex.
+
     for (auto it = m_Bindings.begin(); it != m_Bindings.end(); it++)
     {
         if (it->first.get() == p_pConnection)
@@ -118,6 +127,8 @@ void Signal<Return(Arguments...)>::Disconnect(Connection * p_pConnection)
 template <typename Return, typename... Arguments>
 void Signal<Return(Arguments...)>::DisconnectFromSlot(Connection * p_pConnection)
 {
+    std::lock_guard<std::mutex> sm(m_Mutex); // Lock mutex.
+
     for (auto it = m_Bindings.begin(); it != m_Bindings.end(); it++)
     {
         if (it->first.get() == p_pConnection)

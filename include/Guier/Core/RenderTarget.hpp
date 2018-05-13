@@ -30,7 +30,7 @@
 namespace Guier
 {
 
-    class Context;
+    //class Context;
     class Renderer;
 
     namespace Core
@@ -55,7 +55,7 @@ namespace Guier
 
         protected:
 
-            Guier::Context * m_pContext;   ///< Pointer to context.
+            //Guier::Context * m_pContext;   ///< Pointer to context.
             Renderer *       m_pRenderer;  ///< Pointer to loaded renderer. Is nullptr if not set by context.
             
         };

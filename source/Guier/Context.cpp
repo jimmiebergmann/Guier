@@ -31,49 +31,117 @@
 namespace Guier
 {
 
-    Context::Context(Renderer * renderer, Skin * skin) :
-        m_DefaultRenderer(false),
-        m_DefaultSkin(false),
-        m_pRenderer(renderer),
-        m_pSkin(skin)
+    Context::Context() :
+        ContextBase(this)
     {
-        // Create default renderer if needed.
         if (m_pRenderer == nullptr)
         {
-            m_pRenderer = Renderer::CreateDefaultRenderer();
-            m_DefaultRenderer = true;
+            throw std::runtime_error("Failed to create renderer.");
         }
 
-        // Create defailt skin if needed.
-        if (m_pSkin == nullptr)
+        m_Running = true;
+
+        Core::Semaphore startThreadSemaphore;
+        Core::Semaphore startInterruptSemaphore;
+
+        m_InterruptWindowThread = std::thread([this, &startInterruptSemaphore]()
         {
-            m_pSkin = Skin::CreateDefaultSkin();
-            m_DefaultSkin = true;
-        }
-    }
+            startInterruptSemaphore.NotifyOne();
 
-    Context::Context(Skin * skin) :
-        Context(nullptr, skin)
-    {
+            while (m_Running)
+            {
+                m_WindowSempahore.Wait();
 
+                ExecuteWindowEventInterrupt();
+
+                if (m_Running == false)
+                {
+                    return;
+                }
+            }
+        });
+
+        m_WindowThread = std::thread([this, &startThreadSemaphore]()
+        {
+
+            
+            startThreadSemaphore.NotifyOne();
+
+            while (m_Running)
+            {
+                // Create windows
+                CreateWindowsInQueue();
+
+                // Destroy windows
+                DestroyWindowsInQueue();
+
+                // Handle window events.
+                // This is a modal function, using Win32 or X11.
+                // it's possible to interrupt the function by calling InterruptWindowEvents();
+                HandleWindowEvents();
+            }
+
+            // Delete all windows
+            m_Windows.clear();
+
+        });
+
+        startThreadSemaphore.Wait();
+        startInterruptSemaphore.Wait();
     }
 
     Context::~Context()
     {
-        Clear();
+        m_Running = false;
+        m_WindowSempahore.NotifyOne();
+        m_InterruptWindowThread.join();
+        m_WindowThread.join();
+
+        delete m_pRenderer;
     }
 
+    Context & Context::Remove(std::shared_ptr<Window> window)
+    {
+        if (window->Removed())
+        {
+            return *this;
+        }
+
+        // Find mutex.
+        {
+            std::lock_guard<std::mutex> sm_1(m_WindowMutex);
+
+            auto it = m_Windows.find(window);
+            if (it == m_Windows.end())
+            {
+                return *this;
+            }
+
+            window->Removed() = true;
+
+            // Push and notify window thread.
+            {
+                std::lock_guard<std::mutex> sm_2(m_WindowDestructionMutex);
+                m_WindowDestructionSet.insert(*it);
+            }
+
+            // Remove window from set.
+            m_Windows.erase(it);
+
+            // Interrupt window event loop.
+            InterruptWindowEvents();
+        }
+
+        return *this;
+    }
+/*
     Context & Context::Clear()
     {
         if (m_pRenderer != nullptr)
         {
             delete m_pRenderer;
         }
-        
-        while(m_Windows.size())
-        {
-            delete *m_Windows.begin();
-        }
+
         m_Windows.clear();
 
         return *this;
@@ -93,9 +161,9 @@ namespace Guier
         {
             throw std::runtime_error("No renderer is set in context.");
         }
-    }
+    }*/
 
-    Context & Context::Add(Renderer * renderer)
+    /*Context & Context::Add(Renderer * renderer)
     {
         // Check if the renderer should be unallocated.
         if (m_pRenderer)
@@ -168,9 +236,36 @@ namespace Guier
 
         m_Windows.insert(window);
         return *this;
-    }
+    }*/
 
-    Context & Context::Remove(Renderer * renderer)
+    /*std::shared_ptr<Window> Context::Add(Window * window)
+    {
+        if (window == nullptr)
+        {
+            throw std::runtime_error("Window pointer is nullptr.");
+        }
+
+        std::lock_guard<std::mutex> sm(m_ObjectMutex);
+
+        auto it = m_WindowsRaw.find(window);
+        if (it != m_Windows.end())
+        {
+            return *it;
+        }
+
+        Renderer * pNewRenderer = m_pRenderer->AllocateNew();
+        pNewRenderer->Load();
+
+        window->m_pContext = this;
+        window->m_pRenderer = pNewRenderer;
+
+        m_Windows.insert(window);
+        //return *this;
+
+        return std::shared_ptr<Window>(window);
+    }*/
+
+    /*Context & Context::Remove(Renderer * renderer)
     {
         if (m_pRenderer && renderer == m_pRenderer)
         {
@@ -206,9 +301,9 @@ namespace Guier
 
         m_Windows.erase(window);
         return *this;
-    }
+    }*/
 
-    Renderer * Context::GetRenderer() const
+   /* Renderer * Context::GetRenderer() const
     {
         return m_pRenderer;
     }
@@ -216,6 +311,6 @@ namespace Guier
     Skin * Context::GetSkin() const
     {
         return m_pSkin;
-    }
+    }*/
 
 }
