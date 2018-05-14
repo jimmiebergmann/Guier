@@ -32,6 +32,7 @@
 #include <queue>
 #include <memory>
 #include <thread>
+#include <atomic>
 #include <Guier/Renderer.hpp>
 #include <Guier/Skin.hpp>
 
@@ -100,7 +101,12 @@ namespace Guier
             void InterruptWindowEvents();
             void ExecuteWindowEventInterrupt();
 
-            bool                                m_Running;              ///< Thread is running.
+            void ClearAllWindows();
+
+
+            static void WindowSharedPointerDeleter(Window * window);
+
+            std::atomic<bool>                   m_Running;              ///< Threads are running.
             std::thread                         m_WindowThread;           ///< Running thread.
             std::thread                         m_InterruptWindowThread;  ///< Thread for interruping window events.
             Core::Semaphore                     m_WindowSempahore;    ///< Semaphore for ticking thread, for example when redrawing.

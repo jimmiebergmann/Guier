@@ -63,17 +63,12 @@ namespace Guier
         std::shared_ptr<Window> Add(Args &&... args);
 
         /**
-        * Remove object from context.
+        * Remove window from context.
         *
-        * @brief    The object is not unallocating when removed,
-        *           and context is no longer responsible for unallocating of the object.
+        * @brief    The window is unallocating when removed.
         *
         */
-       /* Context & Remove(Renderer * renderer);
-        Context & Remove(Skin * skin);
-        */Context & Remove(std::shared_ptr<Window> window);
-        
-
+        Context & Remove(std::shared_ptr<Window> window);
 
     };
 

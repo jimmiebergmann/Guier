@@ -44,19 +44,13 @@ namespace Guier
         friend class Core::ContextBase;
 
         /**
-        * SHOULD BE Private destructor.
-        *
-        */
-        ~Window();
-
-        /**
         * Get or set current size of window.
         *
         * @param size   New size of window.
         *
         */
         const Vector2i & Size() const;
-        std::shared_ptr<Window> Size(const Vector2i & size);
+        Window & Size(const Vector2i & size);
 
         /**
         * Get or set current title of window.
@@ -65,8 +59,8 @@ namespace Guier
         *
         */
         const std::wstring & Title() const;
-        std::shared_ptr<Window> Title(const std::wstring & title);
-        std::shared_ptr<Window> Title(const std::string & title);
+        Window & Title(const std::wstring & title);
+        Window & Title(const std::string & title);
 
         /**
         * Get or set the current position of the window.
@@ -77,7 +71,7 @@ namespace Guier
         *
         */
         const Vector2i & Position() const;
-        std::shared_ptr<Window> Position(const Vector2i & position);
+        Window & Position(const Vector2i & position);
 
         /**
         * Show closed or minimized window.
@@ -88,7 +82,7 @@ namespace Guier
         *           Window is restored and shown if minimized.
         *
         */
-        std::shared_ptr<Window> Show();
+        Window & Show();
 
         /**
         * Minimize window.
@@ -98,7 +92,7 @@ namespace Guier
         *           Window is found in task bar if HideFromTaskbar is set to false.
         *
         */
-        std::shared_ptr<Window> Minimize();
+        Window & Minimize();
 
         /**
         * Maximize window.
@@ -106,13 +100,13 @@ namespace Guier
         * @brief    Window is created if called for the first time.
         *
         */
-        std::shared_ptr<Window> Maximize();
+        Window & Maximize();
 
         /**
         * Hide window from task bar.
         *
         */
-        std::shared_ptr<Window> HideFromTaskbar(const bool hide = true);
+        Window & HideFromTaskbar(const bool hide = true);
 
         /**
         * Hide window from task bar and from the user when the window is closed.
@@ -120,7 +114,7 @@ namespace Guier
         * @brief The window is not internally unallocated and cleared when the window is closed, if this setting is set to true.
         *
         */
-        std::shared_ptr<Window> HideWhenClosed(const bool hideWhenClosed = true);
+        Window & HideWhenClosed(const bool hideWhenClosed = true);
 
         /**
         * Close the window.
@@ -129,7 +123,39 @@ namespace Guier
         *        Use the setting HideWhenClosed to connect hide and minimize logics to signal.
         *
         */
-        std::shared_ptr<Window> Close();
+        Window & Close();
+
+        /**
+        * Get or set new window style.
+        *
+        * @brief    It's internally faster to apply mutiple styles via Style(...) method,
+        *           than calling Enable for every single style.
+        *
+        * @param styles     bitfield of styles, defined in Styles::eStyle.
+        *
+        */
+        unsigned int Style() const;
+        Window & Style(const unsigned int styles);
+
+        /**
+        * Enable single or bitfield of window styles.
+        *
+        * @param style      Single style to enable.
+        * @param styles     bitfield of styles, defined in Styles::eStyle.
+        *
+        */
+        Window & Enable(const Styles::eStyle style);
+        Window & Enable(const unsigned int styles);
+
+        /**
+        * Disable single or bitfield of window styles.
+        *
+        * @param style      Single style to disable.
+        * @param styles     bitfield of mutiple styles to disable, defined in Styles::eStyle.
+        *
+        */
+        Window & Disable(const Styles::eStyle style);
+        Window & Disable(const unsigned int styles);
 
         /**
         * Signal called when the window is resized.
@@ -182,6 +208,14 @@ namespace Guier
         */
         Callback::Signal<void()> Closed;
 
+        /**
+        * Signal called when the window is removed from context.
+        *
+        * @brief Any stored shared pointer of window should be restored, to make sure the pointer is unallocated.
+        *
+        */
+        Callback::Signal<void()> Removed;
+
     private:
 
         /**
@@ -191,10 +225,16 @@ namespace Guier
         * @param title          Title of window, shown in title bar and task bar.
         *
         */
-        Window(Context * context, const Vector2i & size = { 800, 600 }, const std::wstring & title = L"");
-        Window(Context * context, const std::wstring & title, const Vector2i & size = { 800, 600 });
-        Window(Context * context, const int sizeX, const int sizeY, const std::wstring & title = L"");
-        Window(Context * context, const std::wstring & title, const int sizeX, const int sizeY);
+        Window(const Vector2i & size = { 800, 600 }, const std::wstring & title = L"");
+        Window(const std::wstring & title, const Vector2i & size = { 800, 600 });
+        Window(const int sizeX, const int sizeY, const std::wstring & title = L"");
+        Window(const std::wstring & title, const int sizeX, const int sizeY);
+
+        /**
+        * Private destructor.
+        *
+        */
+        ~Window();
 
     };
 

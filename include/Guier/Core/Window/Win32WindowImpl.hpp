@@ -47,15 +47,12 @@ namespace Guier
 
         public:
 
-            Win32WindowImpl(Context * context, const Vector2i & size, const std::wstring & title);
+            Win32WindowImpl(Context * context, std::shared_ptr<Window> window, const Vector2i & size, const std::wstring & title);
 
             ~Win32WindowImpl();
 
             static void HandleEvents();
 
-            virtual void PlatformCreate(std::shared_ptr<Guier::Window> window);
-
-            virtual void PlatformDestroy();
 
             virtual const Vector2i & Size() const;
             virtual void Size(const Vector2i & size);
@@ -88,6 +85,14 @@ namespace Guier
 
             virtual void Close();
 
+            virtual unsigned int GetStyle() const;
+
+            virtual void NewStyle(const unsigned int styles);
+
+            virtual void EnableStyles(const unsigned int styles);
+
+            virtual void DisableStyles(const unsigned int styles);
+
 
             HWND GetWindowHandle() const;
             HDC GetDeviceContextHandle() const;
@@ -100,21 +105,29 @@ namespace Guier
             */
             void UpdatePositionSize();
 
+            void NewStyleInternal(const unsigned int styles);
+
             static LRESULT WindowProcStatic(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
             LRESULT WindowProc(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
             void FillWin32Background(const Vector2i & p_OldSize, const Vector2i & p_NewSize);
 
-            bool            m_Showing;          ///< Window is currently showing.
-            bool            m_HideWhenClosed;   ///< Hide window when closing.
-            bool            m_HideFromTaskbar;  ///< Hide window from tastbar.
-            Vector2i        m_Position;         ///< Position of window.
-            Vector2i        m_Size;             ///< Size of window.
-            std::wstring    m_Title;            ///< Title of window.
-            std::shared_ptr<Guier::Callback::Connection> m_CloseConnection;
+            bool                                         m_Showing;             ///< Window is currently showing.
+            bool                                         m_HideWhenClosed;      ///< Hide window when closing.
+            bool                                         m_HideFromTaskbar;     ///< Hide window from tastbar.
+            Vector2i                                     m_Position;            ///< Position of window.
+            Vector2i                                     m_Size;                ///< Size of window.
+            std::wstring                                 m_Title;               ///< Title of window.
+            std::shared_ptr<Guier::Callback::Connection> m_CloseConnection;     ///< Connection of defailt close signal.
             
+            unsigned int                                 m_Styles;              ///< Bitfield of styles.
+            DWORD                                        m_Win32Style;          ///< Win32 style of window.
+            DWORD                                        m_Win32ExtendedStyle;  ///< Win32 extended style of window.
+            mutable std::mutex                           m_StyleMutex;          /// Style mutex.
 
-            Context * const         m_pContext; ///< Pointer to context.
-            std::shared_ptr<Window> m_Window; ///< Pointer to window.
+
+
+            Context * const         m_pContext;             ///< Pointer of context.
+            std::shared_ptr<Window> m_Window;               ///< Pointer of window.
             HWND			        m_WindowHandle;
             HDC				        m_DeviceContextHandle;
             //HGLRC			        m_OpenGLContext;

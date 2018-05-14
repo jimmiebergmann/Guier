@@ -36,41 +36,49 @@ namespace Guier
     namespace Core
     {
 
-        WindowBase::WindowBase(Context * context, const Vector2i & size, const std::wstring & title) :
-            m_pContext(context),
+        WindowBase::WindowBase(const Vector2i & size, const std::wstring & title) :
             m_pImpl(nullptr),
-            m_Removed(false)
+            m_Destroying(false),
+            m_Size(size),
+            m_Title(title)
         {
+        }
+
+        WindowBase::~WindowBase()
+        {
+
+        }        
+
+        void WindowBase::CreateImplementation(Context * context, std::shared_ptr<Window> window)
+        {
+            std::lock_guard<std::mutex> sm(m_ImplMutex);
+            
+            if (m_pImpl != nullptr)
+            {
+                return;
+            }
+
             #if defined(GUIER_PLATFORM_WINDOWS)
-                m_pImpl = new Core::Win32WindowImpl(context, size, title);
+                m_pImpl = new Core::Win32WindowImpl(context, window, m_Size, m_Title);
             #else
                 #error Unkown platform.
             #endif
         }
 
-        WindowBase::~WindowBase()
+        void WindowBase::DestroyImplementation()
         {
+            std::lock_guard<std::mutex> sm(m_ImplMutex);
+
             if (m_pImpl)
             {
                 delete m_pImpl;
+                m_pImpl = nullptr;
             }
-        }        
-
-        void WindowBase::CreatePlatformWindow(std::shared_ptr<Window> window)
-        {
-            m_SharedPtrWindow = window;
-            m_pImpl->PlatformCreate(window);
         }
 
-        void WindowBase::DestroyPlatformWindow()
+        std::atomic<bool> & WindowBase::Destroying()
         {
-            m_SharedPtrWindow.reset();
-            m_pImpl->PlatformDestroy();
-        }
-
-        std::atomic<bool> & WindowBase::Removed()
-        {
-            return m_Removed;
+            return m_Destroying;
         }
 
         void WindowBase::HandleEvents()

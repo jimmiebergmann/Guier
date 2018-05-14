@@ -46,16 +46,16 @@ namespace Guier
 
         void ContextBase::CreateWindowsInQueue()
         {
-            std::lock_guard<std::mutex> sm_1(m_WindowCreationMutex);
             std::lock_guard<std::mutex> sm_2(m_WindowMutex);
+            std::lock_guard<std::mutex> sm_1(m_WindowCreationMutex); 
 
             while (m_WindowCreationQueue.size())
             {
                 auto front = m_WindowCreationQueue.front();
                 m_WindowCreationQueue.pop();
 
-                front->window = std::shared_ptr<Window>(new Window(m_pContext, front->size, front->title));
-                front->window->CreatePlatformWindow(front->window);
+                front->window = std::shared_ptr<Window>(new Window(front->size, front->title), &WindowSharedPointerDeleter);
+                front->window->CreateImplementation(m_pContext, front->window);
 
                 m_Windows.insert(front->window);
 
@@ -65,13 +65,12 @@ namespace Guier
 
         void ContextBase::DestroyWindowsInQueue()
         {
-            std::lock_guard<std::mutex> sm_1(m_WindowDestructionMutex);
             std::lock_guard<std::mutex> sm_2(m_WindowMutex);
+            std::lock_guard<std::mutex> sm_1(m_WindowDestructionMutex);
 
             for (auto it = m_WindowDestructionSet.begin(); it != m_WindowDestructionSet.end(); it++)
             {
-                (*it)->DestroyPlatformWindow();
-                (*it)->Closed();
+                (*it)->DestroyImplementation();
             }
 
             m_WindowDestructionSet.clear();
@@ -94,8 +93,36 @@ namespace Guier
             #else
             #error Unkown platform.
             #endif
-            /*Core::WindowBase::InterruptEvents();
-            ::PostThreadMessage(m_thread->get_id(), WM_QUIT, 0, 0);*/
+        }
+
+        void ContextBase::ClearAllWindows()
+        {
+            std::lock_guard<std::mutex> sm_1(m_WindowMutex);
+            std::lock_guard<std::mutex> sm_2(m_WindowCreationMutex);
+            std::lock_guard<std::mutex> sm_3(m_WindowDestructionMutex);
+            
+            for (auto it = m_WindowDestructionSet.begin(); it != m_WindowDestructionSet.end(); it++)
+            {
+                (*it)->DestroyImplementation();
+            }
+            m_WindowDestructionSet.clear();
+
+            while(m_WindowCreationQueue.size())
+            {
+                m_WindowCreationQueue.pop();
+            }
+
+            for (auto it = m_Windows.begin(); it != m_Windows.end(); it++)
+            {
+                (*it)->DestroyImplementation();
+            }
+            m_Windows.clear();
+            
+        }
+
+        void ContextBase::WindowSharedPointerDeleter(Window * window)
+        {
+            delete window;
         }
         
 

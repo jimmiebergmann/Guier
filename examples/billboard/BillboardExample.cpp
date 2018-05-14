@@ -32,8 +32,18 @@ int main()
     );*/
 
 
-    auto window = context.Add<Guier::Window>(800, 600, L"My window 1!")/*->Size({800, 600}).Show()*/;
-    auto window2 = context.Add<Guier::Window>(L"My window 2!")->Size({800, 400})/*.Show()*/;
+    auto window = context.Add<Guier::Window>(800, 600, L"My window 1!");
+
+    window->Style(  Guier::Window::Styles::TitleBar |
+                    Guier::Window::Styles::Minimize |
+                    Guier::Window::Styles::Resize).
+            Enable(Guier::Window::Styles::Close).
+            Show();
+
+    auto window2 = context.Add<Guier::Window>(L"My window 2!");
+    window2->Size({ 800, 400 })/*.
+             Show()*/;
+
     //window->Add<Text>("Header text, over button.");
     /*auto button = window->Add<Button>({ 100, 50 });
     button->Add<Text>("Button text");
@@ -85,6 +95,15 @@ int main()
         std::cout << "Closed 2." << std::endl;
         running2 = false;
     });
+    window->Removed.Connect([]()
+    {
+        std::cout << "Removed 1." << std::endl;
+    });
+    window2->Removed.Connect([]()
+    {
+        std::cout << "Removed 2." << std::endl;
+    });
+
 
    // context.Add(window);
 
@@ -101,24 +120,24 @@ int main()
         //context.Update();
         //context.Render();
 
-       /* char c = 0;
+        char c = 0;
         c = std::cin.get();
 
         switch (c)
         {
         case '1':
-            window->Minimize();
-            break;
-        case '2':
-            window->Maximize();
-            break;
-        case '3':
             window->Show();
             break;
-        case '4':
-            window->Focus();
+        case '2':
+            window->Minimize();
             break;
-        case '5':
+        case '3':
+            window2->Show();
+            break;
+        case '4':
+            window2->HideFromTaskbar();
+            break;
+        /*case '5':
             window->Open();
             break;
         case '6':
@@ -129,10 +148,10 @@ int main()
             break;
         case '8':
             window->Hide(false);
-            break;
+            break;*/
         default:
             break;
-        }*/
+        }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }

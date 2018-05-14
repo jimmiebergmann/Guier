@@ -41,12 +41,12 @@ namespace Guier
 
         m_Running = true;
 
-        Core::Semaphore startThreadSemaphore;
-        Core::Semaphore startInterruptSemaphore;
+        Core::Semaphore startWindowThreadSemaphore;
+        Core::Semaphore startWindowInterruptSemaphore;
 
-        m_InterruptWindowThread = std::thread([this, &startInterruptSemaphore]()
+        m_InterruptWindowThread = std::thread([this, &startWindowInterruptSemaphore]()
         {
-            startInterruptSemaphore.NotifyOne();
+            startWindowInterruptSemaphore.NotifyOne();
 
             while (m_Running)
             {
@@ -61,11 +61,9 @@ namespace Guier
             }
         });
 
-        m_WindowThread = std::thread([this, &startThreadSemaphore]()
+        m_WindowThread = std::thread([this, &startWindowThreadSemaphore]()
         {
-
-            
-            startThreadSemaphore.NotifyOne();
+            startWindowThreadSemaphore.NotifyOne();
 
             while (m_Running)
             {
@@ -77,17 +75,14 @@ namespace Guier
 
                 // Handle window events.
                 // This is a modal function, using Win32 or X11.
-                // it's possible to interrupt the function by calling InterruptWindowEvents();
+                // It's possible to interrupt the function by calling InterruptWindowEvents();
                 HandleWindowEvents();
             }
 
-            // Delete all windows
-            m_Windows.clear();
-
         });
 
-        startThreadSemaphore.Wait();
-        startInterruptSemaphore.Wait();
+        startWindowThreadSemaphore.Wait();
+        startWindowInterruptSemaphore.Wait();
     }
 
     Context::~Context()
@@ -97,33 +92,39 @@ namespace Guier
         m_InterruptWindowThread.join();
         m_WindowThread.join();
 
+        ClearAllWindows();
+
         delete m_pRenderer;
     }
 
     Context & Context::Remove(std::shared_ptr<Window> window)
     {
-        if (window->Removed())
+        if (window->Destroying())
         {
             return *this;
         }
-
-        // Find mutex.
+        
         {
             std::lock_guard<std::mutex> sm_1(m_WindowMutex);
 
+            // Find window and make sure it exists.
             auto it = m_Windows.find(window);
             if (it == m_Windows.end())
             {
                 return *this;
             }
 
-            window->Removed() = true;
+            window->Destroying() = true;
 
             // Push and notify window thread.
+            // The windows are added to a creation queue, in order to initialize the windows in the same thread.
             {
                 std::lock_guard<std::mutex> sm_2(m_WindowDestructionMutex);
                 m_WindowDestructionSet.insert(*it);
             }
+
+            // Call removed signal.
+            (*it)->Removed();
 
             // Remove window from set.
             m_Windows.erase(it);
@@ -134,183 +135,5 @@ namespace Guier
 
         return *this;
     }
-/*
-    Context & Context::Clear()
-    {
-        if (m_pRenderer != nullptr)
-        {
-            delete m_pRenderer;
-        }
-
-        m_Windows.clear();
-
-        return *this;
-    }
-
-    void Context::Update()
-    {
-        for (auto it = m_Windows.begin(); it != m_Windows.end(); it++)
-        {
-            (*it)->Update();
-        }
-    }
-
-    void Context::Render()
-    {
-        if (m_pRenderer == nullptr)
-        {
-            throw std::runtime_error("No renderer is set in context.");
-        }
-    }*/
-
-    /*Context & Context::Add(Renderer * renderer)
-    {
-        // Check if the renderer should be unallocated.
-        if (m_pRenderer)
-        {
-            if (renderer == m_pRenderer || (renderer == nullptr && m_DefaultRenderer))
-            {
-                return *this;
-            }
-        }
-
-        // Unallocate.
-        delete m_pRenderer;
-
-        // Allocate.
-        if (renderer)
-        {
-            m_pRenderer = renderer;
-            m_DefaultRenderer = false;
-        }
-        else
-        {
-            m_pRenderer = Renderer::CreateDefaultRenderer();
-            m_DefaultRenderer = true;
-        }
-
-        return *this;
-    }
-
-    Context & Context::Add(Skin * skin)
-    {
-        // Check if the skin should be unallocated.
-        if (m_pSkin)
-        {
-            if (skin == m_pSkin || (skin == nullptr && m_DefaultSkin))
-            {
-                return *this;
-            }
-        }
-
-        // Unallocate.
-        delete m_pSkin;
-
-        // Allocate.
-        if (skin)
-        {
-            m_pSkin = skin;
-            m_DefaultSkin = false;
-        }
-        else
-        {
-            m_pSkin = Skin::CreateDefaultSkin();
-            m_DefaultSkin = true;
-        }
-
-        return *this;
-    }
-
-    Context & Context::Add(Window * window, const bool show)
-    {
-        if (window == nullptr || m_Windows.find(window) != m_Windows.end())
-        {
-            return *this;
-        }
-
-        Renderer * pNewRenderer = m_pRenderer->AllocateNew();
-        pNewRenderer->Load();
-
-        window->m_pContext = this;
-        window->m_pRenderer = pNewRenderer;
-
-        m_Windows.insert(window);
-        return *this;
-    }*/
-
-    /*std::shared_ptr<Window> Context::Add(Window * window)
-    {
-        if (window == nullptr)
-        {
-            throw std::runtime_error("Window pointer is nullptr.");
-        }
-
-        std::lock_guard<std::mutex> sm(m_ObjectMutex);
-
-        auto it = m_WindowsRaw.find(window);
-        if (it != m_Windows.end())
-        {
-            return *it;
-        }
-
-        Renderer * pNewRenderer = m_pRenderer->AllocateNew();
-        pNewRenderer->Load();
-
-        window->m_pContext = this;
-        window->m_pRenderer = pNewRenderer;
-
-        m_Windows.insert(window);
-        //return *this;
-
-        return std::shared_ptr<Window>(window);
-    }*/
-
-    /*Context & Context::Remove(Renderer * renderer)
-    {
-        if (m_pRenderer && renderer == m_pRenderer)
-        {
-            delete m_pRenderer;
-            m_pRenderer = nullptr;
-        }
-        return *this;
-    }
-
-    Context & Context::Remove(Skin * skin)
-    {
-        if (m_pSkin && skin == m_pSkin)
-        {
-            delete m_pSkin;
-            m_pSkin = nullptr;
-        }
-        return *this;
-    }
-
-    Context & Context::Remove(Window * window)
-    {
-        if (window == nullptr || m_Windows.find(window) == m_Windows.end())
-        {
-            return *this;
-        }
-
-        if (window->m_Deleted == false)
-        {
-            window->m_pContext = nullptr;
-            delete window->m_pRenderer;
-            window->m_pRenderer = nullptr;
-        }
-
-        m_Windows.erase(window);
-        return *this;
-    }*/
-
-   /* Renderer * Context::GetRenderer() const
-    {
-        return m_pRenderer;
-    }
-
-    Skin * Context::GetSkin() const
-    {
-        return m_pSkin;
-    }*/
 
 }

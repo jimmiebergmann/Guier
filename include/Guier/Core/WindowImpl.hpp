@@ -46,10 +46,6 @@ namespace Guier
 
             virtual ~WindowImpl();
 
-            virtual void PlatformCreate(std::shared_ptr<Guier::Window> window) = 0;
-
-            virtual void PlatformDestroy() = 0;
-
             /**
             * Get or set current size of window.
             *
@@ -83,6 +79,14 @@ namespace Guier
             virtual void HideFromTaskbar(const bool hide) = 0;
 
             virtual void Close() = 0;
+
+            virtual unsigned int GetStyle() const = 0;
+
+            virtual void NewStyle(const unsigned int styles) = 0;
+
+            virtual void EnableStyles(const unsigned int styles) = 0;
+
+            virtual void DisableStyles(const unsigned int styles) = 0;
 
         };
 

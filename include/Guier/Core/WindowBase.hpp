@@ -30,6 +30,7 @@
 #include <string>
 #include <memory>
 #include <atomic>
+#include <mutex>
 
 namespace Guier
 {
@@ -41,46 +42,107 @@ namespace Guier
         class ContextBase;
         class WindowImpl;
 
+        /**
+        * Base class of renderable window.
+        *
+        */
         class GUIER_API WindowBase : public RenderTarget
         {
 
         public:
 
-            friend class Guier::Context; ///< Friend class of context.
-            friend class ContextBase; ///< Friend class of context base.
+            /**
+            * Friend classes.
+            *
+            */
+            friend class Guier::Context;
+            friend class ContextBase;
 
-            WindowBase(Context * context, const Vector2i & size, const std::wstring & title);
-
-            virtual ~WindowBase();
-
-            struct Style
+            /**
+            * Styles of window.
+            *
+            */
+            struct Styles
             {
                 enum eStyle
                 {
                     None = 0,
-                    Close = 1,
-                    Minimize = 2,
-                    Resize = 4,
-                    TitleBar = 8,
-                    Default = 15,
-                    Fullscreen = 16
+                    TitleBar = 1, ///< Includes border.
+                    Border = 2,
+                    Close = 4,
+                    Minimize = 8,
+                    Maximize = 16,
+                    Resize = 32,
+                    HideInTaskbar = 64,
+
+                    Default = 63
                 };
             };
 
+            /**
+            * Constructor.
+            *
+            */
+            WindowBase(const Vector2i & size, const std::wstring & title);
+
+            /**
+            * Destructor.
+            *
+            */
+            virtual ~WindowBase();
+
         protected:
 
-            void CreatePlatformWindow(std::shared_ptr<Window> window);
+            WindowImpl *            m_pImpl;            ///< Implementation of platform dependent functionality.
+            std::atomic<bool>       m_Destroying;       ///< Window is being or is destroyed if true.
+            mutable  std::mutex     m_ImplMutex;        ///< Implementaiton mutex.
 
-            void DestroyPlatformWindow();
+            Vector2i                m_Size;
+            std::wstring            m_Title;
 
-            std::atomic<bool> & Removed();
+        private:
 
+            /**
+            * Create implementation of window.
+            *
+            * @brief Called by Context.
+            *        The Windows methods, for example Size(),
+            *        will just return a dummy value if implementation is not yet created.
+            *
+            * @param context    Pointer of context.
+            * @param window     Pointer of window.
+            * @param size       Size of window.
+            * @param title      Title of window.
+            *
+            */
+            void CreateImplementation(Context * context, std::shared_ptr<Window> window);
+
+            /**
+            * Destroy implementation of window.
+            *
+            * @brief Called by Context.
+            *        The Windows methods, for example Size(),
+            *        will just return a dummy value if implementation is destroyed.
+            *        A destroyed implementation can be recreated.
+            *
+            */
+            void DestroyImplementation();
+
+            /**
+            * Check or set status of window destruction.
+            *
+            * @return true if window is being or is destroyed.
+            *
+            */
+            std::atomic<bool> & Destroying();
+
+            /**
+            * Handle platform specific window events, of all windows created in Context.
+            *
+            */
             static void HandleEvents();
 
-            Context *               m_pContext;         ///< Pointer to context interface.    
-            WindowImpl *            m_pImpl;            ///< Implementation of platform dependent functionality.
-            std::shared_ptr<Window> m_SharedPtrWindow;  ///< Shared pointer of window.
-            std::atomic<bool>       m_Removed;
+
         };
 
     }
