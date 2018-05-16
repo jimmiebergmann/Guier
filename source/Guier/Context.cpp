@@ -31,7 +31,17 @@
 namespace Guier
 {
 
-    Context::Context() :
+    Context::Context()
+    {
+
+    }
+
+    Context::~Context()
+    {
+
+    }
+
+    /*Context::Context() :
         ContextBase(this)
     {
         if (m_pRenderer == nullptr)
@@ -134,6 +144,6 @@ namespace Guier
         }
 
         return *this;
-    }
+    }*/
 
 }

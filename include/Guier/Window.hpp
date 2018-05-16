@@ -26,7 +26,6 @@
 #pragma once
 
 #include <Guier/Core/WindowBase.hpp>
-#include <Guier/Callback.hpp>
 
 namespace Guier
 {
@@ -35,13 +34,30 @@ namespace Guier
     * Drawable window. Currently appearing as a platform independent window.
     *
     */
-    class GUIER_API Window : public Callback::Slot, public Core::WindowBase
+    class GUIER_API Window : public Core::WindowBase
     {
 
     public:
 
-        // Forward declarations
-        friend class Core::ContextBase;
+        /**
+        * Constructor
+        *
+        * @param constructor    Pointer to context.
+        * @param size           Size of window.
+        * @param title          Title of window.
+        *
+        * @throw std::runtime_error If context == nullptr.
+        *
+        */
+        Window(Context * context, const Vector2i & size, const std::wstring & title);
+        Window(Context * context, const Vector2i & size, const std::string & title);
+
+        /**
+        * Get window style.
+        *
+        */
+        WindowStyle * Style();
+        const WindowStyle * Style() const;
 
         /**
         * Get or set current size of window.
@@ -50,17 +66,19 @@ namespace Guier
         *
         */
         const Vector2i & Size() const;
-        Window & Size(const Vector2i & size);
+        Window * Size(const Vector2i & size);
 
         /**
         * Get or set current title of window.
-        *
+        * Allowed templates are std::string and std::wstring.
+        * 
         * @param title   New title of window.
         *
         */
-        const std::wstring & Title() const;
-        Window & Title(const std::wstring & title);
-        Window & Title(const std::string & title);
+        template<typename String> const String Title() const;
+        template<>const std::wstring Title() const;
+        Window * Title(const std::wstring & title);
+        Window * Title(const std::string & title);
 
         /**
         * Get or set the current position of the window.
@@ -71,10 +89,10 @@ namespace Guier
         *
         */
         const Vector2i & Position() const;
-        Window & Position(const Vector2i & position);
+        Window * Position(const Vector2i & position);
 
         /**
-        * Show closed or minimized window.
+        * Show minimized window.
         *
         * @brief    Window is created if called for the first time.
         *           
@@ -82,7 +100,16 @@ namespace Guier
         *           Window is restored and shown if minimized.
         *
         */
-        Window & Show();
+        Window * Show();
+
+        /**
+        * Hide window window.
+        *
+        * @brief The window will disappear from screen and taskbar.
+        *        Restore window via Show() method.
+        *
+        */
+        Window * Hide();
 
         /**
         * Minimize window.
@@ -92,7 +119,7 @@ namespace Guier
         *           Window is found in task bar if HideFromTaskbar is set to false.
         *
         */
-        Window & Minimize();
+        Window * Minimize();
 
         /**
         * Maximize window.
@@ -100,21 +127,7 @@ namespace Guier
         * @brief    Window is created if called for the first time.
         *
         */
-        Window & Maximize();
-
-        /**
-        * Hide window from task bar.
-        *
-        */
-        Window & HideFromTaskbar(const bool hide = true);
-
-        /**
-        * Hide window from task bar and from the user when the window is closed.
-        *
-        * @brief The window is not internally unallocated and cleared when the window is closed, if this setting is set to true.
-        *
-        */
-        Window & HideWhenClosed(const bool hideWhenClosed = true);
+        Window * Maximize();
 
         /**
         * Close the window.
@@ -123,39 +136,13 @@ namespace Guier
         *        Use the setting HideWhenClosed to connect hide and minimize logics to signal.
         *
         */
-        Window & Close();
+        Window * Close();
 
         /**
-        * Get or set new window style.
-        *
-        * @brief    It's internally faster to apply mutiple styles via Style(...) method,
-        *           than calling Enable for every single style.
-        *
-        * @param styles     bitfield of styles, defined in Styles::eStyle.
+        * Add child to button.
         *
         */
-        unsigned int Style() const;
-        Window & Style(const unsigned int styles);
-
-        /**
-        * Enable single or bitfield of window styles.
-        *
-        * @param style      Single style to enable.
-        * @param styles     bitfield of styles, defined in Styles::eStyle.
-        *
-        */
-        Window & Enable(const Styles::eStyle style);
-        Window & Enable(const unsigned int styles);
-
-        /**
-        * Disable single or bitfield of window styles.
-        *
-        * @param style      Single style to disable.
-        * @param styles     bitfield of mutiple styles to disable, defined in Styles::eStyle.
-        *
-        */
-        Window & Disable(const Styles::eStyle style);
-        Window & Disable(const unsigned int styles);
+        bool Add(Core::Control * control);
 
         /**
         * Signal called when the window is resized.
@@ -180,24 +167,34 @@ namespace Guier
         Callback::Signal<void()> Showing;
 
         /**
+        * Signal called when the window is hiding.
+        *
+        */
+        Callback::Signal<void()> Hiding;
+
+        /**
         * Signal called when the window is minimized.
         *
         */
         Callback::Signal<void()> Minimized;
 
         /**
-        * Signal called when the window is focused, or lost focus.
-        *
-        * @param bool   Whether or not the window gained focus. 
+        * Signal called when the window is maximized.
         *
         */
-        Callback::Signal<void(bool)> Focused;
+        Callback::Signal<void()> Maximized;
 
         /**
-        * Signal called when the window is opened.
+        * Signal called when the window is focused.
         *
         */
-        Callback::Signal<void()> Opened;
+        Callback::Signal<void()> Focused;
+
+        /**
+        * Signal called when the window lose focus
+        *
+        */
+        Callback::Signal<void()> Unfocusing;
 
         /**
         * Signal called when the window is closed via X button or code.
@@ -209,26 +206,15 @@ namespace Guier
         Callback::Signal<void()> Closed;
 
         /**
-        * Signal called when the window is removed from context.
+        * Signal called when the window is unallocated via delete keyword.
+        * Do not use the pointer after deletion.
         *
-        * @brief Any stored shared pointer of window should be restored, to make sure the pointer is unallocated.
+        * @param Window Pointer of deleted window.
         *
         */
-        Callback::Signal<void()> Removed;
+        Callback::Signal<void(Window *)> Deleted;
 
     private:
-
-        /**
-        * Private constructor, called via Context::Add(...).
-        *
-        * @param size[X][Y]     Initial size of window.
-        * @param title          Title of window, shown in title bar and task bar.
-        *
-        */
-        Window(const Vector2i & size = { 800, 600 }, const std::wstring & title = L"");
-        Window(const std::wstring & title, const Vector2i & size = { 800, 600 });
-        Window(const int sizeX, const int sizeY, const std::wstring & title = L"");
-        Window(const std::wstring & title, const int sizeX, const int sizeY);
 
         /**
         * Private destructor.
@@ -236,6 +222,18 @@ namespace Guier
         */
         ~Window();
 
+        /**
+        * Friend class of Context.
+        *
+        */
+        friend class Context;
+
     };
+
+    /**
+    * Inline implementations.
+    *
+    */
+    #include <Guier/Core/Window.inl>   
 
 }

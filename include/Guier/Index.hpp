@@ -25,56 +25,91 @@
 
 #pragma once
 
-
-#include <Guier/Core/Build.hpp>
-#include <Guier/Core/Control.hpp>
+#include <Guier/Vector2.hpp>
 
 namespace Guier
 {
 
-    /**
-    * The Guier Context is the very core of the library.
-    * Create one or more contexts per application.
-    * Added objects are owned by context and deleted when the context is unallocated.
-    * The context class handles window management, skins, rendering, inputs, etc...
-    *
-    */
-    class GUIER_API Context
+    class GUIER_API Index
     {
 
     public:
 
         /**
-        * Constructor.  
+        * Enumerator of different index types, depending on what constructor is being used.
         *
         */
-        Context();
+        enum eType
+        {
+            SingleInteger,
+            DoubleInteger
+        };
+
+        /**
+        * Constructors.
+        *
+        */
+        Index(const int index);
+        Index(const int x, const int y);
+        Index(const Vector2i & index);
 
         /**
         * Destructor.
         *
         */
-        ~Context();
+        ~Index();
 
         /**
-        * Add new window to context.
-        * The window is now shown until calling Show() of window.
+        * Get type of index.
         *
         */
-       /* template<typename Type, class... Args>
-        std::shared_ptr<Window> Add(Args &&... args);
+        eType Type() const;
 
         /**
-        * Remove window from context.
-        *
-        * @brief    The window is unallocating when removed.
+        * Get single integer index.
         *
         */
-       // Context & Remove(std::shared_ptr<Window> window);*/
+        int GetSingleInteger() const;
+
+        /**
+        * Get double integer index.
+        *
+        */
+        Vector2i GetDoubleInteger() const;
+
+        /**
+        * First index.
+        *
+        */
+        static const Index First;
+
+        /**
+        * Last index.
+        *
+        */
+        static const Index Last;
+
+        /**
+        * Compare operators
+        *
+        */
+        bool operator == (const Index & index) const;
+        bool operator != (const Index & index) const;
+
+    private:
+
+        const eType m_Type; ///< Type of index.
+
+        /**
+        * Union containing the different values.
+        *
+        */
+        union InternalUnion
+        {
+            int SingleValue;
+            Vector2i * DoubleValue;
+        } m_Value;
 
     };
-
-    // Include inline implementations. 
-   // #include <Guier/Core/Context.inl>
 
 }

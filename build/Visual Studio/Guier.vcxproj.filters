@@ -36,7 +36,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\Guier\Control.hpp" />
     <ClInclude Include="..\..\include\Guier\Guier.hpp" />
     <ClInclude Include="..\..\include\Guier\Input.hpp" />
     <ClInclude Include="..\..\include\Guier\Renderer.hpp" />
@@ -104,14 +103,8 @@
       <Filter>Renderers\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Guier\Context.hpp" />
-    <ClInclude Include="..\..\include\Guier\Core\WindowImpl.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\Guier\Core\WindowBase.hpp">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\Window\Win32WindowImpl.hpp">
-      <Filter>Core\Window</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Guier\Callback.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\Semaphore.hpp">
@@ -120,6 +113,14 @@
     <ClInclude Include="..\..\include\Guier\Core\ContextBase.hpp">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Utilities.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\WindowStyle.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Control.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Index.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\Guier\Core\Quadtree.cpp">
@@ -140,7 +141,6 @@
     <ClCompile Include="..\..\source\Guier\Control\Text.cpp">
       <Filter>Control</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Control.cpp" />
     <ClCompile Include="..\..\source\Guier\Font.cpp" />
     <ClCompile Include="..\..\source\Guier\Input.cpp" />
     <ClCompile Include="..\..\source\Guier\PlatformWindow.cpp" />
@@ -172,14 +172,8 @@
       <Filter>Core\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Guier\Context.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\WindowImpl.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\Guier\Core\WindowBase.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Core\Window\Win32WindowImpl.cpp">
-      <Filter>Core\Window</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Guier\Callback.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\Semaphore.cpp">
@@ -188,6 +182,14 @@
     <ClCompile Include="..\..\source\Guier\Core\ContextBase.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Utilities.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\WindowStyle.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Control.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Index.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\Guier\Core\Matrix4x4.inl">
@@ -200,6 +202,9 @@
       <Filter>Core</Filter>
     </None>
     <None Include="..\..\include\Guier\Core\Context.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="..\..\include\Guier\Core\Window.inl">
       <Filter>Core</Filter>
     </None>
   </ItemGroup>

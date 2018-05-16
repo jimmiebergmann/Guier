@@ -118,6 +118,7 @@ namespace Guier
             m_Position(-1, -1),
             m_Size(size),
             m_Title(title),
+            m_Hiding(true),
             m_Styles(Window::Styles::Default),
             m_Win32Style(0),
             m_Win32ExtendedStyle(0),
@@ -464,51 +465,29 @@ namespace Guier
 
         void Win32WindowImpl::Show()
         {
-            ShowWindow(m_WindowHandle, /*show ?*/ SW_RESTORE/* : SW_HIDE*/);
+            m_Hiding = false;
+            ShowWindow(m_WindowHandle, SW_RESTORE);
             SetForegroundWindow(m_WindowHandle);
             SetFocus(m_WindowHandle);
         }
 
+        void Win32WindowImpl::Hide()
+        {
+            m_Hiding = true;
+            ShowWindow(m_WindowHandle, SW_HIDE);
+        }
+
         void Win32WindowImpl::Minimize()
         {
-            ShowWindow(m_WindowHandle, SW_MINIMIZE);
+            if (m_Hiding == false)
+            {
+                ShowWindow(m_WindowHandle, SW_MINIMIZE);
+            }
         }
 
         void Win32WindowImpl::Maximize()
         {
             ShowWindow(m_WindowHandle, SW_MAXIMIZE);
-        }
-
-        void Win32WindowImpl::HideFromTaskbar(const bool hide)
-        {
-            ShowWindow(m_WindowHandle, SW_HIDE);
-           /* if (hide && m_HideFromTaskbar == false)
-            {
-                m_CloseConnection->Disconnect();
-                m_CloseConnection.reset();
-                m_CloseConnection = m_Window->Closed.Connect([this]()
-                {
-                    m_Window->Minimize();
-                    //m_pContext->Remove()
-                    //m_pWindow->Close();
-                });
-
-                m_HideFromTaskbar = true;
-            }
-            else if (hide == false && m_HideFromTaskbar == true)
-            {
-                m_CloseConnection->Disconnect();
-                m_CloseConnection.reset();
-                m_CloseConnection = m_Window->Closed.Connect([this]()
-                {
-                   m_pContext->Remove(m_Window);
-                });
-
-                m_HideFromTaskbar = false;
-            }*/
-
-            
-            //ShowWindow(m_WindowHandle, hide ? SW_HIDE : SW_SHOW);
         }
 
         void Win32WindowImpl::Close()
@@ -599,15 +578,27 @@ namespace Guier
             
             const Vector2i newPos(m_Position.x < 0 ? CW_USEDEFAULT : m_Position.x, m_Position.y < 0 ? CW_USEDEFAULT : m_Position.y);
 
-            BOOL ret = SetWindowPos(
+            /*BOOL ret = SetWindowPos(
                 m_WindowHandle,
-                m_WindowHandle,
+                NULL,
                 newPos.x,
                 newPos.y,
                 m_Size.x,
                 m_Size.y,
                 0
+            );*/
+
+
+            BOOL ret = MoveWindow(
+                m_WindowHandle,
+                newPos.x,
+                newPos.y,
+                m_Size.x,
+                m_Size.y,
+                FALSE
             );
+
+            
 
             if (ret == 0)
             {
@@ -665,6 +656,7 @@ namespace Guier
                 const auto newPosition = Vector2i(  static_cast<int>(LOWORD(p_LParam)),
                                                     static_cast<int>(HIWORD(p_LParam)));
 
+                m_Position = newPosition;
                 m_Window->Moved(newPosition);
             }
             break;

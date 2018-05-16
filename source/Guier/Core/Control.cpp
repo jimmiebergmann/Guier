@@ -23,22 +23,39 @@
 *
 */
 
-#pragma once
-
-#include <Guier/Core/Build.hpp>
+#include <Guier/Core/Control.hpp>
 
 namespace Guier
 {
-
-    class GUIER_API Control
+    namespace Core
     {
 
-    public:
+        Context * ControlParent::GetContext() const
+        {
+            return m_pContext;
+        }
 
-        Control();
+        ControlParent::ControlParent(Context * context) :
+            m_pContext(context)
+        {
 
-        virtual ~Control();
+        }
 
-    };
+        ControlParent::ControlParent(ControlParent * parent) :
+            m_pContext(parent->GetContext())
+        {
+
+        }
+
+        Control::Control()
+        {
+        }
+
+        Control::~Control()
+        {
+
+        }
+
+    }
 
 }

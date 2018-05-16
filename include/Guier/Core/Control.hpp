@@ -25,56 +25,80 @@
 
 #pragma once
 
-
 #include <Guier/Core/Build.hpp>
-#include <Guier/Core/Control.hpp>
+#include <Guier/Index.hpp>
 
 namespace Guier
 {
 
-    /**
-    * The Guier Context is the very core of the library.
-    * Create one or more contexts per application.
-    * Added objects are owned by context and deleted when the context is unallocated.
-    * The context class handles window management, skins, rendering, inputs, etc...
-    *
-    */
-    class GUIER_API Context
+    class Context; ///< Forward declaration.
+ 
+    namespace Core
     {
 
-    public:
+        class Control;
 
         /**
-        * Constructor.  
-        *
+        * Class for handling parents of controls.
         */
-        Context();
+        class GUIER_API ControlParent
+        {
 
-        /**
-        * Destructor.
-        *
+        public:
+
+            /**
+            * Get context.
+            */
+            Context * GetContext() const;
+
+            /**
+            * Add child to control parent.
+            */
+            virtual bool Add(Control * control) = 0;
+
+        protected:
+
+            /**
+            * Constructor.
+            */
+            ControlParent(Context * context);
+            ControlParent(ControlParent * parent);
+
+        private:
+
+            Context * const m_pContext; ///< Context pointer.
+
+        };
+
+       /* /**
+        * Base class of controls.
         */
-        ~Context();
+        class GUIER_API Control
+        {
 
-        /**
-        * Add new window to context.
-        * The window is now shown until calling Show() of window.
-        *
-        */
-       /* template<typename Type, class... Args>
-        std::shared_ptr<Window> Add(Args &&... args);
+        public:
 
-        /**
-        * Remove window from context.
-        *
-        * @brief    The window is unallocating when removed.
-        *
-        */
-       // Context & Remove(std::shared_ptr<Window> window);*/
+            /**
+            * Add child to control parent.
+            */
+            virtual bool Add(Core::Control * control) = 0;
 
-    };
+        protected:
 
-    // Include inline implementations. 
-   // #include <Guier/Core/Context.inl>
+            /**
+            * Constructor.
+            *
+            */
+            Control();
+
+            /**
+            * Destructor.
+            *
+            */
+            virtual ~Control();
+
+        };
+
+    }
 
 }

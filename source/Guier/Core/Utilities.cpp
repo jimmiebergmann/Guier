@@ -23,58 +23,14 @@
 *
 */
 
-#pragma once
-
-
-#include <Guier/Core/Build.hpp>
-#include <Guier/Core/Control.hpp>
+#include <Guier/Core/Utilities.hpp>
 
 namespace Guier
 {
 
-    /**
-    * The Guier Context is the very core of the library.
-    * Create one or more contexts per application.
-    * Added objects are owned by context and deleted when the context is unallocated.
-    * The context class handles window management, skins, rendering, inputs, etc...
-    *
-    */
-    class GUIER_API Context
+    namespace Core
     {
 
-    public:
-
-        /**
-        * Constructor.  
-        *
-        */
-        Context();
-
-        /**
-        * Destructor.
-        *
-        */
-        ~Context();
-
-        /**
-        * Add new window to context.
-        * The window is now shown until calling Show() of window.
-        *
-        */
-       /* template<typename Type, class... Args>
-        std::shared_ptr<Window> Add(Args &&... args);
-
-        /**
-        * Remove window from context.
-        *
-        * @brief    The window is unallocating when removed.
-        *
-        */
-       // Context & Remove(std::shared_ptr<Window> window);*/
-
-    };
-
-    // Include inline implementations. 
-   // #include <Guier/Core/Context.inl>
+    }
 
 }

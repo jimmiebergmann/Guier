@@ -24,11 +24,11 @@
 */
 
 #include <Guier/Core/WindowBase.hpp>
-#include <Guier/Core/WindowImpl.hpp>
+/*#include <Guier/Core/WindowImpl.hpp>
 
 #if defined(GUIER_PLATFORM_WINDOWS)
 #include <Guier/Core/Window/Win32WindowImpl.hpp>
-#endif
+#endif*/
 
 namespace Guier
 {
@@ -36,7 +36,23 @@ namespace Guier
     namespace Core
     {
 
-        WindowBase::WindowBase(const Vector2i & size, const std::wstring & title) :
+        WindowBase::WindowBase(Context * context, const Vector2i & size, const std::wstring & title) :
+            ControlParent(context),
+            m_WindowStyle(this),
+            m_pContext(context),
+            m_Size(size),
+            m_Position(-1, -1),
+            m_Title(title)
+        {
+
+        }
+
+        WindowBase::~WindowBase()
+        {
+
+        }
+
+       /* WindowBase::WindowBase(const Vector2i & size, const std::wstring & title) :
             m_pImpl(nullptr),
             m_Destroying(false),
             m_Size(size),
@@ -89,7 +105,7 @@ namespace Guier
                 #error Unkown platform.
             #endif
         }
-
+        */
 
     }
 

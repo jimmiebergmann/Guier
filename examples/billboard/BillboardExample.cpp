@@ -5,14 +5,16 @@
 #include <thread>
 #include <vector>
 
+using namespace Guier;
+
 int main()
 {
-    bool running1 = true;
+  /*  bool running1 = true;
     bool running2 = true;
 
 
     Guier::Context context;
-
+    */
     //Guier::Window::Settings settings;
 
 
@@ -32,7 +34,7 @@ int main()
     );*/
 
 
-    auto window = context.Add<Guier::Window>(800, 600, L"My window 1!");
+   /* auto window = context.Add<Guier::Window>(800, 600, L"My window 1!");
 
     window->Style(  Guier::Window::Styles::TitleBar |
                     Guier::Window::Styles::Minimize |
@@ -41,8 +43,8 @@ int main()
             Show();
 
     auto window2 = context.Add<Guier::Window>(L"My window 2!");
-    window2->Size({ 800, 400 })/*.
-             Show()*/;
+    window2->Show().Size({ 800, 200 }).Position({ 0, 0 });
+        */   
 
     //window->Add<Text>("Header text, over button.");
     /*auto button = window->Add<Button>({ 100, 50 });
@@ -50,12 +52,41 @@ int main()
     button->OnClick(window, Window::Maximize);*/
 
 
+    // Example
+    Context * context = new Context();
+
+    Window * window = new Window(context, { 800, 600 }, L"My window 1!");
+    window->Style()->Enable(WindowStyle::Close);
+    window->Show();
+
+    Button * button = new Button(window);
+    Button * button2 = new Button(window);
+    button->Add(button2);
+
+
+   // Text * text = new Text(context, "Press me!");
+
+    //button->Add(text);
+
+    /*window->Size(800, 600);
+    window->Position(100, 100);
+
+    
+    button->Size(Size::Fit);*/
+
+
+    /*Reference<Window> window = context.Add<Window>(800, 600, L"My window 1!");
+
+    Reference<Size> size = window.Add<Size>(100, 30);
+
+    Reference<Button> button = size.Add<Button>();*/
+
 
    // context.Add<Guier::Window>({ 800, 600 }, L"Hello world! åäö ÅÄÖ", Guier::Window::Settings());
 
     /*auto * window = new Guier::Window({ 800, 600 }, L"Hello world! åäö ÅÄÖ");
     */
-    window->Resized.Connect([](const Guier::Vector2i & size)
+   /* window->Resized.Connect([](const Guier::Vector2i & size)
     {
         std::cout << "Resized: " << size.x << "  " << size.y << std::endl;
     });
@@ -103,7 +134,7 @@ int main()
     {
         std::cout << "Removed 2." << std::endl;
     });
-
+    */
 
    // context.Add(window);
 
@@ -115,7 +146,7 @@ int main()
     Guier::Window * pWindow = new Guier::Window({800, 600}, "Hello world!");*/
 
 
-    while(running1 || running2)//for (int i = 0; i < 1000; i++)
+   /* while(running1 || running2)//for (int i = 0; i < 1000; i++)
     {
         //context.Update();
         //context.Render();
@@ -129,13 +160,16 @@ int main()
             window->Show();
             break;
         case '2':
-            window->Minimize();
+            window->Hide();
             break;
         case '3':
-            window2->Show();
+            window->Minimize();
             break;
         case '4':
-            window2->HideFromTaskbar();
+            window->Maximize();
+            break;
+        case '5':
+            window->Close();
             break;
         /*case '5':
             window->Open();
@@ -149,12 +183,12 @@ int main()
         case '8':
             window->Hide(false);
             break;*/
-        default:
+      /*  default:
             break;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    }
+    }*/
 
     
 

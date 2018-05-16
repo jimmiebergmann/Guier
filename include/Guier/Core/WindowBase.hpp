@@ -25,81 +25,68 @@
 
 #pragma once
 
-#include <Guier/Core/RenderTarget.hpp>
+#include <Guier/Core/Control.hpp>
+#include <Guier/WindowStyle.hpp>
+#include <Guier/Callback.hpp>
 #include <Guier/Vector2.hpp>
 #include <string>
-#include <memory>
-#include <atomic>
-#include <mutex>
+
 
 namespace Guier
 {
-    class Context;
-    class Window;
+
+    class Context; ///< Forward declaration.
     
     namespace Core
     {
-        class ContextBase;
-        class WindowImpl;
 
         /**
         * Base class of renderable window.
         *
         */
-        class GUIER_API WindowBase : public RenderTarget
+        class GUIER_API WindowBase : public ControlParent/* : public RenderTarget*/
         {
 
         public:
 
             /**
-            * Friend classes.
-            *
+            * Add child to control parent.
             */
-            friend class Guier::Context;
-            friend class ContextBase;
+            virtual bool Add(Core::Control * control) = 0;
 
-            /**
-            * Styles of window.
-            *
-            */
-            struct Styles
-            {
-                enum eStyle
-                {
-                    None = 0,
-                    TitleBar = 1, ///< Includes border.
-                    Border = 2,
-                    Close = 4,
-                    Minimize = 8,
-                    Maximize = 16,
-                    Resize = 32,
-                    HideInTaskbar = 64,
+        protected:
 
-                    Default = 63
-                };
-            };
+            friend class Guier::WindowStyle; //< Friend class.
 
             /**
             * Constructor.
             *
+            * @param constructor    Pointer to context.
+            *
+            * @throw std::runtime_error If context == nullptr.
+            *
             */
-            WindowBase(const Vector2i & size, const std::wstring & title);
+            WindowBase(Context * context, const Vector2i & size, const std::wstring & title);
 
             /**
             * Destructor.
             *
             */
-            virtual ~WindowBase();
+            ~WindowBase();
 
-        protected:
+            WindowStyle             m_WindowStyle;  ///< Style of window.
+            Context *               m_pContext;     ///< Current context.
+            Vector2i                m_Size;         ///< Size of window.
+            Vector2i                m_Position;     ///< Position of window.
+            std::wstring            m_Title;        ///< Window title.
 
-            WindowImpl *            m_pImpl;            ///< Implementation of platform dependent functionality.
+          /*  WindowImpl *            m_pImpl;            ///< Implementation of platform dependent functionality.
             std::atomic<bool>       m_Destroying;       ///< Window is being or is destroyed if true.
             mutable  std::mutex     m_ImplMutex;        ///< Implementaiton mutex.
 
             Vector2i                m_Size;
             std::wstring            m_Title;
-
+            */
         private:
 
             /**
@@ -115,7 +102,7 @@ namespace Guier
             * @param title      Title of window.
             *
             */
-            void CreateImplementation(Context * context, std::shared_ptr<Window> window);
+           /* void CreateImplementation(Context * context, std::shared_ptr<Window> window);
 
             /**
             * Destroy implementation of window.
@@ -126,7 +113,7 @@ namespace Guier
             *        A destroyed implementation can be recreated.
             *
             */
-            void DestroyImplementation();
+           // void DestroyImplementation();
 
             /**
             * Check or set status of window destruction.
@@ -134,13 +121,13 @@ namespace Guier
             * @return true if window is being or is destroyed.
             *
             */
-            std::atomic<bool> & Destroying();
+           // std::atomic<bool> & Destroying();
 
             /**
             * Handle platform specific window events, of all windows created in Context.
             *
             */
-            static void HandleEvents();
+           // static void HandleEvents();*/
 
 
         };

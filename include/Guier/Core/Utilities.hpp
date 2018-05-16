@@ -23,19 +23,18 @@
 *
 */
 
-#include <Guier/Control.hpp>
+#pragma once
+
+#include <Guier/Core/Build.hpp>
+#include <string>
 
 namespace Guier
 {
 
-    Control::Control()
+    namespace Core
     {
 
-    }
-
-    Control::~Control()
-    {
+       // static GUIER_API std::wstring StringToWideString(const std::string & p_String);
 
     }
-
 }

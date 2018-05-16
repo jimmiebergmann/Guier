@@ -32,6 +32,7 @@
 #include <Guier/Core/WindowImpl.hpp>
 #include <Guier/Callback.hpp>
 #include <Windows.h>
+#include <atomic>
 
 namespace Guier
 {
@@ -77,11 +78,11 @@ namespace Guier
 
             virtual void Show();
 
+            virtual void Hide();
+
             virtual void Minimize();
 
             virtual void Maximize();
-
-            virtual void HideFromTaskbar(const bool hide);
 
             virtual void Close();
 
@@ -112,6 +113,7 @@ namespace Guier
             void FillWin32Background(const Vector2i & p_OldSize, const Vector2i & p_NewSize);
 
             bool                                         m_Showing;             ///< Window is currently showing.
+            std::atomic<bool>                            m_Hiding;              ///< Is the winow hidden?
             bool                                         m_HideWhenClosed;      ///< Hide window when closing.
             bool                                         m_HideFromTaskbar;     ///< Hide window from tastbar.
             Vector2i                                     m_Position;            ///< Position of window.

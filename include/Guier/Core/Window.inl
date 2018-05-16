@@ -23,45 +23,14 @@
 *
 */
 
-#pragma once
-
-#include <Guier/Core/Control.hpp>
-#include <string>
-
-namespace Guier
+template<>
+const std::wstring Window::Title() const
 {
+    return m_Title;
+}
 
-    class Context; ///< Forward declaration.
-
-    /**
-    * Base class of controls.
-    */
-    class GUIER_API Button : public Core::Control, public Core::ControlParent
-    {
-
-    public:
-            
-        /**
-        * Constructor.
-        *
-        */
-        Button(Core::ControlParent * parent, const std::wstring & label = L"");
-        Button(Core::ControlParent * parent, const Index & addIndex, const std::wstring & label = L"");
-        Button(Core::ControlParent * parent, const std::string & label);
-        Button(Core::ControlParent * parent, const Index & addIndex, const std::string & label);
-        
-        /**
-        * Destructor.
-        *
-        */
-        ~Button();
-
-        /**
-        * Add child to button.
-        *
-        */
-        bool Add(Core::Control * control);
-
-    };
-
+template<typename String>
+const String Window::Title() const
+{
+    return std::string(m_Title.begin(), m_Title.end());
 }

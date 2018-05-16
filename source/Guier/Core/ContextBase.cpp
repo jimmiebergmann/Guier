@@ -46,7 +46,7 @@ namespace Guier
 
         void ContextBase::CreateWindowsInQueue()
         {
-            std::lock_guard<std::mutex> sm_2(m_WindowMutex);
+           /* std::lock_guard<std::mutex> sm_2(m_WindowMutex);
             std::lock_guard<std::mutex> sm_1(m_WindowCreationMutex); 
 
             while (m_WindowCreationQueue.size())
@@ -60,12 +60,12 @@ namespace Guier
                 m_Windows.insert(front->window);
 
                 front->semaphore.NotifyOne();
-            }
+            }*/
         }
 
         void ContextBase::DestroyWindowsInQueue()
         {
-            std::lock_guard<std::mutex> sm_2(m_WindowMutex);
+            /*std::lock_guard<std::mutex> sm_2(m_WindowMutex);
             std::lock_guard<std::mutex> sm_1(m_WindowDestructionMutex);
 
             for (auto it = m_WindowDestructionSet.begin(); it != m_WindowDestructionSet.end(); it++)
@@ -73,12 +73,12 @@ namespace Guier
                 (*it)->DestroyImplementation();
             }
 
-            m_WindowDestructionSet.clear();
+            m_WindowDestructionSet.clear();*/
         }
 
         void ContextBase::HandleWindowEvents()
         {
-            Core::WindowBase::HandleEvents();
+            //Core::WindowBase::HandleEvents();
         }
 
         void ContextBase::InterruptWindowEvents()
@@ -97,7 +97,7 @@ namespace Guier
 
         void ContextBase::ClearAllWindows()
         {
-            std::lock_guard<std::mutex> sm_1(m_WindowMutex);
+           /* std::lock_guard<std::mutex> sm_1(m_WindowMutex);
             std::lock_guard<std::mutex> sm_2(m_WindowCreationMutex);
             std::lock_guard<std::mutex> sm_3(m_WindowDestructionMutex);
             
@@ -117,12 +117,12 @@ namespace Guier
                 (*it)->DestroyImplementation();
             }
             m_Windows.clear();
-            
+            */
         }
 
         void ContextBase::WindowSharedPointerDeleter(Window * window)
         {
-            delete window;
+            //delete window;
         }
         
 

@@ -72,11 +72,11 @@ namespace Guier
 
             virtual void Show() = 0;
 
+            virtual void Hide() = 0;
+
             virtual void Minimize() = 0;
 
             virtual void Maximize() = 0;
-
-            virtual void HideFromTaskbar(const bool hide) = 0;
 
             virtual void Close() = 0;
 

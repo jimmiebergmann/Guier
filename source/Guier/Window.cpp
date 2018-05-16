@@ -25,163 +25,184 @@
 
 #include <Guier/Window.hpp>
 #include <Guier/Context.hpp>
-#include <Guier/Core/WindowImpl.hpp>
+//#include <Guier/Core/WindowImpl.hpp>
 
 namespace Guier
 {
 
-    static const std::wstring g_EmptyString = L"";
-    static const Vector2i g_DefaultSizePosition = {-1, -1};
+    //static const std::wstring g_EmptyString = L"";
+    //static const Vector2i g_DefaultSizePosition = {-1, -1};
 
+    Window::Window(Context * context, const Vector2i & size, const std::wstring & title) :
+        WindowBase(context, size, title)
+    {
+
+    }
+
+    Window::Window(Context * context, const Vector2i & size, const std::string & title) :
+        WindowBase(context, size, std::wstring(title.begin(), title.end()))
+    {
+
+    }
+
+    const WindowStyle * Window::Style() const
+    {
+        return &m_WindowStyle;
+    }
+
+    WindowStyle * Window::Style()
+    {
+        return &m_WindowStyle;
+    }
+
+    Window::~Window()
+    {
+        Deleted(this);
+    }
+    
     const Vector2i & Window::Size() const
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
             return m_pImpl->Size();
-        }
+        }*/
 
-        return g_DefaultSizePosition;
+        return m_Size;
     }
 
-    Window & Window::Size(const Vector2i & size)
+    Window * Window::Size(const Vector2i & size)
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+       /* std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
             m_pImpl->Size(size);
-        }
+        }*/
         
-        return *this;
+        return this;
     }
 
-    const std::wstring & Window::Title() const
+    Window * Window::Title(const std::wstring & title)
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            return m_pImpl->Title();
-        }
-       
-        return g_EmptyString;
-    }
-
-    Window & Window::Title(const std::wstring & title)
-    {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
             m_pImpl->Title(title);
-        }
-        
-        return *this;
+        }*/
+
+        m_Title = title;
+        return this;
     }
 
-    Window & Window::Title(const std::string & title)
+    Window * Window::Title(const std::string & title)
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
-            m_pImpl->Title(title);
+        m_pImpl->Title(title);
         }
+        */
 
-        return *this;
+        m_Title = std::wstring(title.begin(), title.end());
+
+        return this;
     }
 
     const Vector2i & Window::Position() const
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
             return m_pImpl->Position();
         }
-
-        return g_DefaultSizePosition;
+        */
+        return m_Position;
     }
 
-    Window & Window::Position(const Vector2i & position)
+    Window * Window::Position(const Vector2i & position)
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
             m_pImpl->Position(position);
         }
-
-        return *this;
+        */
+        m_Position = position;
+        return this;
     }
 
-    Window & Window::Show()
+    Window * Window::Show()
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
             m_pImpl->Show();
         }
-
-        return *this;
+        */
+        return this;
     }
 
-    Window & Window::Minimize()
+    Window * Window::Hide()
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+       /* std::lock_guard<std::mutex> sm(m_ImplMutex);
+
+        if (m_pImpl)
+        {
+            m_pImpl->Hide();
+        }
+        */
+        return this;
+    }
+    
+    Window * Window::Minimize()
+    {
+       /* std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
             m_pImpl->Minimize();
-        }
+        }*/
 
-        return *this;
+        return this;
     }
 
-    Window & Window::Maximize()
+    Window * Window::Maximize()
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
             m_pImpl->Maximize();
-        }
+        }*/
 
-        return *this;
+        return this;
     }
 
-    Window & Window::HideFromTaskbar(const bool hide)
+    Window * Window::Close()
     {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->HideFromTaskbar(hide);
-        }
-        
-        return *this;
-    }
-
-    Window & Window::HideWhenClosed(const bool hideWhenClosed)
-    {
-        return *this;
-    }
-
-    Window & Window::Close()
-    {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
+        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
 
         if (m_pImpl)
         {
             m_pImpl->Close();
-        }
+        }*/
         
-        return *this;
+        return this;
     }
 
+    bool Window::Add(Core::Control * control)
+    {
+        return false;
+    }
+
+    /*
     unsigned int Window::Style() const
     {
         std::lock_guard<std::mutex> sm(m_ImplMutex);
@@ -277,5 +298,5 @@ namespace Guier
     Window::~Window()
     {
 
-    }
+    }*/
 }
