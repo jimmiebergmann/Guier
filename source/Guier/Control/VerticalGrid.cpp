@@ -23,30 +23,43 @@
 *
 */
 
-#include <Guier/Control/Text.hpp>
+#include <Guier/Control/VerticalGrid.hpp>
 
 namespace Guier
 {
 
-    Text::Text(Core::ControlParent * parent, const String & content) :
-        Control(this, parent)
+    VerticalGrid::VerticalGrid(Core::ControlParent * parent) :
+        ControlParent(this, parent)
     {
 
     }
 
-    Text::~Text()
+    VerticalGrid::~VerticalGrid()
     {
 
     }
 
-    const String & Text::Content() const
+    size_t VerticalGrid::Count() const
     {
-        return m_Content;
+        return 0;
     }
 
-    void Text::Content(const String & content)
+    bool VerticalGrid::AddChild(Core::Control * control, const Index & index)
     {
-        m_Content = content;
+
+        return false;
+    }
+
+    bool VerticalGrid::RemoveChild(Control * control)
+    {
+
+        return false;
+    }
+
+    Core::Control * VerticalGrid::RemoveChild(const Index & index)
+    {
+
+        return nullptr;
     }
 
 }

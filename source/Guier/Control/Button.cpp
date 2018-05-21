@@ -24,31 +24,38 @@
 */
 
 #include <Guier/Control/Button.hpp>
+#include <Guier/Control/VerticalGrid.hpp>
+#include <Guier/Control/Text.hpp>
 
 namespace Guier
 {
-    Button::Button(Core::ControlParent * parent, const std::wstring & label) :
-        ControlParent(parent)
+    Button::Button(Core::ControlParent * parent, const String & label) :
+        ControlParent::VerticalGrid(this, this, parent),
+        m_Size(Size::Fit)
     {
+        CreateText(label);
+    }
+
+    Button::Button(Core::ControlParent * parent, const Index & parentIndex, const String & label) :
+        ControlParent::VerticalGrid(this, this, parent),
+        m_Size(Size::Fit)
+    {
+        CreateText(label);
+    }
+
+    Button::Button(Core::ControlParent * parent, const Vector2i & size, const String & label ) :
+        ControlParent::VerticalGrid(this, this, parent),
+        m_Size(size)
+    {
+        CreateText(label);
 
     }
 
-    Button::Button(Core::ControlParent * parent, const Index & addIndex, const std::wstring & label) :
-        ControlParent(parent)
+    Button::Button(Core::ControlParent * parent, const Vector2i & size, const Index & parentIndex, const String & label) :
+        ControlParent::VerticalGrid(this, this, parent),
+        m_Size(size)
     {
-
-    }
-
-    Button::Button(Core::ControlParent * parent, const std::string & label) :
-        ControlParent(parent)
-    {
-
-    }
-
-    Button::Button(Core::ControlParent * parent, const Index & addIndex, const std::string & label) :
-        ControlParent(parent)
-    {
-
+        CreateText(label);
     }
 
     Button::~Button()
@@ -56,9 +63,29 @@ namespace Guier
 
     }
 
-    bool Button::Add(Core::Control * control)
+    bool Button::AddChild(Core::Control * control, const Index & index)
     {
-        return false;
+        return ControlParent::VerticalGrid::Add(control, index);
+    }
+
+    bool Button::RemoveChild(Core::Control * control)
+    {
+        return ControlParent::VerticalGrid::RemoveChild(control);
+    }
+
+    Core::Control * Button::RemoveChild(const Index & index)
+    {
+        return ControlParent::VerticalGrid::RemoveChild(index);
+    }
+
+    void Button::CreateText(const String & label)
+    {
+        // Create text control if label length != 0.
+        const std::wstring & text = label.Get();
+        if (text.size())
+        {
+            Add(new Text(this, label));
+        }
     }
 
 }

@@ -23,30 +23,61 @@
 *
 */
 
-#include <Guier/Control/Text.hpp>
+#pragma once
+
+
+#include <Guier/Core/Build.hpp>
+#include <string>
 
 namespace Guier
 {
 
-    Text::Text(Core::ControlParent * parent, const String & content) :
-        Control(this, parent)
+    /**
+    * String class, based of wide string, but allows single byte strings as well.
+    * This class is only used for parameter passing, to allow both wide and single byte strings as parameters.
+    *
+    */
+    class GUIER_API String
     {
 
-    }
+    public:
 
-    Text::~Text()
-    {
+        /**
+        * Constructor.
+        *
+        */
+        String();
+        String(const std::string & string);
+        String(const std::wstring & string);
+        String(const char * chars);
+        String(const wchar_t * chars);
 
-    }
+        /**
+        * Destructor.
+        *
+        */
+        ~String();
 
-    const String & Text::Content() const
-    {
-        return m_Content;
-    }
+        /**
+        * Get wide string.
+        *
+        */
+        std::wstring & Get();
+        const std::wstring & Get() const;
 
-    void Text::Content(const String & content)
-    {
-        m_Content = content;
-    }
+        /**
+        * Set string.
+        *
+        */
+        void Set(const std::string & string);
+        void Set(const std::wstring & string);
+        void Set(const char * chars);
+        void Set(const wchar_t * chars);
+
+    private:
+
+        std::wstring m_String;
+
+    };
 
 }

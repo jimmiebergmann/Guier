@@ -32,6 +32,8 @@
 namespace Guier
 {
 
+    class Window;
+
     /**
     * The Guier Context is the very core of the library.
     * Create one or more contexts per application.
@@ -55,6 +57,14 @@ namespace Guier
         *
         */
         ~Context();
+
+        /**
+        * Add window to context.
+        *
+        * @throw std::runtime_error     If window == nullptr.
+        *
+        */
+        bool Add(Window * window);
 
         /**
         * Add new window to context.

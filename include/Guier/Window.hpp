@@ -139,12 +139,6 @@ namespace Guier
         Window * Close();
 
         /**
-        * Add child to button.
-        *
-        */
-        bool Add(Core::Control * control);
-
-        /**
         * Signal called when the window is resized.
         *
         * @param Vector2i   New size of window.
@@ -221,6 +215,14 @@ namespace Guier
         *
         */
         ~Window();
+
+        /**
+        * Internal function, executed by ControlParent.
+        *
+        */
+        virtual bool AddChild(Core::Control * control, const Index & index);
+        virtual bool RemoveChild(Core::Control * control);
+        virtual Core::Control * RemoveChild(const Index & index);
 
         /**
         * Friend class of Context.

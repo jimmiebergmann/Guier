@@ -47,13 +47,6 @@ namespace Guier
         class GUIER_API WindowBase : public ControlParent/* : public RenderTarget*/
         {
 
-        public:
-
-            /**
-            * Add child to control parent.
-            */
-            virtual bool Add(Core::Control * control) = 0;
-
         protected:
 
             friend class Guier::WindowStyle; //< Friend class.
@@ -88,6 +81,10 @@ namespace Guier
             std::wstring            m_Title;
             */
         private:
+
+            virtual bool AddChild(Control * control, const Index & index) = 0;
+            virtual bool RemoveChild(Control * control) = 0;
+            virtual Control * RemoveChild(const Index & index) = 0;
 
             /**
             * Create implementation of window.

@@ -41,6 +41,14 @@ namespace Guier
 
     }
 
+    bool Context::Add(Window * window)
+    {
+        if (window == nullptr)
+        {
+            throw std::runtime_error("Window is nullptr.");
+        }
+    }
+
     /*Context::Context() :
         ContextBase(this)
     {

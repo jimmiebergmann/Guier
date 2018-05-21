@@ -37,7 +37,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\Guier\Context.hpp" />
     <ClInclude Include="..\..\include\Guier\Control\Button.hpp" />
-    <ClInclude Include="..\..\include\Guier\Control\Size.hpp" />
+    <ClInclude Include="..\..\include\Guier\Control\VerticalGrid.hpp" />
     <ClInclude Include="..\..\include\Guier\Control\Text.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\Build.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\ContextBase.hpp" />
@@ -67,6 +67,7 @@
     <ClInclude Include="..\..\include\Guier\Callback.hpp" />
     <ClInclude Include="..\..\include\Guier\Skin.hpp" />
     <ClInclude Include="..\..\include\Guier\Skins\DefaultSkin.hpp" />
+    <ClInclude Include="..\..\include\Guier\String.hpp" />
     <ClInclude Include="..\..\include\Guier\Vector2.hpp" />
     <ClInclude Include="..\..\include\Guier\Window.hpp" />
     <ClInclude Include="..\..\include\Guier\WindowStyle.hpp" />
@@ -74,7 +75,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\source\Guier\Context.cpp" />
     <ClCompile Include="..\..\source\Guier\Control\Button.cpp" />
-    <ClCompile Include="..\..\source\Guier\Control\Size.cpp" />
+    <ClCompile Include="..\..\source\Guier\Control\VerticalGrid.cpp" />
     <ClCompile Include="..\..\source\Guier\Control\Text.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\ContextBase.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\Control.cpp" />
@@ -99,6 +100,7 @@
     <ClCompile Include="..\..\source\Guier\Callback.cpp" />
     <ClCompile Include="..\..\source\Guier\Skin.cpp" />
     <ClCompile Include="..\..\source\Guier\Skins\DefaultSkin.cpp" />
+    <ClCompile Include="..\..\source\Guier\String.cpp" />
     <ClCompile Include="..\..\source\Guier\Window.cpp" />
     <ClCompile Include="..\..\source\Guier\WindowStyle.cpp" />
   </ItemGroup>

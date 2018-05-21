@@ -23,30 +23,74 @@
 *
 */
 
-#include <Guier/Control/Text.hpp>
+#include <Guier/String.hpp>
 
 namespace Guier
 {
 
-    Text::Text(Core::ControlParent * parent, const String & content) :
-        Control(this, parent)
+    String::String()
     {
 
     }
 
-    Text::~Text()
+    String::String(const std::string & string) :
+        m_String(string.begin(), string.end())
     {
 
     }
 
-    const String & Text::Content() const
+    String::String(const std::wstring & string) :
+        m_String(string)
     {
-        return m_Content;
+
     }
 
-    void Text::Content(const String & content)
+    String::String(const char * chars)
     {
-        m_Content = content;
+        std::string temp = chars;
+        m_String = std::wstring(temp.begin(), temp.end());
+    }
+
+    String::String(const wchar_t * chars) :
+        m_String(chars)
+    {
+        
+    }
+
+    String::~String()
+    {
+
+    }
+
+    std::wstring & String::Get()
+    {
+        return m_String;
+    }
+
+    const std::wstring & String::Get() const
+    {
+        return m_String;
+    }
+
+    void String::Set(const std::string & string)
+    {
+        m_String = std::wstring(string.begin(), string.end());
+    }
+
+    void String::Set(const std::wstring & string)
+    {
+        m_String = string;
+    }
+
+    void String::Set(const char * chars)
+    {
+        std::string temp = chars;
+        m_String = std::wstring(temp.begin(), temp.end());
+    }
+
+    void String::Set(const wchar_t * chars)
+    {
+        m_String = chars;
     }
 
 }

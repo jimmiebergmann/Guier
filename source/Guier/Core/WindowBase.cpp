@@ -24,6 +24,7 @@
 */
 
 #include <Guier/Core/WindowBase.hpp>
+#include <Guier/Context.hpp>
 /*#include <Guier/Core/WindowImpl.hpp>
 
 #if defined(GUIER_PLATFORM_WINDOWS)
@@ -44,7 +45,6 @@ namespace Guier
             m_Position(-1, -1),
             m_Title(title)
         {
-
         }
 
         WindowBase::~WindowBase()

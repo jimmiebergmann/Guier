@@ -30,51 +30,51 @@
 namespace Guier
 {
 
-    const Index Index::First(std::numeric_limits<int>::min());
-    const Index Index::Last(std::numeric_limits<int>::max());
+    static const int g_First = std::numeric_limits<int>::min();
+    static const int g_Last = std::numeric_limits<int>::max();
+
+    const Index Index::First(g_First);
+    const Index Index::Last(g_Last);
 
     Index::Index(const int index) :
-        m_Type(SingleInteger)
+        m_Type(SingleInteger),
+        m_X(index),
+        m_Y(0)
     {
-        m_Value.SingleValue = index;
+        
     }
 
     Index::Index(const int x, const int y) :
-        m_Type(DoubleInteger)
+        m_Type(DoubleInteger),
+        m_X(x),
+        m_Y(y)
     {
-        m_Value.DoubleValue = new Vector2i(x, y);
+
     }
 
     Index::Index(const Vector2i & index) :
-        m_Type(DoubleInteger)
+        m_Type(DoubleInteger),
+        m_X(index.x),
+        m_Y(index.y)
     {
-        m_Value.DoubleValue = new Vector2i(index);
+    }
+
+    Index::Index(const Index & index) :
+        m_Type(index.m_Type),
+        m_X(index.m_X),
+        m_Y(index.m_Y)
+    {
+
     }
 
     Index::~Index()
     {
-        switch (m_Type)
-        {
-        case DoubleInteger:
-            delete m_Value.DoubleValue;
-        default:
-            break;
-        }
+
     }
 
     int Index::GetSingleInteger() const
     {
-        switch (m_Type)
-        {
-        case SingleInteger:
-            return m_Value.SingleValue;
-        case DoubleInteger:
-            return (m_Value.DoubleValue->x * m_Value.DoubleValue->y) + m_Value.DoubleValue->x;
-        default:
-            break;
-        }
-
-        return 0;
+        return m_X;
     }
 
     Vector2i Index::GetDoubleInteger() const
@@ -82,9 +82,9 @@ namespace Guier
         switch (m_Type)
         {
         case SingleInteger:
-            return Vector2i(m_Value.SingleValue, m_Value.SingleValue);
+            return Vector2i(m_X, 0);
         case DoubleInteger:
-            return *m_Value.DoubleValue;
+            return Vector2i(m_X, m_Y);
         default:
             break;
         }
@@ -92,14 +92,30 @@ namespace Guier
         return { 0, 0 };
     }
 
+    bool Index::IsFirst() const
+    {
+        return m_X == g_First;
+    }
+
+    bool Index::IsLast() const
+    {
+        return m_X == g_Last;
+    }
+
     bool Index::operator == (const Index & index) const
     {
         switch (m_Type)
         {
-        case SingleInteger:
-            return m_Value.SingleValue == index.GetSingleInteger();
-        case DoubleInteger:
-            return *m_Value.DoubleValue == index.GetDoubleInteger();
+            case SingleInteger:
+            {
+                return m_X == index.m_X;
+            }
+            break;
+            case DoubleInteger:
+            {
+                return m_X == index.m_X && m_Y == index.m_Y;
+            }
+            break;
         default:
             break;
         }

@@ -27,7 +27,7 @@
 
 #include <Guier/Context.hpp>
 #include <Guier/Window.hpp>
-#include <Guier/Control/Size.hpp>
+#include <Guier/Control/VerticalGrid.hpp>
 #include <Guier/Control/Text.hpp>
 #include <Guier/Control/Button.hpp>
 

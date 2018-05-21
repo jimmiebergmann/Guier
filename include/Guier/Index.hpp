@@ -52,6 +52,7 @@ namespace Guier
         Index(const int index);
         Index(const int x, const int y);
         Index(const Vector2i & index);
+        Index(const Index & index);
 
         /**
         * Destructor.
@@ -78,6 +79,18 @@ namespace Guier
         Vector2i GetDoubleInteger() const;
 
         /**
+        * Check if index is the first.
+        *
+        */
+        bool IsFirst() const;
+
+        /**
+        * Check if index is the last.
+        *
+        */
+        bool IsLast() const;
+
+        /**
         * First index.
         *
         */
@@ -99,16 +112,8 @@ namespace Guier
     private:
 
         const eType m_Type; ///< Type of index.
-
-        /**
-        * Union containing the different values.
-        *
-        */
-        union InternalUnion
-        {
-            int SingleValue;
-            Vector2i * DoubleValue;
-        } m_Value;
+        int         m_X;
+        int         m_Y;
 
     };
 

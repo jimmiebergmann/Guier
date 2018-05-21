@@ -31,16 +31,14 @@
 namespace Guier
 {
 
-    class VerticalGrid;
-
     /**
     * Base class of controls.
     */
-    class GUIER_API Button : public Core::Control, public Core::ControlParent::VerticalGrid
+    class GUIER_API VerticalGrid : public Core::Control, public Core::ControlParent
     {
 
     public:
-            
+
         /**
         * Constructor.
         *
@@ -50,30 +48,41 @@ namespace Guier
         * @param size           Size of button. Size::Fit by default.
         *
         */
-        Button(Core::ControlParent * parent, const String & label = L"");
+        VerticalGrid(Core::ControlParent * parent);
+
+        //Size(Core::ControlParent * parent, const Vector2i & size, const Index & parentIndex);
+        //Size(Core::ControlParent * parent, const Index & parentIndex, const Vector2i & size);
+
+        /*
         Button(Core::ControlParent * parent, const Index & parentIndex, const String & label = L"");
         Button(Core::ControlParent * parent, const Vector2i & size, const String & label = L"");
         Button(Core::ControlParent * parent, const Vector2i & size, const Index & parentIndex, const String & label = L"");
         
+        */
+
         /**
         * Destructor.
         *
         */
-        ~Button();
-
-    public:
+        ~VerticalGrid();
 
         /**
-        * Internal function, executed by ControlParent.
+        * Get child count.
         *
         */
+        size_t Count() const;
+
+        /**
+        * Add child to button.
+        *
+        * @throw std::runtime_error   If control == nullptr.
+        *
+        */
+    private:
+
         virtual bool AddChild(Core::Control * control, const Index & index);
         virtual bool RemoveChild(Control * control);
         virtual Core::Control * RemoveChild(const Index & index);
-
-        void CreateText(const String & label);
-
-        Vector2i        m_Size;             ///< Size of the button.
 
     };
 

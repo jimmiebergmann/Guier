@@ -36,13 +36,13 @@ namespace Guier
     Window::Window(Context * context, const Vector2i & size, const std::wstring & title) :
         WindowBase(context, size, title)
     {
-
+        context->Add(this);
     }
 
     Window::Window(Context * context, const Vector2i & size, const std::string & title) :
         WindowBase(context, size, std::wstring(title.begin(), title.end()))
     {
-
+        context->Add(this);
     }
 
     const WindowStyle * Window::Style() const
@@ -58,6 +58,21 @@ namespace Guier
     Window::~Window()
     {
         Deleted(this);
+    }
+
+    bool Window::AddChild(Core::Control * control, const Index & index)
+    {
+        return true;
+    }
+
+    bool Window::RemoveChild(Core::Control * control)
+    {
+        return true;
+    }
+
+    Core::Control * Window::RemoveChild(const Index & index)
+    {
+        return nullptr;
     }
     
     const Vector2i & Window::Size() const
@@ -195,11 +210,6 @@ namespace Guier
         }*/
         
         return this;
-    }
-
-    bool Window::Add(Core::Control * control)
-    {
-        return false;
     }
 
     /*

@@ -4,6 +4,7 @@
 #include <chrono>
 #include <thread>
 #include <vector>
+#include <iostream>
 
 using namespace Guier;
 
@@ -59,9 +60,11 @@ int main()
     window->Style()->Enable(WindowStyle::Close);
     window->Show();
 
-    Button * button = new Button(window);
+    Button * button = new Button(window, Size::Fit);
     Button * button2 = new Button(window);
     button->Add(button2);
+
+    std::cout << Size::Fit.x << "  " << Size::Fit.y << std::endl;
 
 
    // Text * text = new Text(context, "Press me!");
