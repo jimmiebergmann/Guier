@@ -27,7 +27,7 @@
 
 
 #include <Guier/Core/Build.hpp>
-#include <Guier/Core/Control.hpp>
+//#include <Guier/Control.hpp>
 
 namespace Guier
 {

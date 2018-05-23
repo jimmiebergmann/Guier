@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <Guier/Core/Control.hpp>
+#include <Guier/Control.hpp>
 #include <Guier/WindowStyle.hpp>
 #include <Guier/Callback.hpp>
 #include <Guier/Vector2.hpp>
@@ -44,7 +44,7 @@ namespace Guier
         * Base class of renderable window.
         *
         */
-        class GUIER_API WindowBase : public ControlParent/* : public RenderTarget*/
+        class GUIER_API WindowBase : public Parent
         {
 
         protected:
@@ -82,8 +82,8 @@ namespace Guier
             */
         private:
 
-            virtual bool AddChild(Control * control, const Index & index) = 0;
-            virtual bool RemoveChild(Control * control) = 0;
+            virtual bool AddChild(Control * child, const Index & index) = 0;
+            virtual bool RemoveChild(Control * child) = 0;
             virtual Control * RemoveChild(const Index & index) = 0;
 
             /**

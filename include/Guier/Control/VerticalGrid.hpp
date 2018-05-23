@@ -25,16 +25,16 @@
 
 #pragma once
 
-#include <Guier/Core/Control.hpp>
-#include <Guier/String.hpp>
+#include <Guier/Control.hpp>
 
 namespace Guier
 {
 
     /**
-    * Base class of controls.
+    * Vertical grid controller.
+    *
     */
-    class GUIER_API VerticalGrid : public Core::Control, public Core::ControlParent
+    class GUIER_API VerticalGrid : public Control, public Parent
     {
 
     public:
@@ -43,22 +43,14 @@ namespace Guier
         * Constructor.
         *
         * @param parent         Parent object to add this control to.
-        * @param parentIndex    Index of parents container where to control should be added to.
-        * @param label          Attach label automatically if length of label != 0.
+        * @param index          Index of parents container where to control should be added to.
         * @param size           Size of button. Size::Fit by default.
         *
+        * @throw std::runtime_error If parent is nullptr.
+        *
         */
-        VerticalGrid(Core::ControlParent * parent);
-
-        //Size(Core::ControlParent * parent, const Vector2i & size, const Index & parentIndex);
-        //Size(Core::ControlParent * parent, const Index & parentIndex, const Vector2i & size);
-
-        /*
-        Button(Core::ControlParent * parent, const Index & parentIndex, const String & label = L"");
-        Button(Core::ControlParent * parent, const Vector2i & size, const String & label = L"");
-        Button(Core::ControlParent * parent, const Vector2i & size, const Index & parentIndex, const String & label = L"");
-        
-        */
+        VerticalGrid(Parent * parent, const Index & index = Index::Last, const Vector2i & size = Size::Fit);
+        VerticalGrid(Parent * parent, const Vector2i & size, const Index & index = Index::Last);
 
         /**
         * Destructor.
@@ -72,17 +64,11 @@ namespace Guier
         */
         size_t Count() const;
 
-        /**
-        * Add child to button.
-        *
-        * @throw std::runtime_error   If control == nullptr.
-        *
-        */
     private:
 
-        virtual bool AddChild(Core::Control * control, const Index & index);
-        virtual bool RemoveChild(Control * control);
-        virtual Core::Control * RemoveChild(const Index & index);
+        virtual bool AddChild(Control * child, const Index & index);
+        virtual bool RemoveChild(Control * child);
+        virtual Control * RemoveChild(const Index & index);
 
     };
 

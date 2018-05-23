@@ -36,12 +36,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Guier\Context.hpp" />
+    <ClInclude Include="..\..\include\Guier\Control.hpp" />
     <ClInclude Include="..\..\include\Guier\Control\Button.hpp" />
     <ClInclude Include="..\..\include\Guier\Control\VerticalGrid.hpp" />
     <ClInclude Include="..\..\include\Guier\Control\Text.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\Build.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\ContextBase.hpp" />
-    <ClInclude Include="..\..\include\Guier\Core\Control.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\ControlHelpers.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\Matrix4x4.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\Quadtree.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\Renderer\Texture.hpp" />
@@ -74,11 +75,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\Guier\Context.cpp" />
+    <ClCompile Include="..\..\source\Guier\Control.cpp" />
     <ClCompile Include="..\..\source\Guier\Control\Button.cpp" />
     <ClCompile Include="..\..\source\Guier\Control\VerticalGrid.cpp" />
     <ClCompile Include="..\..\source\Guier\Control\Text.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\ContextBase.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\Control.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\ControlHelpers.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\Quadtree.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\Renderer\Texture.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\Renderer\VertexArray.cpp" />
@@ -91,7 +93,6 @@
     <ClCompile Include="..\..\source\Guier\Font.cpp" />
     <ClCompile Include="..\..\source\Guier\Index.cpp" />
     <ClCompile Include="..\..\source\Guier\Input.cpp" />
-    <ClCompile Include="..\..\source\Guier\PlatformWindow.cpp" />
     <ClCompile Include="..\..\source\Guier\Renderer.cpp" />
     <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLTexture.cpp" />

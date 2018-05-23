@@ -114,14 +114,15 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Guier\WindowStyle.hpp" />
-    <ClInclude Include="..\..\include\Guier\Core\Control.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\Guier\Index.hpp" />
     <ClInclude Include="..\..\include\Guier\String.hpp" />
     <ClInclude Include="..\..\include\Guier\Control\VerticalGrid.hpp">
       <Filter>Control</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\ControlHelpers.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Control.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\Guier\Core\Quadtree.cpp">
@@ -141,7 +142,6 @@
     </ClCompile>
     <ClCompile Include="..\..\source\Guier\Font.cpp" />
     <ClCompile Include="..\..\source\Guier\Input.cpp" />
-    <ClCompile Include="..\..\source\Guier\PlatformWindow.cpp" />
     <ClCompile Include="..\..\source\Guier\Renderer.cpp" />
     <ClCompile Include="..\..\source\Guier\Skin.cpp" />
     <ClCompile Include="..\..\source\Guier\Window.cpp" />
@@ -184,13 +184,14 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Guier\WindowStyle.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\Control.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\Guier\Index.cpp" />
     <ClCompile Include="..\..\source\Guier\String.cpp" />
     <ClCompile Include="..\..\source\Guier\Control\VerticalGrid.cpp">
       <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Control.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\ControlHelpers.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <Guier/Core/Control.hpp>
+#include <Guier/Control.hpp>
 #include <Guier/String.hpp>
 
 namespace Guier
@@ -34,7 +34,7 @@ namespace Guier
     /**
     * Base class of controls.
     */
-    class GUIER_API Text : public Core::Control
+    class GUIER_API Text : public Control
     {
 
     public:
@@ -44,8 +44,11 @@ namespace Guier
         *
         * @param text   Content of text.
         *
+        * @throw std::runtime_error If parent is nullptr.
+        *
         */
-        Text(Core::ControlParent * parent, const String & content);
+        Text(Parent * parent, const String & content = L"");
+        Text(Parent * parent, const Index & index, const String & content = L"");
 
         /**
         * Destructor.

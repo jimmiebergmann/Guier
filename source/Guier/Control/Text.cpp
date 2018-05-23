@@ -28,8 +28,16 @@
 namespace Guier
 {
 
-    Text::Text(Core::ControlParent * parent, const String & content) :
-        Control(this, parent)
+    Text::Text(Parent * parent, const String & content) :
+        Control(this, parent, Index::Last, Size::Fit),
+        m_Content(content)
+    {
+
+    }
+
+    Text::Text(Parent * parent, const Index & index, const String & content) :
+        Control(this, parent, index, Size::Fit),
+        m_Content(content)
     {
 
     }

@@ -23,97 +23,17 @@
 *
 */
 
-#include <Guier/Core/Control.hpp>
-#include <Guier/Control/VerticalGrid.hpp>
-#include <stdexcept>
+#include <Guier/Core/ControlHelpers.hpp>
 
 namespace Guier
 {
 
-    namespace Size
-    {
-
-        const Vector2i Fit = Vector2i(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-
-    }
-
     namespace Core
     {
 
-        Context * ControlParent::GetContext() const
-        {
-            return m_pContext;
-        }
-
-        bool ControlParent::Add(Control * control, const Index & index)
-        {
-            if (control == nullptr)
-            {
-                throw std::runtime_error("Control is nullptr.");
-                return false;
-            }
-
-            if (AddChild(control, index) == false)
-            {
-                return false;
-            }
-
-            BecomeParentOf(control);
-            return true;
-        }
-
-        bool ControlParent::Remove(Control * control)
-        {
-            if (control == nullptr)
-            {
-                return false;
-            }
-
-            if (RemoveChild(control) == false)
-            {
-                return false;
-            }
-
-            delete control;
-
-            return true;
-        }
-
-        bool ControlParent::Remove(const Index & index)
-        {
-            Control * pControl = RemoveChild(index);
-            
-            if (pControl == nullptr)
-            {
-                return false;
-            }
-
-            delete pControl;
-
-            return true;
-        }
-
-        ControlParent::ControlParent(Context * parent) :
-            m_pContext(parent)
-        {
-
-        }
-
-        ControlParent::ControlParent(Control * inheritor, ControlParent * parent, const Index & parentIndex) :
-            m_pContext(parent->GetContext())
-        {
-            parent->Add(inheritor, parentIndex);
-        }
-
-        void ControlParent::BecomeParentOf(Control * control)
-        {
-            
-        }
-
-
-        // Vertical grid helper class.
-        ControlParent::VerticalGrid::VerticalGrid(Control * inheritor, ControlParent * inheritorParent, ControlParent * parent, const Index & parentIndex) :
-            ControlParent(inheritor, parent, parentIndex),
+     /*   // Vertical grid helper class.
+        VerticalGridHelper::VerticalGridHelper(Control * inheritor, Parent * inheritorParent, Parent * parent, const Index & parentIndex) :
+            Parent(),
             m_pInheritor(inheritorParent),
             m_pChild(nullptr),
             m_pVerticalGrid(nullptr)
@@ -121,7 +41,7 @@ namespace Guier
 
         }
 
-        ControlParent::VerticalGrid::~VerticalGrid()
+        VerticalGridHelper::~VerticalGridHelper()
         {
             std::lock_guard<std::recursive_mutex> sm(m_Mutex);
 
@@ -135,7 +55,7 @@ namespace Guier
             }
         }
 
-        bool ControlParent::VerticalGrid::AddChild(Control * control, const Index & index)
+        bool VerticalGridHelper::AddChild(Control * control, const Index & index)
         {
             if (control == nullptr)
             {
@@ -155,7 +75,7 @@ namespace Guier
             else
             {
                 // Temporary store the old child.
-                Core::Control * tempChild = m_pChild;
+                Control * tempChild = m_pChild;
                 m_pChild = nullptr;
 
                 // Create the vertical grid. Calling the constructor of ControlParent will cause the system
@@ -168,7 +88,7 @@ namespace Guier
             return true;
         }
 
-        bool ControlParent::VerticalGrid::RemoveChild(Control * control)
+        bool VerticalGridHelper::RemoveChild(Control * control)
         {
             if (control == nullptr)
             {
@@ -190,7 +110,7 @@ namespace Guier
             }
             else if (m_pChild)
             {
-                if(m_pChild == control)
+                if (m_pChild == control)
                 {
                     delete m_pChild;
                     m_pChild = nullptr;
@@ -200,7 +120,7 @@ namespace Guier
             return false;
         }
 
-        Control * ControlParent::VerticalGrid::RemoveChild(const Index & index)
+        Control * VerticalGridHelper::RemoveChild(const Index & index)
         {
             std::lock_guard<std::recursive_mutex> sm(m_Mutex);
 
@@ -225,23 +145,9 @@ namespace Guier
             }
 
             return nullptr;
-        }
-
-        // Control class.
-        Control::Control()
-        {
-        }
-
-        Control::Control(Control * inheritor, ControlParent * parent, const Index & parentIndex)
-        {
-            parent->Add(inheritor, parentIndex);
-        }
-
-        Control::~Control()
-        {
-  
-        }
+        }*/
 
     }
 
 }
+

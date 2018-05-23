@@ -66,6 +66,9 @@ int main()
 
     std::cout << Size::Fit.x << "  " << Size::Fit.y << std::endl;
 
+    button->Remove(button2);
+    //delete button2;
+
 
    // Text * text = new Text(context, "Press me!");
 

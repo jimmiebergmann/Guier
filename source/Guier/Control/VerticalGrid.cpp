@@ -28,8 +28,16 @@
 namespace Guier
 {
 
-    VerticalGrid::VerticalGrid(Core::ControlParent * parent) :
-        ControlParent(this, parent)
+    VerticalGrid::VerticalGrid(Parent * parent, const Index & index, const Vector2i & size) :
+        Control(this, parent, index, size),
+        Parent()
+    {
+
+    }
+
+    VerticalGrid::VerticalGrid(Parent * parent, const Vector2i & size, const Index & index) :
+        Control(this, parent, index, size),
+        Parent()
     {
 
     }
@@ -44,19 +52,19 @@ namespace Guier
         return 0;
     }
 
-    bool VerticalGrid::AddChild(Core::Control * control, const Index & index)
+    bool VerticalGrid::AddChild(Control * child, const Index & index)
     {
 
         return false;
     }
 
-    bool VerticalGrid::RemoveChild(Control * control)
+    bool VerticalGrid::RemoveChild(Control * child)
     {
 
         return false;
     }
 
-    Core::Control * VerticalGrid::RemoveChild(const Index & index)
+    Control * VerticalGrid::RemoveChild(const Index & index)
     {
 
         return nullptr;

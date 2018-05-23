@@ -60,17 +60,17 @@ namespace Guier
         Deleted(this);
     }
 
-    bool Window::AddChild(Core::Control * control, const Index & index)
+    bool Window::AddChild(Control * child, const Index & index)
     {
         return true;
     }
 
-    bool Window::RemoveChild(Core::Control * control)
+    bool Window::RemoveChild(Control * child)
     {
         return true;
     }
 
-    Core::Control * Window::RemoveChild(const Index & index)
+    Control * Window::RemoveChild(const Index & index)
     {
         return nullptr;
     }

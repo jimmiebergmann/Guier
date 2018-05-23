@@ -38,7 +38,7 @@ namespace Guier
     {
 
         WindowBase::WindowBase(Context * context, const Vector2i & size, const std::wstring & title) :
-            ControlParent(context),
+            Parent(),
             m_WindowStyle(this),
             m_pContext(context),
             m_Size(size),

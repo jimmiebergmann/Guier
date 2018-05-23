@@ -47,6 +47,8 @@ namespace Guier
         {
             throw std::runtime_error("Window is nullptr.");
         }
+
+        return false;
     }
 
     /*Context::Context() :

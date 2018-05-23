@@ -220,9 +220,9 @@ namespace Guier
         * Internal function, executed by ControlParent.
         *
         */
-        virtual bool AddChild(Core::Control * control, const Index & index);
-        virtual bool RemoveChild(Core::Control * control);
-        virtual Core::Control * RemoveChild(const Index & index);
+        virtual bool AddChild(Control * control, const Index & index);
+        virtual bool RemoveChild(Control * control);
+        virtual Control * RemoveChild(const Index & index);
 
         /**
         * Friend class of Context.
