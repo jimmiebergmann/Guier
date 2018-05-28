@@ -106,11 +106,12 @@ namespace Guier
             return false;
         }
 
+        // Actually unallocate child control.
         if (child->m_pParent)
         {
             child->m_pParent = nullptr; //< Set parent to nullptr to ensure control destructor wont call this function again.
-            delete child;
         }
+        delete child;
 
         return true;
     }

@@ -36,12 +36,103 @@ namespace Guier
     namespace Core
     {
 
-        ContextBase::ContextBase(Context * context) :
-            m_pContext(context),
-            m_Running(false),
-            m_pRenderer(Renderer::CreateDefaultRenderer())
+        bool ContextBase::Add(Window * window)
         {
+            std::lock_guard<std::mutex> sm(m_TickMutex);
 
+            return false;
+        }
+
+        bool ContextBase::Set(Renderer * renderer)
+        {
+            std::lock_guard<std::mutex> sm(m_TickMutex);
+
+            return false;
+        }
+
+        void ContextBase::Tick()
+        {
+            std::lock_guard<std::mutex> sm(m_TickMutex);
+
+            // ...
+        }
+
+        ContextBase::ContextBase(Context * context, Renderer * renderer, Skin * skin, const bool autoTick) :
+            m_pContext(context),
+            m_AutoTick(autoTick),
+            m_Running(false),
+            m_pRenderer(renderer),
+            m_pSkin(skin)
+        {
+            // Try to load default renderer.
+            if (m_pRenderer == nullptr)
+            {
+                m_pRenderer = Renderer::CreateDefaultRenderer();
+
+                // Check if default renderer is ok.
+                if (m_pRenderer == nullptr)
+                {
+                    throw std::runtime_error("Failed to create default renderer.");
+                }
+            }
+
+            // Try to load default skin.
+            if (m_pSkin == nullptr)
+            {
+                m_pSkin = Skin::CreateDefaultSkin();
+
+                // Check if default skin is ok.
+                if (m_pSkin == nullptr)
+                {
+                    throw std::runtime_error("Failed to create default skin.");
+                }
+            }
+ 
+            // Flag the context as running.
+            m_Running = true;
+
+            Core::Semaphore startWindowThreadSemaphore;
+            //Core::Semaphore startWindowInterruptSemaphore;
+
+           /* m_InterruptWindowThread = std::thread([this, &startWindowInterruptSemaphore]()
+            {
+                startWindowInterruptSemaphore.NotifyOne();
+
+                while (m_Running)
+                {
+                    m_WindowSempahore.Wait();
+
+                    ExecuteWindowEventInterrupt();
+
+                    if (m_Running == false)
+                    {
+                        return;
+                    }
+                }
+            });*/
+
+          /*  m_WindowThread = std::thread([this, &startWindowThreadSemaphore]()
+            {
+                startWindowThreadSemaphore.NotifyOne();
+
+                while (m_Running)
+                {
+                    // Create windows
+                    CreateWindowsInQueue();
+
+                    // Destroy windows
+                    DestroyWindowsInQueue();
+
+                    // Handle window events.
+                    // This is a modal function, using Win32 or X11.
+                    // It's possible to interrupt the function by calling InterruptWindowEvents();
+                    HandleWindowEvents();
+                }
+
+            });
+
+            startWindowThreadSemaphore.Wait();
+            startWindowInterruptSemaphore.Wait();*/
         }
 
         void ContextBase::CreateWindowsInQueue()

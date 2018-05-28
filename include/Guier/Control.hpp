@@ -44,8 +44,8 @@ namespace Guier
     */
     namespace Size
     {
-        extern const Vector2i Fit;
-        extern const Vector2i Max;
+        extern const Vector2i Fit;  ///< Fit the size of the child/s.
+        extern const Vector2i Max;  ///< Use maximum possible space given by parent.
 
     }
 
@@ -78,10 +78,30 @@ namespace Guier
     public:
 
         /**
+        * Enumeration of each type.
+        *
+        */
+        enum class Types : unsigned int
+        {
+            Button,
+            VerticalGrid,
+            Text,
+            Custom
+
+        };
+
+
+        /**
         * Destructor.
         *
         */
         virtual ~Control();
+
+        /**
+        * Get type of controller.
+        *
+        */
+        virtual unsigned int Type() const = 0;
 
     protected:
 
@@ -153,13 +173,8 @@ namespace Guier
         /**
         * Constructor.
         *
- //       * @param inheritor  Pointer to inheritor. Always pass "this".
- //       * @param context    Parent of this object.
-        *
         */
         Parent();
-        /*Parent(Context * parent);
-        Parent(Control * inheritor, Parent * parent, const Index & parentIndex);*/
 
     private:
 
@@ -172,8 +187,6 @@ namespace Guier
         *
         */
         void BecomeParentOf(Control * child);
-
-        //Context * const m_pContext; ///< Context pointer.
 
     };
 

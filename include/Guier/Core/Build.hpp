@@ -45,3 +45,8 @@
 #endif
 
 #include <exception>
+
+// Macro for creating unique control IDs.
+#define GUIER_CUSTOM_CONTROLLER_ID(name) static const unsigned int TypeId = \
+    static_cast<unsigned int>(Guier::Control::Types::Custom) + \
+    static_cast<unsigned int>(__COUNTER__)

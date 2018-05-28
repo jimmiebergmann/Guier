@@ -40,14 +40,12 @@ namespace Guier
         {
 
         }
-        void OpenGLRenderer::Load()
+
+        bool OpenGLRenderer::Load()
         {
 
+            return true;
         }
 
-        Renderer * OpenGLRenderer::AllocateNew() const
-        {
-            return new OpenGLRenderer;
-        }
     }
 }

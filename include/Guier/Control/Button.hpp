@@ -63,7 +63,13 @@ namespace Guier
         */
         ~Button();
 
-    public:
+        /**
+        * Get type of controller.
+        *
+        */
+        virtual unsigned int Type() const;
+
+    private:
 
         /**
         * Internal function, executed by Parent.

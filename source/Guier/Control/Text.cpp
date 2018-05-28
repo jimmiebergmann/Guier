@@ -47,6 +47,11 @@ namespace Guier
 
     }
 
+    unsigned int Text::Type() const
+    {
+        return static_cast<unsigned int>(Types::Text);
+    }
+
     const String & Text::Content() const
     {
         return m_Content;

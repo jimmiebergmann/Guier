@@ -30,38 +30,25 @@
 namespace Guier
 {
 
+    class Context; ///< Forward declaration.
+
+    /**
+    * Base class of renderer.
+    *
+    * @brief    A customer renderer should not perform any graphic API creation in the constructor.
+    *           Perform all initialization in the Load() method.
+    *
+    */
     class GUIER_API Renderer
     {
 
     public:
 
         /**
-        * Constructor.
-        *
-        * @brief No loading should be done whatsoever in constructor. Use Load method instead.
-        *
-        */
-        Renderer();
-
-        /**
         * Destructor.
         *
         */
         virtual ~Renderer();
-
-        /**
-        * Load the renderer.
-        *
-        */
-        virtual void Load() = 0;
-
-        /**
-        * Virtual function for allocating new renderer.
-        *
-        * @throw std::runtime_error If returning nullptr.
-        *
-        */
-        virtual Renderer * AllocateNew() const = 0;
 
         /**
         * Create default renderer.
@@ -72,6 +59,35 @@ namespace Guier
         *
         */
         static Renderer * CreateDefaultRenderer();
+
+    protected:
+
+        /**
+        * Constructor.
+        *
+        * @brief No loading should be done whatsoever in constructor. Use Load method instead.
+        *
+        */
+        Renderer();
+
+    private:
+
+
+        /**
+        * Load the renderer.
+        *
+        * @return True if succeeded, else false.
+        *
+        */
+        virtual bool Load() = 0;
+
+        Context *   m_pContext; ///< Pointer to context.
+
+        /**
+        * Friend classes.
+        *
+        */
+        friend class Context;
 
     };
 

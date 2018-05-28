@@ -26,8 +26,7 @@
 #pragma once
 
 
-#include <Guier/Core/Build.hpp>
-//#include <Guier/Control.hpp>
+#include <Guier/Core/ContextBase.hpp>
 
 namespace Guier
 {
@@ -41,7 +40,7 @@ namespace Guier
     * The context class handles window management, skins, rendering, inputs, etc...
     *
     */
-    class GUIER_API Context
+    class GUIER_API Context : public Core::ContextBase
     {
 
     public:
@@ -50,7 +49,9 @@ namespace Guier
         * Constructor.  
         *
         */
-        Context();
+        Context(const bool autoTick = true);
+        Context(Renderer * renderer, Skin * skin = nullptr, const bool autoTick = true);
+        Context(Skin * skin, Renderer * renderer = nullptr, const bool autoTick = true);
 
         /**
         * Destructor.
@@ -64,7 +65,7 @@ namespace Guier
         * @throw std::runtime_error     If window == nullptr.
         *
         */
-        bool Add(Window * window);
+        //bool Add(Window * window);
 
         /**
         * Add new window to context.

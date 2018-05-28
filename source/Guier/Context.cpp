@@ -31,7 +31,20 @@
 namespace Guier
 {
 
-    Context::Context()
+    Context::Context(const bool autoTick) :
+        Core::ContextBase(this, nullptr, nullptr, autoTick)
+    {
+
+    }
+
+    Context::Context(Renderer * renderer, Skin * skin, const bool autoTick) :
+        Core::ContextBase(this, renderer, skin, autoTick)
+    {
+
+    }
+
+    Context::Context(Skin * skin, Renderer * renderer, const bool autoTick) :
+        Core::ContextBase(this, renderer, skin, autoTick)
     {
 
     }
@@ -41,7 +54,7 @@ namespace Guier
 
     }
 
-    bool Context::Add(Window * window)
+    /*bool Context::Add(Window * window)
     {
         if (window == nullptr)
         {
@@ -49,7 +62,7 @@ namespace Guier
         }
 
         return false;
-    }
+    }*/
 
     /*Context::Context() :
         ContextBase(this)

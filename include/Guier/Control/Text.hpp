@@ -57,6 +57,12 @@ namespace Guier
         ~Text();
 
         /**
+        * Get type of controller.
+        *
+        */
+        virtual unsigned int Type() const;
+
+        /**
         * Get/set content of text.
         *
         */

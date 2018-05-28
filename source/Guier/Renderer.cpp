@@ -32,11 +32,6 @@
 namespace Guier
 {
 
-    Renderer::Renderer()
-    {
-
-    }
-
     Renderer::~Renderer()
     {
 
@@ -51,5 +46,10 @@ namespace Guier
         #endif;
 
         return nullptr;
+    }
+
+    Renderer::Renderer()
+    {
+
     }
 }

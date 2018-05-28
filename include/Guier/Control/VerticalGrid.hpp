@@ -59,6 +59,12 @@ namespace Guier
         ~VerticalGrid();
 
         /**
+        * Get type of controller.
+        *
+        */
+        virtual unsigned int Type() const;
+
+        /**
         * Get child count.
         *
         */

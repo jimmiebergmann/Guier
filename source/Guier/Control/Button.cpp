@@ -67,6 +67,11 @@ namespace Guier
 
     }
 
+    unsigned int Button::Type() const
+    {
+        return static_cast<unsigned int>(Types::Button);
+    }
+
     bool Button::AddChild(Control * child, const Index & index)
     {
         if (child == nullptr)

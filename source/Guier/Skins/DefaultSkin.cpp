@@ -33,7 +33,11 @@ namespace Guier
 
         DefaultSkin::DefaultSkin()
         {
+            SetChunk(static_cast<unsigned int>(Item::Button), static_cast<unsigned int>(State::Normal),
+                Vector2i(0, 0), Vector2i(2, 2), Vector2i(6, 6), Vector2i(2, 2));
 
+            SetChunk(static_cast<unsigned int>(Item::TextInput), static_cast<unsigned int>(State::Normal),
+                Vector2i(10, 0), Vector2i(2, 2), Vector2i(19, 6), Vector2i(2, 2));
         }
 
         DefaultSkin::~DefaultSkin()

@@ -47,6 +47,11 @@ namespace Guier
 
     }
 
+    unsigned int VerticalGrid::Type() const
+    {
+        return static_cast<unsigned int>(Types::VerticalGrid);
+    }
+
     size_t VerticalGrid::Count() const
     {
         return 0;

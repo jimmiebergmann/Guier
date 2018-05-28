@@ -86,13 +86,40 @@ namespace Guier
         class GUIER_API ContextBase
         {
 
+        public:
+
+            /**
+            * Add window to context.
+            *
+            * @return True if window is added, else false.
+            *
+            */
+            bool Add(Window * window);
+
+            /**
+            * Set renderer.
+            *
+            * @return True if renderer has been changed, else false.
+            *
+            */
+            bool Set(Renderer * renderer);
+
+            /**
+            * Tick the context.
+            *
+            * @brief Do not call, if auto tick is true. The system will handle it for you.
+
+            *
+            */
+            void Tick();
+
         protected:
 
             /**
             * Default constructor.
             *
             */
-            ContextBase(Context * context);
+            ContextBase(Context * context, Renderer * renderer, Skin * skin, const bool autoTick);
 
             void CreateWindowsInQueue();
             void DestroyWindowsInQueue();
@@ -110,7 +137,7 @@ namespace Guier
             std::thread                         m_WindowThread;           ///< Running thread.
             std::thread                         m_InterruptWindowThread;  ///< Thread for interruping window events.
             Core::Semaphore                     m_WindowSempahore;    ///< Semaphore for ticking thread, for example when redrawing.
-            Renderer *                          m_pRenderer;        ///< Pointer to renderer. Used for allocation of other renderers.
+            
             //Skin *                              m_pSkin;            ///< Pointer to skin.
             std::set<std::shared_ptr<Window>>   m_Windows;          ///< Set of attached windows.
 
@@ -123,9 +150,16 @@ namespace Guier
             std::set<std::shared_ptr<Window>>   m_WindowDestructionSet;
 
 
+            //std::set<Control *>                 m_ControlRedraw;
+
         private:
 
-            Context * const                     m_pContext;
+            Context * const                     m_pContext;         ///< Pointer to inheriting context.
+            const bool                          m_AutoTick;         ///< Should the context start a new thread and automatically tick when possible?.
+            Semaphore                           m_TickSemaphore;    ///< Tick trigger.
+            std::mutex                          m_TickMutex;        ///< Tick mutex.
+            Renderer *                          m_pRenderer;        ///< Pointer to renderer.
+            Skin *                              m_pSkin;        ///< Pointer to skin.
 
         };
 

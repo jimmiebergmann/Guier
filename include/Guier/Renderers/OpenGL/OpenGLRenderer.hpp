@@ -55,16 +55,11 @@ namespace Guier
             /**
             * Load the renderer.
             *
+            * @return True if succeeded, else false.
+            *
             */
-            virtual void Load();
+            virtual bool Load();
 
-            /**
-            * Virtual function for allocating new renderer.
-            *
-            * @throw std::runtime_error If returning nullptr.
-            *
-            */
-            virtual Renderer * AllocateNew() const;
 
         };
 
