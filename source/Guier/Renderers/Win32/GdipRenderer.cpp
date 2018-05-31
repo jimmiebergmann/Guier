@@ -23,56 +23,73 @@
 *
 */
 
-#include <Guier/Core/WindowBase.hpp>
-#include <Guier/Context.hpp>
+#include <Guier/Renderers/Win32/GdipRenderer.hpp>
 
-#if defined(GUIER_PLATFORM_WINDOWS)
-#include <Guier/Core/Window/Win32WindowImpl.hpp>
-#endif
+#ifdef GUIER_PLATFORM_WINDOWS
+
+#include <gdiplus.h>
+#include <Gdiplusheaders.h>
+#include <atlstr.h> 
+#include <ShellScalingAPI.h>
 
 namespace Guier
 {
 
-    namespace Core
+    namespace Renderers
     {
 
-        WindowBase::WindowBase(Context * context, const Vector2i & size, const String & title) :
-            RenderTarget(context->GetRenderer()),
-            Parent(),
-            m_WindowStyle(this),
-            m_pContext(context),
-            m_Size(size),
-            m_Position(-1, -1),
-            m_Title(title)
+        // Interface
+        void GdipInterface::RenderControl(Control * control, const Core::RenderArea & renderArea)
         {
+            ::
         }
 
-        WindowBase::~WindowBase()
+        void GdipInterface::RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture)
         {
 
         }
 
-        bool WindowBase::Load(Renderer * renderer)
+        void GdipInterface::RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture,
+            const Vector2i & portionPosition, const Vector2i & portionSize)
         {
-            #if defined(GUIER_PLATFORM_WINDOWS)
-                m_pImpl = new Core::Win32WindowImpl(m_pContext, renderer, m_Size, m_Title);
-            #else
-                #error Unkown platform.
-            #endif
+
+        }
+
+        void GdipInterface::RenderRectangle(const Vector2i & position, const Vector2i & size, const Color & color)
+        {
+
+        }
+
+        GdipInterface::GdipInterface(HWND windowHandle) :
+            m_WindowHandle(windowHandle)
+        {
+
+        }
+
+        // Renderer
+        GdipRenderer::GdipRenderer(HWND windowHandle) :
+            GdipInterface(windowHandle)
+        {
+
+        }
+
+        GdipRenderer::~GdipRenderer()
+        {
+
+        }
+
+        bool GdipRenderer::Load()
+        {
 
             return true;
         }
 
-        void WindowBase::HandleEvents()
+        Core::RenderInterface * GdipRenderer::GetInterface()
         {
-            #if defined(GUIER_PLATFORM_WINDOWS)
-                Core::Win32WindowImpl::HandleEvents();
-            #else
-                #error Unkown platform.
-            #endif
+            return this;
         }
-        
 
     }
-
 }
+
+#endif

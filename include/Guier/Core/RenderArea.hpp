@@ -23,52 +23,37 @@
 *
 */
 
-#include <Guier/Renderer.hpp>
+#pragma once
 
-// Has default renderer type?
-#ifdef GUIER_DEFAULT_RENDERER
-    #if GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
-        #ifdef GUIER_PLATFORM_WINDOWS
-            #include <Guier/Renderers/Win32/GdipRenderer.hpp>
-        #else
-            #error Unkown platform.
-        #endif
-    #elif GUIER_DEFAULT_RENDERER == GUIER_HARDWARE_RENDERER
-        #error Not supporting hardware renderers yet.
-    #endif
-#endif
-
+#include <Guier/Vector2.hpp>
 
 namespace Guier
 {
 
-    Renderer::~Renderer()
+    namespace Core
     {
 
-    }
-
-    Renderer * Renderer::CreateDefaultRenderer(const Type defaultRendererType)
-    {
-        #ifdef GUIER_DEFAULT_RENDERER
-            #if defined(GUIER_PLATFORM_WINDOWS) && GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
-                return new Renderers::GdipRenderer;
-            #endif
-        #endif
-
-
-        /*
-        #if GUIER_DEFAULT_RENDERER == GUIER_RENDERER_OPENGL
-             return new Renderers::OpenGLRenderer;
-        #else
-            throw std::runtime_error("Missing default renderer.");
-        #endif;
+        /**
+        * Render area class.
+        *
         */
+        class RenderArea
+        {
 
-        return nullptr;
+        public:
+
+            RenderArea(const Vector2i & position, const Vector2i & size) :
+                Position(position),
+                Size(size)
+            {
+
+            }
+
+            Vector2i Position;
+            Vector2i Size;
+
+        };
+
     }
 
-    Renderer::Renderer()
-    {
-
-    }
 }

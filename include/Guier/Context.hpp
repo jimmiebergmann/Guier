@@ -51,7 +51,9 @@ namespace Guier
         */
         Context(const bool autoTick = true);
         Context(Renderer * renderer, Skin * skin = nullptr, const bool autoTick = true);
+        Context(const Renderer::Type rendererType, Skin * skin = nullptr, const bool autoTick = true);
         Context(Skin * skin, Renderer * renderer = nullptr, const bool autoTick = true);
+        Context(Skin * skin, const Renderer::Type rendererType, const bool autoTick = true);
 
         /**
         * Destructor.
@@ -65,7 +67,7 @@ namespace Guier
         * @throw std::runtime_error     If window == nullptr.
         *
         */
-        //bool Add(Window * window);
+       // bool Add(Window * window);
 
         /**
         * Add new window to context.

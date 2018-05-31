@@ -30,6 +30,7 @@
 #ifdef GUIER_PLATFORM_WINDOWS
 
 #include <Guier/Core/WindowImpl.hpp>
+#include <Guier/Control/VerticalGrid.hpp>
 #include <Guier/Callback.hpp>
 #include <Windows.h>
 #include <atomic>
@@ -48,7 +49,7 @@ namespace Guier
 
         public:
 
-            Win32WindowImpl(Context * context, std::shared_ptr<Window> window, const Vector2i & size, const std::wstring & title);
+            Win32WindowImpl(Context * context, Window * window, const Vector2i & size, const String & title);
 
             ~Win32WindowImpl();
 
@@ -62,9 +63,7 @@ namespace Guier
             * Get or set current title of window.
             *
             */
-            virtual const std::wstring & Title() const;
-            virtual void Title(const std::wstring & title);
-            virtual void Title(const std::string & title);
+            virtual void Title(const String & title);
 
             /**
             * Get or set the current position of the window.
@@ -112,31 +111,36 @@ namespace Guier
             LRESULT WindowProc(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
             void FillWin32Background(const Vector2i & p_OldSize, const Vector2i & p_NewSize);
 
+            Context * const                              m_pContext;            ///< Pointer of context.
+            Renderers::GdipRenderer *                    m_pGdipRenderer;       ///< Pointer of renderer.
             bool                                         m_Showing;             ///< Window is currently showing.
             std::atomic<bool>                            m_Hiding;              ///< Is the winow hidden?
             bool                                         m_HideWhenClosed;      ///< Hide window when closing.
             bool                                         m_HideFromTaskbar;     ///< Hide window from tastbar.
             Vector2i                                     m_Position;            ///< Position of window.
             Vector2i                                     m_Size;                ///< Size of window.
-            std::wstring                                 m_Title;               ///< Title of window.
+            //std::wstring                                 m_Title;               ///< Title of window.
             std::shared_ptr<Guier::Callback::Connection> m_CloseConnection;     ///< Connection of defailt close signal.
             
             unsigned int                                 m_Styles;              ///< Bitfield of styles.
             DWORD                                        m_Win32Style;          ///< Win32 style of window.
             DWORD                                        m_Win32ExtendedStyle;  ///< Win32 extended style of window.
-            mutable std::mutex                           m_StyleMutex;          /// Style mutex.
+            mutable std::mutex                           m_StyleMutex;          ///< Style mutex.
+
+            int                                          m_DPI;                 ///< Current window dpi.
 
 
-
-            Context * const         m_pContext;             ///< Pointer of context.
-            std::shared_ptr<Window> m_Window;               ///< Pointer of window.
+            //
+            //std::shared_ptr<Window> m_Window;               ///< Pointer of window.
             HWND			        m_WindowHandle;
             HDC				        m_DeviceContextHandle;
             //HGLRC			        m_OpenGLContext;
             HBRUSH			        m_BackgroundBrush;
             std::wstring	        m_WindowClassName;
-            bool			        m_RedrawStatus;
+            bool			        m_RedrawStatus;         
          
+            VerticalGrid *          m_pVerticalGrid;
+            
 
         };
 

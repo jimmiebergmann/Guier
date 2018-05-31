@@ -23,7 +23,7 @@
 *
 */
 
-#include <Guier/Core/Renderer/Texture.hpp>
+#include <Guier/Core/ControlTree.hpp>
 
 namespace Guier
 {
@@ -31,10 +31,50 @@ namespace Guier
     namespace Core
     {
 
-        Texture::~Texture()
+       /* ControlTree::ControlTree()
         {
 
         }
+
+        ControlTree::~ControlTree()
+        {
+
+        }
+
+        void ControlTree::AddControl(Control * control, const Vector2i & position, const Vector2i & size)
+        {
+            if (control == nullptr)
+            {
+                return;
+            }
+
+            for (auto it = m_Controls.begin(); it != m_Controls.end(); it++)
+            {
+                if (control == *it)
+                {
+                    return;
+                }
+            }
+
+            m_Controls.push_back(control);
+        }
+
+        void ControlTree::RemoveControl(Control * control)
+        {
+            if (control == nullptr)
+            {
+                return;
+            }
+
+            for (auto it = m_Controls.begin(); it != m_Controls.end(); it++)
+            {
+                if (control == *it)
+                {
+                    m_Controls.erase(it);
+                    return;
+                }
+            }
+        }*/
 
     }
 

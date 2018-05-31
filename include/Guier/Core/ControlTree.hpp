@@ -23,29 +23,41 @@
 *
 */
 
-#include <Guier/Renderers/OpenGL/OpenGLRenderer.hpp>
+#pragma once
+
+#include <Guier/Core/Build.hpp>
+#include <Guier/Control.hpp>
+#include <vector>
 
 namespace Guier
 {
 
-    namespace Renderers
+    namespace Core
     {
 
-        OpenGLRenderer::OpenGLRenderer()
+        /*class GUIER_API ControlTree
         {
 
-        }
+        public:
 
-        OpenGLRenderer::~OpenGLRenderer()
-        {
 
-        }
 
-        bool OpenGLRenderer::Load()
-        {
+           
+            ControlTree();
 
-            return true;
-        }
+           
+            ~ControlTree();
 
+
+            void AddControl(Control * control, const Vector2i & position, const Vector2i & size, unsigned int level = -1);
+            void RemoveControl(Control * control);
+            
+        private:
+
+            std::vector<Control *> m_Controls;
+
+        };
+        */
     }
+
 }

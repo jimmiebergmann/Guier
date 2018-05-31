@@ -1,11 +1,5 @@
 #pragma once
 
-// Default settings
-#define GUIER_RENDERER_OPENGL 0
-#define GUIER_DEFAULT_RENDERER GUIER_RENDERER_OPENGL
-#define GUIER_DEFAULT_SKIN ///< Comment out this line to remove default skin from build.
-
-
 // Define the platform
 #if defined( _WIN32 ) || defined( __WIN32__ ) || defined( _WIN64 ) || defined( __WIN64__ )
     #define GUIER_PLATFORM_WINDOWS
@@ -50,3 +44,21 @@
 #define GUIER_CUSTOM_CONTROLLER_ID(name) static const unsigned int TypeId = \
     static_cast<unsigned int>(Guier::Control::Types::Custom) + \
     static_cast<unsigned int>(__COUNTER__)
+
+#define GUIER_SOFTWARE_RENDERER 0
+#define GUIER_HARDWARE_RENDERER 1
+
+
+
+/**
+* Default constructor.
+*
+*/
+
+#define GUIER_DEFAULT_SKIN ///< Comment out this line to remove default skin from build.
+
+// Select the default renderer type.
+// Options:
+// - GUIER_SOFTWARE_RENDERER
+// - GUIER_HARDWARE_RENDERER
+#define GUIER_DEFAULT_RENDERER GUIER_SOFTWARE_RENDERER

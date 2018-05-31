@@ -23,9 +23,7 @@
 *
 */
 
-#pragma once
-
-#include <Guier/Renderer.hpp>
+#include <Guier/Renderers/Win32/Win32OpenGLRenderer.hpp>
 
 namespace Guier
 {
@@ -33,36 +31,21 @@ namespace Guier
     namespace Renderers
     {
 
-        class GUIER_API OpenGLRenderer : public Renderer
+        Win32OpenGLRenderer::Win32OpenGLRenderer()
         {
 
-        public:
+        }
 
-            /**
-            * Constructor.
-            *
-            * @brief No loading should be done whatsoever in constructor. Use Load method instead.
-            *
-            */
-            OpenGLRenderer();
+        Win32OpenGLRenderer::~Win32OpenGLRenderer()
+        {
 
-            /**
-            * Destructor.
-            *
-            */
-            ~OpenGLRenderer();
+        }
 
-            /**
-            * Load the renderer.
-            *
-            * @return True if succeeded, else false.
-            *
-            */
-            virtual bool Load();
+        bool Win32OpenGLRenderer::Load()
+        {
 
-
-        };
+            return true;
+        }
 
     }
-
 }

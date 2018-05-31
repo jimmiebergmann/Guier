@@ -26,6 +26,7 @@
 #pragma once
 
 #include <Guier/Core/Build.hpp>
+#include <Guier/Core/RenderArea.hpp>
 #include <Guier/Index.hpp>
 
 namespace Guier
@@ -37,6 +38,7 @@ namespace Guier
     */
     class Context;
     class Parent;
+    namespace Core { class RenderInterface; class WindowImpl; }
  
     /**
     * Size namespace, containing methods for sizing of controls.
@@ -115,16 +117,24 @@ namespace Guier
 
         Vector2i m_Size; ///< Requested size of control.
 
+    private:
+
+        /**
+        * Render the control.
+        *
+        */
+        virtual void Render(Core::RenderInterface * renderInterface, const Core::RenderArea & renderArea) = 0;
+
+        Parent *    m_pParent;      ///< Parent of control.
+        Vector2i    m_RenderSize;   ///< Actual render size of control.
+
         /**
         * Friend classes.
         *
         */
         friend class Parent;
-
-    private:
-
-        Parent *    m_pParent;      ///< Parent of control.
-        Vector2i    m_RenderSize;   ///< Actual render size of control.
+        friend class Core::RenderInterface;
+        friend class Core::WindowImpl;
 
     };
 

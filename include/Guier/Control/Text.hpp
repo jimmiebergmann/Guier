@@ -71,6 +71,12 @@ namespace Guier
 
     private:
 
+        /**
+        * Render the control.
+        *
+        */
+        virtual void Render(Core::RenderInterface * renderInterface, const Core::RenderArea & renderArea);
+
         String m_Content;    ///< Text content.
 
     };

@@ -29,7 +29,18 @@
 #include <Guier/Context.hpp>
 #include <sstream>
 
+#include <stdlib.h>     /* srand, rand */
+
+
 #ifdef GUIER_PLATFORM_WINDOWS
+
+#include <Guier/Renderers/Win32/GdipRenderer.hpp>
+
+// REMOVE THIS!!!
+#include <gdiplus.h>
+#include <Gdiplusheaders.h>
+#include <atlstr.h> 
+#include <ShellScalingAPI.h>
 
 namespace Guier
 {
@@ -44,9 +55,9 @@ namespace Guier
         {
             unsigned int newStyle = style;
 
-            if (newStyle & static_cast<unsigned int>(Window::Styles::TitleBar))
+            if (newStyle & static_cast<unsigned int>(WindowStyle::TitleBar))
             {
-                newStyle |= static_cast<unsigned int>(Window::Styles::Border);
+                newStyle |= static_cast<unsigned int>(WindowStyle::Border);
             }
 
             return newStyle;
@@ -56,27 +67,27 @@ namespace Guier
         {
             DWORD ret = 0;
 
-            if (styles & static_cast<DWORD>(Window::Styles::TitleBar))
+            if (styles & static_cast<DWORD>(WindowStyle::TitleBar))
             {
                 ret |= WS_CAPTION | WS_SYSMENU;
             }
 
-            if (styles & static_cast<DWORD>(Window::Styles::Border))
+            if (styles & static_cast<DWORD>(WindowStyle::Border))
             {
                 ret |= WS_BORDER;
             }
 
-            if (styles & static_cast<DWORD>(Window::Styles::Minimize))
+            if (styles & static_cast<DWORD>(WindowStyle::Minimize))
             {
                 ret |= WS_MINIMIZEBOX;
             }
 
-            if (styles & static_cast<DWORD>(Window::Styles::Maximize))
+            if (styles & static_cast<DWORD>(WindowStyle::Maximize))
             {
                 ret |= WS_MAXIMIZEBOX;
             }
 
-            if (styles & static_cast<DWORD>(Window::Styles::Resize))
+            if (styles & static_cast<DWORD>(WindowStyle::Resize))
             {
                 ret |= WS_SIZEBOX;
             }
@@ -88,7 +99,7 @@ namespace Guier
         {
             DWORD ret = WS_EX_APPWINDOW;
 
-            if (styles & static_cast<DWORD>(Window::Styles::HideInTaskbar))
+            if (styles & static_cast<DWORD>(WindowStyle::HideInTaskbar))
             {
                 ret = WS_EX_NOACTIVATE;
             }
@@ -109,29 +120,26 @@ namespace Guier
         }
 
 
-        Win32WindowImpl::Win32WindowImpl(Context * context, std::shared_ptr<Window> window, const Vector2i & size, const std::wstring & title) :
+        Win32WindowImpl::Win32WindowImpl(Context * context, Window * window, const Vector2i & size, const String & title) :
             m_pContext(context),
-            m_Window(window),
+            m_pGdipRenderer(nullptr),
             m_Showing(false),
             m_HideWhenClosed(false),
             m_HideFromTaskbar(false),
             m_Position(-1, -1),
             m_Size(size),
-            m_Title(title),
             m_Hiding(true),
-            m_Styles(Window::Styles::Default),
+            m_Styles(WindowStyle::Default),
             m_Win32Style(0),
             m_Win32ExtendedStyle(0),
-            m_WindowHandle(0)
+            m_WindowHandle(0),
+            m_DPI(0),
+
+            m_pVerticalGrid(new VerticalGrid(window))
         {
             if (m_pContext == nullptr)
             {
                 throw std::runtime_error("Context is nullptr.");
-            }
-
-            if (m_Window == nullptr)
-            {
-                throw std::runtime_error("Window is nullptr.");
             }
 
             // Get default styles.
@@ -158,7 +166,8 @@ namespace Guier
             winClass.hCursor = LoadCursor(NULL, IDC_ARROW);
             //HBRUSH hb = ::CreateSolidBrush(RGB(255, 0, 0));
             //winClass.hbrBackground = hb;
-            winClass.hbrBackground = NULL;
+            winClass.hbrBackground = CreateSolidBrush(RGB(255, 255, 255));
+            //winClass.hbrBackground = NULL;
             winClass.lpszClassName = className.c_str();
             winClass.lpszMenuName = NULL;
 
@@ -190,7 +199,7 @@ namespace Guier
             m_WindowHandle = CreateWindowEx(
                 m_Win32ExtendedStyle,
                 className.c_str(),
-                m_Title.c_str(),
+                title.Get().c_str(),
 
                 WS_CLIPSIBLINGS |
                 WS_CLIPCHILDREN |
@@ -213,11 +222,11 @@ namespace Guier
 
 
 
-            /*
+            
    
             // Get the device context
             m_DeviceContextHandle = GetDC(m_WindowHandle);
-
+/*
             // Filling the pixel fromat structure.
             /*static PIXELFORMATDESCRIPTOR PFD = {
             sizeof(PIXELFORMATDESCRIPTOR),
@@ -336,15 +345,28 @@ namespace Guier
             */
 
             // Default signal for closing the window
-            m_CloseConnection = m_Window->Closed.Connect([this]()
+           /* m_CloseConnection = m_Window->Closed.Connect([this]()
             {
                 m_pContext->Remove(m_Window);
-            });
+            });*/
+            
+            m_pGdipRenderer = new Renderers::GdipRenderer(m_WindowHandle);
+
+            m_DPI = GetDpiForWindow(m_WindowHandle);
+
+            ShowWindow(m_WindowHandle, SW_RESTORE);
+            SetForegroundWindow(m_WindowHandle);
+            SetFocus(m_WindowHandle);
+
+           /* COLORREF color = RGB(255, 0, 255);
+            SetBkColor(m_DeviceContextHandle, color);
+            */
+           
         }
 
         Win32WindowImpl::~Win32WindowImpl()
         {
-            m_Window->Closed.DisconnectAll();
+            //m_Window->Closed.DisconnectAll();
 
             if (m_BackgroundBrush)
             {
@@ -391,7 +413,7 @@ namespace Guier
                 UnregisterClass(m_WindowClassName.c_str(), Hinstance);
             }
 
-            m_Window.reset();
+            //m_Window.reset();
         }
 
         void Win32WindowImpl::HandleEvents()
@@ -437,20 +459,11 @@ namespace Guier
             UpdatePositionSize();
         }
 
-        const std::wstring & Win32WindowImpl::Title() const
-        {
-            return m_Title;
-        }
-
-        void Win32WindowImpl::Title(const std::wstring & title)
+        void Win32WindowImpl::Title(const String & title)
         {
 
         }
 
-        void Win32WindowImpl::Title(const std::string & title)
-        {
-
-        }
 
         const Vector2i & Win32WindowImpl::Position() const
         {
@@ -492,7 +505,7 @@ namespace Guier
 
         void Win32WindowImpl::Close()
         {
-            m_Window->Closed();
+            //m_Window->Closed();
         }
 
         unsigned int Win32WindowImpl::GetStyle() const
@@ -523,12 +536,12 @@ namespace Guier
             }
 
             // Enable/disale [X] button if the close style has been changed.
-            if (changes & static_cast<unsigned int>(Window::Styles::Close))
+            if (changes & static_cast<unsigned int>(WindowStyle::Close))
             {
                 UINT dwExtra = 0;
 
                 // Close style is being disabled. Make it gray and disabled.
-                if (!(m_Styles & static_cast<DWORD>(Window::Styles::Close)))
+                if (!(m_Styles & static_cast<DWORD>(WindowStyle::Close)))
                 {
                     dwExtra = MF_DISABLED | MF_GRAYED;
                 }
@@ -629,13 +642,406 @@ namespace Guier
         LRESULT Win32WindowImpl::WindowProc(HWND p_HWND, UINT p_Message,
             WPARAM p_WParam, LPARAM p_LParam)
         {
- //           Event e;
+
+            static bool keyPress = false;
 
             switch (p_Message)
             {
+
+          /*  case WM_ERASEBKGND:
+                return 1;*/
+
+            /*case WM_NCCREATE:
+            {
+                EnableNonClientDpiScaling(p_HWND);
+            }
+            break;*/
+
+            case WM_DPICHANGED:
+            {
+                int dpi = HIWORD(p_WParam);
+                if (dpi != m_DPI)
+                {
+                    m_DPI = dpi;
+
+                    RECT windowRect;
+                    GetWindowRect(m_WindowHandle, &windowRect);
+
+                    RECT rect;
+                    rect.left = 0;
+                    rect.right = windowRect.right - windowRect.left;
+                    rect.top = 0;
+                    rect.bottom = windowRect.bottom - windowRect.top;
+                    InvalidateRect(m_WindowHandle, &rect, false);
+                }
+            }
+            break;
+
+            case WM_CREATE:
+            {
+                // In top of main
+                ULONG_PTR gdiplusToken;
+                Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+                GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
+                //SetProcessDPIAware();
+                SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE);
+            }
+            break;
+            case WM_PAINT:
+            {
+                m_pGdipRenderer->GetInterface()->RenderControl(m_pVerticalGrid);
+
+                //Render(m_WindowHandle, m_pContext->GetRenderer());
+                
+                
+                /*PAINTSTRUCT ps;
+                HDC hDC = BeginPaint(m_WindowHandle, &ps);
+                Gdiplus::Graphics graphics(hDC);
+
+                Gdiplus::SolidBrush solidbrush(Gdiplus::Color(255, 255, 0, 0));
+                graphics.FillRectangle(&solidbrush, 0, 0, 300, 300);*/
+
+/*
+                const int fontSize = 12;
+                int fontSizeDPI = MulDiv(fontSize, m_DPI, 96);
+
+
+                Gdiplus::FontFamily fontFamily(L"Segoe UI");
+                //fontFamily.IsAvailable();
+
+                Gdiplus::Font       font(&fontFamily, static_cast<Gdiplus::REAL>(fontSizeDPI), Gdiplus::FontStyle::FontStyleRegular, Gdiplus::Unit::UnitPixel);
+                Gdiplus::SolidBrush solidbrush(Gdiplus::Color(255, 0, 0, 0));
+                const WCHAR text[] = L"File   Edit   Format   View   Help";
+
+                // Draw string.
+                graphics.SetCompositingQuality(Gdiplus::CompositingQuality::CompositingQualityHighQuality);
+                graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeHighQuality);
+                graphics.SetPixelOffsetMode(Gdiplus::PixelOffsetMode::PixelOffsetModeHighQuality);
+                graphics.SetTextRenderingHint(Gdiplus::TextRenderingHint::TextRenderingHintClearTypeGridFit);
+
+                graphics.DrawString(text, -1, &font, Gdiplus::PointF(10, 10), &solidbrush);
+
+
+                // Draw string.
+                graphics.SetCompositingQuality(Gdiplus::CompositingQuality::CompositingQualityHighQuality);
+                graphics.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeHighQuality);
+                graphics.SetPixelOffsetMode(Gdiplus::PixelOffsetMode::PixelOffsetModeHighQuality);
+                graphics.SetTextRenderingHint(Gdiplus::TextRenderingHint::TextRenderingHintSingleBitPerPixelGridFit);
+
+                graphics.DrawString(text, -1, &font, Gdiplus::PointF(10, 30), &solidbrush);
+
+                */
+               // EndPaint(m_WindowHandle, &ps);
+
+                return 0;
+
+
+               /* RECT winRec;
+                GetWindowRect(m_WindowHandle, &winRec);
+                LONG randomX = static_cast<LONG>(rand() % winRec.right - winRec.left);
+                LONG randomY = static_cast<LONG>(rand() % winRec.bottom - winRec.top);
+
+
+                PAINTSTRUCT ps;
+                HDC hDC = BeginPaint(m_WindowHandle, &ps);
+
+                
+                RECT rect = { 30, 50, 100, 200 };
+                
+                rect.left += randomX;
+                rect.right += randomX;
+                rect.top += randomY;
+                rect.bottom += randomY;
+
+                HBRUSH brush = CreateSolidBrush(RGB(50, 151, 151));
+                FillRect( m_DeviceContextHandle, &rect, brush);
+                DeleteObject(brush);
+
+                EndPaint(m_WindowHandle, &ps);
+                */
+
+                //if (keyPress)
+               // {
+
+               
+
+                   // std::cout << ps.rcPaint.left << "  " << ps.rcPaint.right << "  " << ps.rcPaint.top << "  " << ps.rcPaint.bottom << std::endl;
+
+                   // Gdiplus::Graphics graphics(m_DeviceContextHandle);
+
+                    /*Gdiplus::PrivateFontCollection m_fontcollection;
+                    //...
+                    CString szFontFile =  L"SkiCargo.ttf";
+
+                    Gdiplus::Status nResults = m_fontcollection.AddFontFile(szFontFile);
+
+
+                    // When painting the text
+                    Gdiplus::FontFamily fontFamily;
+                    int nNumFound = 0;
+                    m_fontcollection.GetFamilies(1, &fontFamily, &nNumFound);
+
+                    if (nNumFound>0)
+                    {
+                        Gdiplus::Font font(&fontFamily, 28, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel);
+
+                        Gdiplus::StringFormat strformat;
+                        wchar_t buf[] = L"The quick brown fox jumps over the lazy dog!";
+                        Gdiplus::SolidBrush solidbrush(Gdiplus::Color(255, 0, 0, 0));
+                        graphics.DrawString(buf, wcslen(buf), &font, Gdiplus::PointF(10.0f, 10.0f), &strformat, &solidbrush);
+                    }
+                    */
+
+                    // Create a FontFamily object.
+                  //  Gdiplus::FontFamily nameFontFamily(/*L"Roboto light"*/L"Segoe UI");
+
+                    // Get the cell ascent of the font family in design units.
+                    //WCHAR      familyName[LF_FACESIZE];
+                    //nameFontFamily.GetFamilyName(familyName);
+
+                    // Copy the cell ascent into a string and draw the string.
+                  /*  Gdiplus::SolidBrush solidbrush(Gdiplus::Color(255, 0, 0, 0));
+                    Gdiplus::SolidBrush whiteBrush(Gdiplus::Color(255, 255, 255, 255));
+
+
+                    Gdiplus::Font       font(&nameFontFamily, 9/*, Gdiplus::FontStyle::FontStyleItalic*///);
+                    
+                   /* Gdiplus::Pen pens(&solidbrush);
+                   // graphics.DrawRectangle(pens, 0, 0, 300, 300);
+
+
+                    Gdiplus::Pen blackPen(Gdiplus::Color(255, 0, 255, 0), 3);
+
+                    // Define the rectangle.
+                    int x = 0;
+                    int y = 0;
+                    int width = 200;
+                    int height = 200;
+
+                    Gdiplus::Rect bgRect();
+                    */
+                    // Draw the rectangle.
+             
+                   // Gdiplus::SolidBrush whiteBrush(Gdiplus::Color(255, 255, 255, 255));
+                   // graphics.FillRectangle(&whiteBrush, 0, 0, winRec.right - winRec.left, winRec.bottom - winRec.top);
+
+
+                  /*  Gdiplus::TextRenderingHint hits[6] = 
+                    {
+                        Gdiplus::TextRenderingHintSystemDefault,
+                        Gdiplus::TextRenderingHintSingleBitPerPixelGridFit,
+                        Gdiplus::TextRenderingHintSingleBitPerPixel,
+                        Gdiplus::TextRenderingHintAntiAliasGridFit,
+                        Gdiplus::TextRenderingHintAntiAlias,
+                        Gdiplus::TextRenderingHintClearTypeGridFit
+                    };*/
+                    /*
+                    TextRenderingHintSystemDefault = 0,
+                        TextRenderingHintSingleBitPerPixelGridFit = 1,
+                        TextRenderingHintSingleBitPerPixel = 2,
+                        TextRenderingHintAntiAliasGridFit = 3,
+                        TextRenderingHintAntiAlias = 4,
+                        TextRenderingHintClearTypeGridFit = 5
+                        */
+
+
+                   /* for (int i = 0; i < 6; i++)
+                    {
+                        graphics.SetTextRenderingHint(hits[i]);
+                        //graphics.SetTextContrast(100);
+                        graphics.SetCompositingQuality(Gdiplus::CompositingQuality::CompositingQualityAssumeLinear);
+
+                       // graphics.SetCompositingMode(Gdiplus::CompositingMode::CompositingModeSourceCopy);
+
+                    
+                        graphics.DrawString(L"The quick brown fox jumps over the lazy dog.", -1, &font, Gdiplus::PointF(20, 20 + (20 * i)), &solidbrush);
+                    }*/
+
+      /*              graphics.SetTextRenderingHint(Gdiplus::TextRenderingHint::TextRenderingHintClearTypeGridFit);
+                    graphics.SetTextContrast(0xffffffff);
+                    graphics.SetCompositingMode(Gdiplus::CompositingMode::CompositingModeSourceOver);
+                    graphics.SetCompositingQuality(Gdiplus::CompositingQuality::CompositingQualityHighQuality);
+                    graphics.SetPixelOffsetMode(Gdiplus::PixelOffsetMode::PixelOffsetModeHighQuality);
+
+                    const Gdiplus::FontFamily oFamily(L"Tahoma", NULL);
+
+
+                    Gdiplus::Font oF600(&oFamily, 6.00, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::Unit::UnitPixel);
+                    Gdiplus::Font oF800(&oFamily, 8.00, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::Unit::UnitPixel);
+                    Gdiplus::Font oF848(&oFamily, 8.48, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::Unit::UnitPixel);
+                    Gdiplus::Font oF849(&oFamily, 9.0, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::Unit::UnitPixel);
+                    Gdiplus::Font oF1200(&oFamily, 12.00, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::Unit::UnitPixel);
+                    Gdiplus::Font oF1500(&oFamily, 15.00, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::Unit::UnitPixel);
+                    Gdiplus::Font oF1648(&oFamily, 16.48, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::Unit::UnitPixel);
+                    Gdiplus::Font oF1649(&oFamily, 16.49, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::Unit::UnitPixel);
+*/
+                    
+                    /*
+                    Font oF600(&oFamily, 6.00, FontStyle::FontStyleRegular, Unit::UnitPixel);
+                    Font oF800(&oFamily, 8.00, FontStyle::FontStyleRegular, Unit::UnitPixel);
+                    Font oF848(&oFamily, 8.48, FontStyle::FontStyleRegular, Unit::UnitPixel);
+                    Font oF849(&oFamily, 8.49, FontStyle::FontStyleRegular, Unit::UnitPixel);
+                    Font oF1200(&oFamily, 12.00, FontStyle::FontStyleRegular, Unit::UnitPixel);
+                    Font oF1500(&oFamily, 15.00, FontStyle::FontStyleRegular, Unit::UnitPixel);
+                    Font oF1648(&oFamily, 16.48, FontStyle::FontStyleRegular, Unit::UnitPixel);
+                    Font oF1649(&oFamily, 16.49, FontStyle::FontStyleRegular, Unit::UnitPixel);
+                    */
+/*
+                    Gdiplus::Color g_oTextColor(255, 0, 0, 0);
+                    Gdiplus::SolidBrush oBrush(g_oTextColor);
+
+                    double dy = 1.0;
+                    graphics.DrawString(L"Size 6.00", -1, &oF600, Gdiplus::PointF(30.0, dy += 18.0), &oBrush);
+                    graphics.DrawString(L"Size 8.00", -1, &oF800, Gdiplus::PointF(30.0, dy += 18.0), &oBrush);
+                    graphics.DrawString(L"Size 8.48", -1, &oF848, Gdiplus::PointF(30.0, dy += 18.0), &oBrush);
+                    graphics.DrawString(L"abcdefghijklmnopqrstuvwxyzåäö", -1, &oF849, Gdiplus::PointF(30.0, dy += 18.0), &oBrush);
+                    graphics.DrawString(L"Size 12.00", -1, &oF1200, Gdiplus::PointF(30.0, dy += 18.0), &oBrush);
+                    graphics.DrawString(L"Size 15.00", -1, &oF1500, Gdiplus::PointF(30.0, dy += 18.0), &oBrush);
+                    graphics.DrawString(L"Size 16.48", -1, &oF1648, Gdiplus::PointF(30.0, dy += 18.0), &oBrush);
+                    graphics.DrawString(L"Size 16.49", -1, &oF1649, Gdiplus::PointF(30.0, dy += 18.0), &oBrush);
+ */
+                    /*
+                    e.Graphics.CompositingQuality = Drawing2D.CompositingQuality.AssumeLinear
+                    e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
+                    e.Graphics.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+                    
+                    */
+
+                   
+
+// Draw white background
+//Gdiplus::SolidBrush mySolidBrush(Gdiplus::Color::White);
+//graphics.FillRectangle(&mySolidBrush, 0, 0, 100, 100);
+
+//Gdiplus::Bitmap b(100, 100);
+//b.GetWidth();
+
+                  
+
+                   
+
+//  Gdiplus::RectF rectF;
+// auto imgSize = graphics.MeasureString(text, -1, &font, Gdiplus::PointF(10, 10), &rectF);
+
+/* Gdiplus::Bitmap b(100, 100);
+Gdiplus::Graphics *g = Gdiplus::Graphics::FromImage(&b);
+*/
+
+                    
+
+//  Gdiplus::RectF rectF;
+// auto imgSize = graphics.MeasureString(text, -1, &font, Gdiplus::PointF(10, 10), &rectF);
+
+/* Gdiplus::Bitmap b(100, 100);
+Gdiplus::Graphics *g = Gdiplus::Graphics::FromImage(&b);
+*/
+                    
+
+
+                    //graphics.DrawImage(&b, )
+                    
+     /*
+                    
+                    CLSID pngClsid;
+CLSIDFromString(L"{557CF406-1A04-11D3-9A73-0000F81EF32E}", &pngClsid);
+bmp.Save(L"file.png", &pngClsid, NULL);
+
+and here's IDs for other formats:
+
+bmp: {557cf400-1a04-11d3-9a73-0000f81ef32e}
+jpg: {557cf401-1a04-11d3-9a73-0000f81ef32e}
+gif: {557cf402-1a04-11d3-9a73-0000f81ef32e}
+tif: {557cf405-1a04-11d3-9a73-0000f81ef32e}
+png: {557cf406-1a04-11d3-9a73-0000f81ef32e}
+                    */
+                    
+/* CLSID pngClsid;
+CLSIDFromString(L"{557cf406-1a04-11d3-9a73-0000f81ef32e}", &pngClsid);
+
+b.Save(L"C:\\Users\\sours\\Documents\\GitHub\\Guier\\bin\\out.png", &pngClsid, NULL);
+*/
+//graphics.SetTextContrast(0x00000000);
+
+//graphics.DrawRectangle(&blackPen, x, y, width, height);
+/* graphics.SetTextRenderingHint(Gdiplus::TextRenderingHintClearTypeGridFit);
+graphics.DrawString(L"C:\\Users\\sours\\Documents\\GitHub\\Guier\\include\\Guier\\Core\\fil.txt", -1, &font, Gdiplus::PointF(randomX, randomY), &solidbrush);
+graphics.SetTextRenderingHint(Gdiplus::TextRenderingHintSystemDefault);
+graphics.DrawString(L"C:\\Users\\sours\\Documents\\GitHub\\Guier\\include\\Guier\\Core\\fil.txt", -1, &font, Gdiplus::PointF(randomX, randomY + 20), &solidbrush);
+graphics.SetTextRenderingHint(Gdiplus::TextRenderingHintSystemDefault);
+graphics.DrawString(L"C:\\Users\\sours\\Documents\\GitHub\\Guier\\include\\Guier\\Core\\fil.txt", -1, &font, Gdiplus::PointF(randomX, randomY + 40), &solidbrush);
+
+*/
+
+/*LPCWSTR message = L"abcdefghijklmnopqrstuvwxyzåäö.";
+
+RECT rect;
+SetTextColor(m_DeviceContextHandle, 0x00000000);
+                
+SetBkMode(m_DeviceContextHandle, TRANSPARENT);
+rect.left = 40;
+rect.top = 10;
+                    
+HFONT hFont = CreateFont(
+9, 0, 0, 0, FW_REGULAR, FALSE, FALSE, FALSE,
+DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+CLEARTYPE_QUALITY, FF_DONTCARE, L"Tahoma");
+
+//HFONT hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+LOGFONT logfont;
+GetObject(hFont, sizeof(LOGFONT), &logfont);
+//logfont.lfHeight = 9;
+
+logfont.lfHeight = -MulDiv(9, GetDeviceCaps(m_DeviceContextHandle, LOGPIXELSY), 72);
+// Now change the logfont.lfHeight member
+
+HFONT hNewFont = CreateFontIndirect(&logfont);
+HFONT hOldFont = (HFONT)SelectObject(m_DeviceContextHandle, hNewFont);
+                    
+// Do your text drawing
+DrawText(m_DeviceContextHandle, message, -1, &rect, DT_SINGLELINE | DT_NOCLIP);
+
+// Always select the old font back into the DC
+SelectObject(m_DeviceContextHandle, hOldFont);
+DeleteObject(hNewFont);
+*/
+                    
+                   
+              
+                  
+/*
+                    keyPress = false;
+                }
+                */
+
+                /*
+
+                Gdiplus::PrivateFontCollection m_fontcollection;
+                //...
+                CString szFontFile = szExePath + L"SkiCargo.ttf";
+
+                Gdiplus::Status nResults = m_fontcollection.AddFontFile(szFontFile);
+
+      
+                FontFamily fontFamily;
+                int nNumFound = 0;
+                m_fontcollection.GetFamilies(1, &fontFamily, &nNumFound);
+
+                if (nNumFound>0)
+                {
+                    Font font(&fontFamily, 28, FontStyleRegular, UnitPixel);
+
+                    StringFormat strformat;
+                    wchar_t buf[] = L"The quick brown fox jumps over the lazy dog!";
+                    graphics.DrawString(buf, wcslen(buf), &font,
+                        PointF(10.0f, 10.0f), &strformat, &brush);
+                }*/
+
+            }
+            break;
             case WM_CLOSE:
             {
-                m_Window->Closed();
+               // m_Window->Closed();
 
                 // Do not forward the event.
                 return 0;
@@ -643,12 +1049,12 @@ namespace Guier
             break;
             case WM_SETFOCUS:
             {
-                m_Window->Focused(true);
+                //m_Window->Focused(true);
             }
             break;
             case WM_KILLFOCUS:
             {
-                m_Window->Focused(false);
+                //m_Window->Focused(false);
             }
             break;
             case WM_MOVE:
@@ -657,7 +1063,7 @@ namespace Guier
                                                     static_cast<int>(HIWORD(p_LParam)));
 
                 m_Position = newPosition;
-                m_Window->Moved(newPosition);
+                //m_Window->Moved(newPosition);
             }
             break;
             case WM_SIZE:
@@ -667,7 +1073,7 @@ namespace Guier
                                                 static_cast<int>(HIWORD(p_LParam)));
                 
                 // Check if minimized.
-                if (newSize == Vector2i(0, 0))
+               /* if (newSize == Vector2i(0, 0))
                 {
                     m_Showing = false;
                     m_Window->Minimized();
@@ -685,7 +1091,7 @@ namespace Guier
                 else
                 {
                     m_Window->Resized(m_Size);
-                }
+                }*/
                 
 
 
@@ -698,7 +1104,7 @@ namespace Guier
                 glLoadMatrixf(projection.m);*/
 
                 // Fill border background
-                FillWin32Background(oldSize, newSize);
+                //FillWin32Background(oldSize, newSize);
 
                 // Redraw canvas.
   /*              m_RedrawStatus = true;
@@ -726,6 +1132,19 @@ namespace Guier
  //                   m_EventHandler.PressKey(key);
                     break;
                 }
+
+                //RedrawWindow(m_WindowHandle, NULL, NULL, RDW_INTERNALPAINT);
+                //RedrawWindow(m_WindowHandle, NULL, NULL, RDW_INVALIDATE | RDW_INTERNALPAINT);
+                keyPress = true;
+
+                RECT rect;
+                rect.left = 0;
+                rect.right = 200;
+                rect.top = 0;
+                rect.bottom = 200;
+                InvalidateRect(m_WindowHandle, &rect, false);
+
+
                 /*else if (p_WParam == VK_MENU)
                 {
                 Event::Key::eKey key = (HIWORD(p_LParam) & KF_EXTENDED) ? tKey::AltRight : tKey::AltLeft;

@@ -75,4 +75,9 @@ namespace Guier
         return nullptr;
     }
 
+    void VerticalGrid::Render(Core::RenderInterface * renderInterface, const Core::RenderArea & renderArea)
+    {
+
+    }
+
 }

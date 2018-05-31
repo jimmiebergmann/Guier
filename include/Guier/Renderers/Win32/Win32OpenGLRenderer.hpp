@@ -23,52 +23,46 @@
 *
 */
 
+#pragma once
+
 #include <Guier/Renderer.hpp>
-
-// Has default renderer type?
-#ifdef GUIER_DEFAULT_RENDERER
-    #if GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
-        #ifdef GUIER_PLATFORM_WINDOWS
-            #include <Guier/Renderers/Win32/GdipRenderer.hpp>
-        #else
-            #error Unkown platform.
-        #endif
-    #elif GUIER_DEFAULT_RENDERER == GUIER_HARDWARE_RENDERER
-        #error Not supporting hardware renderers yet.
-    #endif
-#endif
-
 
 namespace Guier
 {
 
-    Renderer::~Renderer()
+    namespace Renderers
     {
+
+        class GUIER_API Win32OpenGLRenderer : public Renderer
+        {
+
+        public:
+
+            /**
+            * Constructor.
+            *
+            * @brief No loading should be done whatsoever in constructor. Use Load method instead.
+            *
+            */
+            Win32OpenGLRenderer();
+
+            /**
+            * Destructor.
+            *
+            */
+            ~Win32OpenGLRenderer();
+
+            /**
+            * Load the renderer.
+            *
+            * @return True if succeeded, else false.
+            *
+            */
+            virtual bool Load();
+
+
+        };
 
     }
 
-    Renderer * Renderer::CreateDefaultRenderer(const Type defaultRendererType)
-    {
-        #ifdef GUIER_DEFAULT_RENDERER
-            #if defined(GUIER_PLATFORM_WINDOWS) && GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
-                return new Renderers::GdipRenderer;
-            #endif
-        #endif
-
-
-        /*
-        #if GUIER_DEFAULT_RENDERER == GUIER_RENDERER_OPENGL
-             return new Renderers::OpenGLRenderer;
-        #else
-            throw std::runtime_error("Missing default renderer.");
-        #endif;
-        */
-
-        return nullptr;
-    }
-
-    Renderer::Renderer()
-    {
-
-    }
 }

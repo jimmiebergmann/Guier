@@ -35,6 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\Guier\Color.hpp" />
     <ClInclude Include="..\..\include\Guier\Context.hpp" />
     <ClInclude Include="..\..\include\Guier\Control.hpp" />
     <ClInclude Include="..\..\include\Guier\Control\Button.hpp" />
@@ -44,28 +45,33 @@
     <ClInclude Include="..\..\include\Guier\Core\ContextBase.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\ControlHelpers.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\Matrix4x4.hpp" />
-    <ClInclude Include="..\..\include\Guier\Core\Quadtree.hpp" />
-    <ClInclude Include="..\..\include\Guier\Core\Renderer\Texture.hpp" />
-    <ClInclude Include="..\..\include\Guier\Core\Renderer\VertexArray.hpp" />
-    <ClInclude Include="..\..\include\Guier\Core\Renderer\VertexBuffer.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\ControlTree.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\RenderArea.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\RenderInterface.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\RenderTarget.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Safe.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\Semaphore.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Texture.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Textures\OpenGLTexture.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Textures\Win32\GdipTexture.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Textures\Win32\Win32OpenGLTexture.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\Thirdparty\Freetype\FreeTypeAmalgam.h" />
     <ClInclude Include="..\..\include\Guier\Core\Thirdparty\Lodepng\lodepng.h" />
     <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\glext.h" />
     <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\glxext.h" />
     <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\wglext.h" />
-    <ClInclude Include="..\..\include\Guier\Core\Utilities.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\WindowBase.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\WindowImpl.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Window\Win32WindowImpl.hpp" />
+    <ClInclude Include="..\..\include\Guier\Font.hpp" />
     <ClInclude Include="..\..\include\Guier\Guier.hpp" />
     <ClInclude Include="..\..\include\Guier\Index.hpp" />
     <ClInclude Include="..\..\include\Guier\Input.hpp" />
     <ClInclude Include="..\..\include\Guier\Renderer.hpp" />
-    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLRenderer.hpp" />
-    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLTexture.hpp" />
-    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLVertexArray.hpp" />
-    <ClInclude Include="..\..\include\Guier\Renderers\OpenGL\OpenGLVertexBuffer.hpp" />
     <ClInclude Include="..\..\include\Guier\Callback.hpp" />
+    <ClInclude Include="..\..\include\Guier\Renderers\OpenGLRenderer.hpp" />
+    <ClInclude Include="..\..\include\Guier\Renderers\Win32\GdipRenderer.hpp" />
+    <ClInclude Include="..\..\include\Guier\Renderers\Win32\Win32OpenGLRenderer.hpp" />
     <ClInclude Include="..\..\include\Guier\Skin.hpp" />
     <ClInclude Include="..\..\include\Guier\Skins\DefaultSkin.hpp" />
     <ClInclude Include="..\..\include\Guier\String.hpp" />
@@ -74,6 +80,7 @@
     <ClInclude Include="..\..\include\Guier\WindowStyle.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\Guier\Color.cpp" />
     <ClCompile Include="..\..\source\Guier\Context.cpp" />
     <ClCompile Include="..\..\source\Guier\Control.cpp" />
     <ClCompile Include="..\..\source\Guier\Control\Button.cpp" />
@@ -81,24 +88,24 @@
     <ClCompile Include="..\..\source\Guier\Control\Text.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\ContextBase.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\ControlHelpers.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\Quadtree.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\Renderer\Texture.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\Renderer\VertexArray.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\Renderer\VertexBuffer.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\ControlTree.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\RenderInterface.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\RenderTarget.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\Semaphore.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Texture.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Textures\Win32\GdipTexture.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Textures\Win32\Win32OpenGLTexture.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\Thirdparty\Lodepng\lodepng.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\Utilities.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\WindowBase.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\WindowImpl.cpp" />
+    <ClCompile Include="..\..\source\Guier\Core\Window\Win32WindowImpl.cpp" />
     <ClCompile Include="..\..\source\Guier\Font.cpp" />
     <ClCompile Include="..\..\source\Guier\Index.cpp" />
     <ClCompile Include="..\..\source\Guier\Input.cpp" />
     <ClCompile Include="..\..\source\Guier\Renderer.cpp" />
-    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLRenderer.cpp" />
-    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLTexture.cpp" />
-    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLVertexArray.cpp" />
-    <ClCompile Include="..\..\source\Guier\Renderers\OpenGL\OpenGLVertexBuffer.cpp" />
     <ClCompile Include="..\..\source\Guier\Callback.cpp" />
+    <ClCompile Include="..\..\source\Guier\Renderers\Win32\GdipRenderer.cpp" />
+    <ClCompile Include="..\..\source\Guier\Renderers\Win32\Win32OpenGLRenderer.cpp" />
     <ClCompile Include="..\..\source\Guier\Skin.cpp" />
     <ClCompile Include="..\..\source\Guier\Skins\DefaultSkin.cpp" />
     <ClCompile Include="..\..\source\Guier\String.cpp" />
@@ -110,7 +117,6 @@
     <None Include="..\..\include\Guier\Core\Context.inl" />
     <None Include="..\..\include\Guier\Core\Matrix4x4.inl" />
     <None Include="..\..\include\Guier\Core\Vector2.inl" />
-    <None Include="..\..\include\Guier\Core\Window.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

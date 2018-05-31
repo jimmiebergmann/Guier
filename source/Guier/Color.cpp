@@ -23,52 +23,37 @@
 *
 */
 
-#include <Guier/Renderer.hpp>
-
-// Has default renderer type?
-#ifdef GUIER_DEFAULT_RENDERER
-    #if GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
-        #ifdef GUIER_PLATFORM_WINDOWS
-            #include <Guier/Renderers/Win32/GdipRenderer.hpp>
-        #else
-            #error Unkown platform.
-        #endif
-    #elif GUIER_DEFAULT_RENDERER == GUIER_HARDWARE_RENDERER
-        #error Not supporting hardware renderers yet.
-    #endif
-#endif
-
+#include <Guier/Color.hpp>
 
 namespace Guier
 {
 
-    Renderer::~Renderer()
+    Color::Color(const unsigned char red, const unsigned char green, const unsigned char blue, const unsigned char alpha) :
+        R(red),
+        G(green),
+        B(blue),
+        A(alpha)
     {
 
     }
 
-    Renderer * Renderer::CreateDefaultRenderer(const Type defaultRendererType)
-    {
-        #ifdef GUIER_DEFAULT_RENDERER
-            #if defined(GUIER_PLATFORM_WINDOWS) && GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
-                return new Renderers::GdipRenderer;
-            #endif
-        #endif
-
-
-        /*
-        #if GUIER_DEFAULT_RENDERER == GUIER_RENDERER_OPENGL
-             return new Renderers::OpenGLRenderer;
-        #else
-            throw std::runtime_error("Missing default renderer.");
-        #endif;
-        */
-
-        return nullptr;
-    }
-
-    Renderer::Renderer()
+    Color::Color(const unsigned char gray, const unsigned char alpha) :
+        R(gray),
+        G(gray),
+        B(gray),
+        A(alpha)
     {
 
     }
+
+    const Color Color::Black(0, 0, 0);
+    const Color Color::White(255, 255, 255);
+    const Color Color::Red(255, 0, 0);
+    const Color Color::Green(0, 255, 0);
+    const Color Color::Blue(0, 0, 255);
+    const Color Color::Yellow(255, 255, 0);
+    const Color Color::Magenta(255, 0, 255);
+    const Color Color::Cyan(0, 255, 255);
+    const Color Color::Transparent(0, 0, 0, 0);
+
 }

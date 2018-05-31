@@ -26,6 +26,7 @@
 #include <Guier/Control/Button.hpp>
 #include <Guier/Control/VerticalGrid.hpp>
 #include <Guier/Control/Text.hpp>
+#include <Guier/Core/RenderInterface.hpp>
 
 namespace Guier
 {
@@ -106,6 +107,12 @@ namespace Guier
         m_pChild = nullptr;
 
         return pOldChild;
+    }
+
+    void Button::Render(Core::RenderInterface * renderInterface, const Core::RenderArea & renderArea)
+    {
+
+        renderInterface->RenderRectangle(Vector2i(40, 40), Vector2i(100, 40), Color::Red);
     }
 
     void Button::CreateText(const String & label)

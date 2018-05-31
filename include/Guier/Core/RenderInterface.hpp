@@ -26,71 +26,48 @@
 #pragma once
 
 #include <Guier/Core/Build.hpp>
-#include <Guier/Core/WindowBase.hpp>
-#include <Guier/Vector2.hpp>
-#include <Guier/String.hpp>
-#include <memory>
+#include <Guier/Core/RenderArea.hpp>
+#include <Guier/Core/Texture.hpp>
+#include <Guier/Font.hpp>
 
 namespace Guier
 {
 
-    class Window;
-    class Renderer;
+    class Control;
 
     namespace Core
     {
 
-        class GUIER_API WindowImpl
+        class GUIER_API RenderInterface
         {
 
         public:
 
-            virtual ~WindowImpl();
-
             /**
-            * Get or set current size of window.
+            * Virtual destructor.
             *
             */
-            virtual const Vector2i & Size() const = 0;
-            virtual void Size(const Vector2i & size) = 0;
+            virtual ~RenderInterface();
 
             /**
-            * Get or set current title of window.
+            * Render Controller.
             *
             */
-            virtual void Title(const String & title) = 0;
+            virtual void RenderControl(Control * control, const RenderArea & renderArea);
 
             /**
-            * Get or set the current position of the window.
-            *
-            * @brief Has no effect if the window is closed.
+            * Render Rectangle.
             *
             */
-            virtual const Vector2i & Position() const = 0;
-            virtual void Position(const Vector2i & position) = 0;
+            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Texture * texture) = 0;
+            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Texture * texture, const Vector2i & portionPosition, const Vector2i & portionSize) = 0;
+            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, const Color & color) = 0;
 
-            virtual void Show() = 0;
-
-            virtual void Hide() = 0;
-
-            virtual void Minimize() = 0;
-
-            virtual void Maximize() = 0;
-
-            virtual void Close() = 0;
-
-            virtual unsigned int GetStyle() const = 0;
-
-            virtual void NewStyle(const unsigned int styles) = 0;
-
-            virtual void EnableStyles(const unsigned int styles) = 0;
-
-            virtual void DisableStyles(const unsigned int styles) = 0;
-
-
-        protected:
-
-            void Render(Control * control, Core::RendererInterface * rendererInterface, int windowHandle);
+            /**
+            * Render font.
+            *
+            */
+            virtual void RenderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color = Color::Black);
 
         };
 

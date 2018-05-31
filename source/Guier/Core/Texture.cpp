@@ -23,14 +23,19 @@
 *
 */
 
-template<>
-const std::wstring Window::Title() const
-{
-    return m_Title;
-}
+#include <Guier/Core/Texture.hpp>
 
-template<typename String>
-const String Window::Title() const
+namespace Guier
 {
-    return std::string(m_Title.begin(), m_Title.end());
+
+    namespace Core
+    {
+
+        Texture::~Texture()
+        {
+
+        }
+
+    }
+
 }

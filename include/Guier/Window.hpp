@@ -49,8 +49,7 @@ namespace Guier
         * @throw std::runtime_error If context == nullptr.
         *
         */
-        Window(Context * context, const Vector2i & size, const std::wstring & title);
-        Window(Context * context, const Vector2i & size, const std::string & title);
+        Window(Context * context, const Vector2i & size, const String & title);
 
         /**
         * Get window style.
@@ -75,10 +74,8 @@ namespace Guier
         * @param title   New title of window.
         *
         */
-        template<typename String> const String Title() const;
-        template<>const std::wstring Title() const;
-        Window * Title(const std::wstring & title);
-        Window * Title(const std::string & title);
+        const String & Title() const;
+        Window * Title(const String & title);
 
         /**
         * Get or set the current position of the window.
@@ -231,11 +228,5 @@ namespace Guier
         friend class Context;
 
     };
-
-    /**
-    * Inline implementations.
-    *
-    */
-    #include <Guier/Core/Window.inl>   
 
 }

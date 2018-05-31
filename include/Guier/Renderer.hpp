@@ -26,11 +26,13 @@
 #pragma once
 
 #include <Guier/Core/Build.hpp>
+#include <Guier/Vector2.hpp>
 
 namespace Guier
 {
 
     class Context; ///< Forward declaration.
+    namespace Core { class RenderInterface; class WindowsImp; class RenderTarget; }
 
     /**
     * Base class of renderer.
@@ -45,10 +47,14 @@ namespace Guier
     public:
 
         /**
-        * Destructor.
+        * Enumeration of types
         *
         */
-        virtual ~Renderer();
+        enum class Type
+        {
+            Software,
+            Hardware
+        };
 
         /**
         * Create default renderer.
@@ -58,7 +64,13 @@ namespace Guier
         * @throw std::runtime_error If there is no default renderer available.
         *
         */
-        static Renderer * CreateDefaultRenderer();
+        static Renderer * CreateDefaultRenderer(const Type defaultRendererType);
+
+        /**
+        * Destructor.
+        *
+        */
+        virtual ~Renderer();
 
     protected:
 
@@ -81,6 +93,13 @@ namespace Guier
         */
         virtual bool Load() = 0;
 
+        /**
+        * Get renderer interface.
+        *
+        */
+        virtual Core::RenderInterface * GetInterface() = 0;
+
+
         Context *   m_pContext; ///< Pointer to context.
 
         /**
@@ -88,6 +107,8 @@ namespace Guier
         *
         */
         friend class Context;
+        friend class Core::RenderTarget;
+        friend class Core::WindowsImp;
 
     };
 

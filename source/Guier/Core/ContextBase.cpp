@@ -38,16 +38,35 @@ namespace Guier
 
         bool ContextBase::Add(Window * window)
         {
-            std::lock_guard<std::mutex> sm(m_TickMutex);
+            if (window == nullptr)
+            {
+                return false;
+            }
 
-            return false;
+            std::lock_guard<std::mutex> sm1(m_TickMutex);
+
+            if (m_Windows.find(window) != m_Windows.end())
+            {
+                return true;
+            }
+
+            std::lock_guard<std::mutex> sm2(m_WindowLoadingSet.Mutex);
+
+            if (m_WindowLoadingSet.Value.find(window) != m_WindowLoadingSet.Value.end())
+            {
+                return true;
+            }
+
+            m_WindowLoadingSet.Value.insert(window);
+
+            InterruptWindowEvents();
+
+            return true;
         }
 
-        bool ContextBase::Set(Renderer * renderer)
+        Renderer * ContextBase::GetRenderer() const
         {
-            std::lock_guard<std::mutex> sm(m_TickMutex);
-
-            return false;
+            return m_pRenderer;
         }
 
         void ContextBase::Tick()
@@ -57,22 +76,79 @@ namespace Guier
             // ...
         }
 
-        ContextBase::ContextBase(Context * context, Renderer * renderer, Skin * skin, const bool autoTick) :
+        ContextBase::ContextBase(Context * context) :
             m_pContext(context),
-            m_AutoTick(autoTick),
+            m_AutoTick(true),
             m_Running(false),
-            m_pRenderer(renderer),
-            m_pSkin(skin)
+            m_pRenderer(nullptr),
+            m_pSkin(nullptr)
+        {
+            if (context == nullptr)
+            {
+                throw std::runtime_error("Context is nullptr.");
+            }
+        }
+
+        ContextBase::ContextBase(Context * context, Renderer * renderer, Skin * skin, const bool autoTick) :
+            ContextBase(context)          
+        {
+            bool hasDefaultRenderer = false;
+            Renderer::Type defaultRendererType = Renderer::Type::Software;
+
+            #ifdef GUIER_DEFAULT_RENDERER
+                #if GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
+                    defaultRendererType = Renderer::Type::Software;
+                    hasDefaultRenderer = true;
+                #elif GUIER_DEFAULT_RENDERER == GUIER_HARDWARE_RENDERER
+                    Renderer::Type defaultRendererType = Renderer::Type::Hardware;
+                    hasDefaultRenderer = true;
+                #else
+                    #error Unkown default renderer type. Specify in Build.hpp.
+                #endif
+            #endif
+
+            Start(renderer, hasDefaultRenderer, defaultRendererType, skin, autoTick);
+        }
+
+        ContextBase::ContextBase(Context * context, const Renderer::Type rendererType, Skin * skin, const bool autoTick) :
+            ContextBase(context)
+        {
+            bool hasDefaultRenderer = true;
+            Renderer::Type defaultRendererType = Renderer::Type::Software;
+
+            #ifdef GUIER_DEFAULT_RENDERER
+                #if GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
+                    defaultRendererType = Renderer::Type::Software;
+                    hasDefaultRenderer = true;
+                #elif GUIER_DEFAULT_RENDERER == GUIER_HARDWARE_RENDERER
+                    Renderer::Type defaultRendererType = Renderer::Type::Hardware;
+                    hasDefaultRenderer = true;
+                #else
+                    #error Unkown default renderer type. Specify in Build.hpp.
+                #endif
+            #endif
+
+            Start(nullptr, hasDefaultRenderer, defaultRendererType, skin, autoTick);
+        }
+
+        void ContextBase::Start(Renderer * renderer, const bool hasDefaultRenderer, const Renderer::Type defaultRendererType, Skin * skin, const bool autoTick)
         {
             // Try to load default renderer.
             if (m_pRenderer == nullptr)
             {
-                m_pRenderer = Renderer::CreateDefaultRenderer();
-
-                // Check if default renderer is ok.
-                if (m_pRenderer == nullptr)
+                if (hasDefaultRenderer)
                 {
-                    throw std::runtime_error("Failed to create default renderer.");
+                    m_pRenderer = Renderer::CreateDefaultRenderer(defaultRendererType);
+
+                    // Check if default renderer is ok.
+                    if (m_pRenderer == nullptr)
+                    {
+                        throw std::runtime_error("Failed to create default renderer.");
+                    }
+                }
+                else
+                {
+                    throw std::runtime_error("No default renderer is available.");
                 }
             }
 
@@ -87,31 +163,31 @@ namespace Guier
                     throw std::runtime_error("Failed to create default skin.");
                 }
             }
- 
+
             // Flag the context as running.
             m_Running = true;
 
             Core::Semaphore startWindowThreadSemaphore;
             //Core::Semaphore startWindowInterruptSemaphore;
 
-           /* m_InterruptWindowThread = std::thread([this, &startWindowInterruptSemaphore]()
+            /* m_InterruptWindowThread = std::thread([this, &startWindowInterruptSemaphore]()
             {
-                startWindowInterruptSemaphore.NotifyOne();
+            startWindowInterruptSemaphore.NotifyOne();
 
-                while (m_Running)
-                {
-                    m_WindowSempahore.Wait();
+            while (m_Running)
+            {
+            m_WindowSempahore.Wait();
 
-                    ExecuteWindowEventInterrupt();
+            ExecuteWindowEventInterrupt();
 
-                    if (m_Running == false)
-                    {
-                        return;
-                    }
-                }
+            if (m_Running == false)
+            {
+            return;
+            }
+            }
             });*/
 
-          /*  m_WindowThread = std::thread([this, &startWindowThreadSemaphore]()
+            m_WindowThread = std::thread([this, &startWindowThreadSemaphore]()
             {
                 startWindowThreadSemaphore.NotifyOne();
 
@@ -121,42 +197,41 @@ namespace Guier
                     CreateWindowsInQueue();
 
                     // Destroy windows
-                    DestroyWindowsInQueue();
+                    //DestroyWindowsInQueue();
 
                     // Handle window events.
                     // This is a modal function, using Win32 or X11.
                     // It's possible to interrupt the function by calling InterruptWindowEvents();
                     HandleWindowEvents();
+
+                    // If autotick, tick.
                 }
 
             });
 
             startWindowThreadSemaphore.Wait();
-            startWindowInterruptSemaphore.Wait();*/
+            //startWindowInterruptSemaphore.Wait();
         }
 
         void ContextBase::CreateWindowsInQueue()
         {
-           /* std::lock_guard<std::mutex> sm_2(m_WindowMutex);
-            std::lock_guard<std::mutex> sm_1(m_WindowCreationMutex); 
+            std::lock_guard<std::mutex> sm_2(m_TickMutex);
+            std::lock_guard<std::mutex> sm_1(m_WindowLoadingSet.Mutex); 
 
-            while (m_WindowCreationQueue.size())
+            for(auto it = m_WindowLoadingSet.Value.begin(); it != m_WindowLoadingSet.Value.end(); it++)
             {
-                auto front = m_WindowCreationQueue.front();
-                m_WindowCreationQueue.pop();
+                Window * pWindow = *it;
+                pWindow->Load();
 
-                front->window = std::shared_ptr<Window>(new Window(front->size, front->title), &WindowSharedPointerDeleter);
-                front->window->CreateImplementation(m_pContext, front->window);
+                m_Windows.insert(pWindow);
+            }
 
-                m_Windows.insert(front->window);
-
-                front->semaphore.NotifyOne();
-            }*/
+            m_WindowLoadingSet.Value.clear();
         }
 
-        void ContextBase::DestroyWindowsInQueue()
+        /*void ContextBase::DestroyWindowsInQueue()
         {
-            /*std::lock_guard<std::mutex> sm_2(m_WindowMutex);
+            std::lock_guard<std::mutex> sm_2(m_WindowMutex);
             std::lock_guard<std::mutex> sm_1(m_WindowDestructionMutex);
 
             for (auto it = m_WindowDestructionSet.begin(); it != m_WindowDestructionSet.end(); it++)
@@ -164,20 +239,20 @@ namespace Guier
                 (*it)->DestroyImplementation();
             }
 
-            m_WindowDestructionSet.clear();*/
-        }
+            m_WindowDestructionSet.clear();
+        }*/
 
         void ContextBase::HandleWindowEvents()
         {
-            //Core::WindowBase::HandleEvents();
+            Core::WindowBase::HandleEvents();
         }
 
-        void ContextBase::InterruptWindowEvents()
+        /*void ContextBase::InterruptWindowEvents()
         {
             m_WindowSempahore.NotifyOne();
         }
-
-        void ContextBase::ExecuteWindowEventInterrupt()
+        */
+        void ContextBase::InterruptWindowEvents()
         {
             #if defined(GUIER_PLATFORM_WINDOWS)
                 ::PostThreadMessage(GetThreadId(m_WindowThread.native_handle()), WM_QUIT, 0, 0);
@@ -185,7 +260,7 @@ namespace Guier
             #error Unkown platform.
             #endif
         }
-
+        /*
         void ContextBase::ClearAllWindows()
         {
            /* std::lock_guard<std::mutex> sm_1(m_WindowMutex);
@@ -208,14 +283,14 @@ namespace Guier
                 (*it)->DestroyImplementation();
             }
             m_Windows.clear();
-            */
+            
         }
 
         void ContextBase::WindowSharedPointerDeleter(Window * window)
         {
             //delete window;
         }
-        
+        */
 
     }
 

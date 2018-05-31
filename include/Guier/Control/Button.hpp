@@ -80,6 +80,12 @@ namespace Guier
         virtual Control * RemoveChild(const Index & index);
 
         /**
+        * Render the control.
+        *
+        */
+        virtual void Render(Core::RenderInterface * renderInterface, const Core::RenderArea & renderArea);
+
+        /**
         * Internal function for adding label via constructor.
         *
         */

@@ -25,25 +25,16 @@
 
 #include <Guier/Window.hpp>
 #include <Guier/Context.hpp>
-//#include <Guier/Core/WindowImpl.hpp>
 
 namespace Guier
 {
 
-    //static const std::wstring g_EmptyString = L"";
-    //static const Vector2i g_DefaultSizePosition = {-1, -1};
-
-    Window::Window(Context * context, const Vector2i & size, const std::wstring & title) :
+    Window::Window(Context * context, const Vector2i & size, const String & title) :
         WindowBase(context, size, title)
     {
         context->Add(this);
     }
 
-    Window::Window(Context * context, const Vector2i & size, const std::string & title) :
-        WindowBase(context, size, std::wstring(title.begin(), title.end()))
-    {
-        context->Add(this);
-    }
 
     const WindowStyle * Window::Style() const
     {
@@ -99,20 +90,7 @@ namespace Guier
         return this;
     }
 
-    Window * Window::Title(const std::wstring & title)
-    {
-        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->Title(title);
-        }*/
-
-        m_Title = title;
-        return this;
-    }
-
-    Window * Window::Title(const std::string & title)
+    const String & Window::Title() const
     {
         /*std::lock_guard<std::mutex> sm(m_ImplMutex);
 
@@ -122,8 +100,19 @@ namespace Guier
         }
         */
 
-        m_Title = std::wstring(title.begin(), title.end());
+        return m_Title;
+    }
 
+    Window * Window::Title(const String & title)
+    {
+        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
+
+        if (m_pImpl)
+        {
+            m_pImpl->Title(title);
+        }*/
+
+        m_Title = title;
         return this;
     }
 

@@ -1,6 +1,5 @@
 #include <Guier/Guier.hpp>
 #include <Guier/Skins/DefaultSkin.hpp>
-#include <Guier/Renderers/OpenGL/OpenGLRenderer.hpp>
 #include <chrono>
 #include <thread>
 #include <vector>
@@ -152,15 +151,16 @@ int main()
     Guier::Window * pWindow = new Guier::Window({800, 600}, "Hello world!");*/
 
 
-   /* while(running1 || running2)//for (int i = 0; i < 1000; i++)
+    while(1)//for (int i = 0; i < 1000; i++)
     {
         //context.Update();
         //context.Render();
 
         char c = 0;
         c = std::cin.get();
+        break;
 
-        switch (c)
+        /*switch (c)
         {
         case '1':
             window->Show();
@@ -177,7 +177,7 @@ int main()
         case '5':
             window->Close();
             break;
-        /*case '5':
+        case '5':
             window->Open();
             break;
         case '6':
@@ -188,13 +188,13 @@ int main()
             break;
         case '8':
             window->Hide(false);
-            break;*/
-      /*  default:
             break;
-        }
+       default:
+            break;
+        }*/
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    }*/
+        //std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
 
     
 

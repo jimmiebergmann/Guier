@@ -43,26 +43,29 @@ namespace Guier
 
     }
 
+    Context::Context(const Renderer::Type rendererType, Skin * skin, const bool autoTick) :
+        Core::ContextBase(this, rendererType, skin, autoTick)
+    {
+
+    }
+
     Context::Context(Skin * skin, Renderer * renderer, const bool autoTick) :
         Core::ContextBase(this, renderer, skin, autoTick)
     {
 
     }
 
-    Context::~Context()
+    Context::Context(Skin * skin, const Renderer::Type rendererType, const bool autoTick) :
+        Core::ContextBase(this, rendererType, skin, autoTick)
     {
 
     }
 
-    /*bool Context::Add(Window * window)
-    {
-        if (window == nullptr)
-        {
-            throw std::runtime_error("Window is nullptr.");
-        }
 
-        return false;
-    }*/
+    Context::~Context()
+    {
+
+    }
 
     /*Context::Context() :
         ContextBase(this)

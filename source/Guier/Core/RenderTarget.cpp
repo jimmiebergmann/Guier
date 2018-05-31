@@ -24,6 +24,8 @@
 */
 
 #include <Guier/Core/RenderTarget.hpp>
+#include <Guier/Core/RenderInterface.hpp>
+#include <Guier/Renderer.hpp>
 
 namespace Guier
 {
@@ -32,7 +34,6 @@ namespace Guier
     {
 
         RenderTarget::RenderTarget() :
-           // m_pContext(nullptr),
             m_pRenderer(nullptr)
         {
 
@@ -40,6 +41,16 @@ namespace Guier
 
         RenderTarget::~RenderTarget()
         {
+        }
+
+        void RenderTarget::SetRenderer(Renderer * renderer)
+        {
+            m_pRenderer = renderer;
+        }
+
+        void RenderTarget::RenderControl(Control * control, RenderArea & renderArea)
+        {
+            m_pRenderer->GetInterface()->RenderControl(control, renderArea);
         }
 
     }

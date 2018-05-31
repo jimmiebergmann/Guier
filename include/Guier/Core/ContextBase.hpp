@@ -27,6 +27,7 @@
 
 #include <Guier/Core/Build.hpp>
 #include <Guier/Core/Semaphore.hpp>
+#include <Guier/Core/Safe.hpp>
 #include <Guier/Vector2.hpp>
 #include <set>
 #include <queue>
@@ -50,7 +51,7 @@ namespace Guier
         class WindowBase;
 
 
-        struct WindowCreation
+        /*struct WindowCreation
         {
             WindowCreation(const Vector2i & p_Size = { 800, 600 }, const std::wstring & p_Title = L"") :
                 size(p_Size), title(p_Title)
@@ -77,7 +78,7 @@ namespace Guier
             std::wstring            title;
             Semaphore               semaphore;
             std::shared_ptr<Window> window;
-        };
+        };*/
 
         /**
         * Context base class.
@@ -97,12 +98,10 @@ namespace Guier
             bool Add(Window * window);
 
             /**
-            * Set renderer.
-            *
-            * @return True if renderer has been changed, else false.
+            * Get renderer.
             *
             */
-            bool Set(Renderer * renderer);
+            Renderer * GetRenderer() const;
 
             /**
             * Tick the context.
@@ -120,22 +119,24 @@ namespace Guier
             *
             */
             ContextBase(Context * context, Renderer * renderer, Skin * skin, const bool autoTick);
+            ContextBase(Context * context, const Renderer::Type rendererType, Skin * skin, const bool autoTick);
 
             void CreateWindowsInQueue();
-            void DestroyWindowsInQueue();
+            //void DestroyWindowsInQueue();
 
             void HandleWindowEvents();
             void InterruptWindowEvents();
-            void ExecuteWindowEventInterrupt();
 
+           // void InterruptWindowEvents();
+            
+            /*
             void ClearAllWindows();
 
 
             static void WindowSharedPointerDeleter(Window * window);
-
-            std::atomic<bool>                   m_Running;              ///< Threads are running.
-            std::thread                         m_WindowThread;           ///< Running thread.
-            std::thread                         m_InterruptWindowThread;  ///< Thread for interruping window events.
+            */
+            
+           /* std::thread                         m_InterruptWindowThread;  ///< Thread for interruping window events.
             Core::Semaphore                     m_WindowSempahore;    ///< Semaphore for ticking thread, for example when redrawing.
             
             //Skin *                              m_pSkin;            ///< Pointer to skin.
@@ -147,19 +148,39 @@ namespace Guier
             std::queue<WindowCreation*>         m_WindowCreationQueue;
 
             std::mutex                          m_WindowDestructionMutex;
-            std::set<std::shared_ptr<Window>>   m_WindowDestructionSet;
+            std::set<std::shared_ptr<Window>>   m_WindowDestructionSet;*/
 
 
             //std::set<Control *>                 m_ControlRedraw;
 
         private:
 
-            Context * const                     m_pContext;         ///< Pointer to inheriting context.
-            const bool                          m_AutoTick;         ///< Should the context start a new thread and automatically tick when possible?.
-            Semaphore                           m_TickSemaphore;    ///< Tick trigger.
-            std::mutex                          m_TickMutex;        ///< Tick mutex.
-            Renderer *                          m_pRenderer;        ///< Pointer to renderer.
-            Skin *                              m_pSkin;        ///< Pointer to skin.
+            /**
+            * Default constructor.
+            *
+            */
+            ContextBase(Context * context);
+
+            /**
+            * Start context base.
+            *
+            */
+            void Start(Renderer * renderer, const bool hasDefaultRenderer,
+                       const Renderer::Type defaultRendererType, Skin * skin, const bool autoTick);
+
+            Context * const                     m_pContext;             ///< Pointer to inheriting context.
+            const bool                          m_AutoTick;             ///< Should the context start a new thread and automatically tick when possible?.
+            Semaphore                           m_TickSemaphore;        ///< Tick trigger.
+            std::mutex                          m_TickMutex;            ///< Tick mutex.
+            Renderer *                          m_pRenderer;            ///< Pointer to renderer.
+            Skin *                              m_pSkin;                ///< Pointer to skin.
+
+            std::atomic<bool>                   m_Running;              ///< Threads are running.
+            std::thread                         m_WindowThread;         ///< Running thread.
+
+            std::set<Window *>                  m_Windows;              ///< Set of all windows attached to context.
+            Safe<std::set<Window *>>            m_WindowLoadingSet;     ///< Queue of all windows in loading queue.
+                                                                        ///< Windows are loaded in the same thread.
 
         };
 

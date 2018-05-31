@@ -23,13 +23,29 @@
 *
 */
 
-#include <Guier/Core/Utilities.hpp>
+#include <Guier/Core/RenderInterface.hpp>
+#include <Guier/Control.hpp>
 
 namespace Guier
 {
 
     namespace Core
     {
+
+        RenderInterface::~RenderInterface()
+        {
+
+        }
+
+        void RenderInterface::RenderControl(Control * control, const RenderArea & renderArea)
+        {
+            control->Render(this, renderArea);
+        }
+
+        void RenderInterface::RenderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color)
+        {
+            font->Render(string, size, position, color);
+        }
 
     }
 

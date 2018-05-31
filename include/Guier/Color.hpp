@@ -26,15 +26,47 @@
 #pragma once
 
 #include <Guier/Core/Build.hpp>
-#include <string>
 
 namespace Guier
 {
 
-    namespace Core
+    /**
+    * Color, represented by RGBA.
+    *
+    */
+    class GUIER_API Color
     {
 
-       // static GUIER_API std::wstring StringToWideString(const std::string & p_String);
+    public:
 
-    }
+        /**
+        * Constructors.
+        *
+        * @param red        Red color component. 
+        * @param green      Green color component.
+        * @param blue       Blue color component.
+        * @param alpha      Alpha component.
+        * @param gray       Gray color. Setting red, green and blue components.
+        *
+        */
+        Color(const unsigned char red, const unsigned char green, const unsigned char blue, const unsigned char alpha = 255);
+        Color(const unsigned char gray, const unsigned char alpha = 255);
+
+        unsigned char R;    ///< Red color component.
+        unsigned char G;    ///< Green color component.
+        unsigned char B;    ///< Blue color component.
+        unsigned char A;    ///< Alpha component.
+
+        static const Color Black;
+        static const Color White;
+        static const Color Red;
+        static const Color Green;
+        static const Color Blue;
+        static const Color Yellow;
+        static const Color Magenta;
+        static const Color Cyan;
+        static const Color Transparent;
+
+    };
+
 }

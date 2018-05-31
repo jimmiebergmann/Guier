@@ -26,12 +26,14 @@
 #pragma once
 
 #include <Guier/Core/Build.hpp>
+#include <Guier/Core/RenderArea.hpp>
 
 namespace Guier
 {
 
     //class Context;
     class Renderer;
+    class Control;
 
     namespace Core
     {
@@ -55,7 +57,10 @@ namespace Guier
 
         protected:
 
-            //Guier::Context * m_pContext;   ///< Pointer to context.
+            void SetRenderer(Renderer * renderer);
+
+            void RenderControl(Control * control, RenderArea & renderArea);
+
             Renderer *       m_pRenderer;  ///< Pointer to loaded renderer. Is nullptr if not set by context.
             
         };
