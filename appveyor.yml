@@ -1,4 +1,7 @@
 version: 1.0.{build}
+
+image: Visual Studio 2017
+
 build:
   project: build\Visual Studio\Guier.sln
-verbosity: minimal
+  verbosity: minimal
