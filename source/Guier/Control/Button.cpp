@@ -34,38 +34,38 @@ namespace Guier
     Button::Button(Parent * parent, const String & label) :
         Control(this, parent, Index::Last, Size::Fit),
         Parent(),
-        m_Size(Size::Fit)
+        m_pVerticalGrid(new VerticalGrid(this))
     {
-        CreateText(label);
+        AddLabel(label);
     }
 
     Button::Button(Parent * parent, const Index & index, const String & label) :
         Control(this, parent, index, Size::Fit),
         Parent(),
-        m_Size(Size::Fit)
+        m_pVerticalGrid(new VerticalGrid(this))
     {
-        CreateText(label);
+        AddLabel(label);
     }
 
     Button::Button(Parent * parent, const Index & index, const Vector2i & size, const String & label) :
         Control(this, parent, index, size),
         Parent(),
-        m_Size(size)
+        m_pVerticalGrid(new VerticalGrid(this))
     {
-        CreateText(label);
+        AddLabel(label);
     }
 
     Button::Button(Parent * parent, const Vector2i & size, const String & label) :
         Control(this, parent, Index::Last, size),
         Parent(),
-        m_Size(size)
+        m_pVerticalGrid(new VerticalGrid(this))
     {
-        CreateText(label);
+        AddLabel(label);
     }
 
     Button::~Button()
     {
-
+        delete m_pVerticalGrid;
     }
 
     unsigned int Button::Type() const
@@ -75,47 +75,30 @@ namespace Guier
 
     bool Button::AddChild(Control * child, const Index & index)
     {
-        if (child == nullptr)
+        if (m_pVerticalGrid)
         {
-            return false;
+            return m_pVerticalGrid->Add(child, index);
         }
-
-        if (m_pChild)
-        {
-            delete m_pChild;
-        }
-        m_pChild = child;
-
-        return true;
+        
+        return false;
     }
 
     bool Button::RemoveChild(Control * child)
     {
-        if (child == nullptr || m_pChild == nullptr)
-        {
-            return false;
-        }
-
-        m_pChild = nullptr;
-
-        return true;
+        return m_pVerticalGrid->Remove(child);
     }
 
     Control * Button::RemoveChild(const Index & index)
     {
-        Control * pOldChild = m_pChild;
-        m_pChild = nullptr;
-
-        return pOldChild;
+        return m_pVerticalGrid->Remove(index);
     }
 
-    void Button::Render(Core::RenderInterface * renderInterface, const Core::RenderArea & renderArea)
+    void Button::Render(Core::Renderer::Interface * renderInterface)
     {
-
         renderInterface->RenderRectangle(Vector2i(40, 40), Vector2i(100, 40), Color::Red);
     }
 
-    void Button::CreateText(const String & label)
+    void Button::AddLabel(const String & label)
     {
         // Create text control if label length != 0.
         const std::wstring & text = label.Get();

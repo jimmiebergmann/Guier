@@ -24,10 +24,11 @@
 */
 
 #include <Guier/Core/WindowBase.hpp>
-#include <Guier/Context.hpp>
 
-#if defined(GUIER_PLATFORM_WINDOWS)
-#include <Guier/Core/Window/Win32WindowImpl.hpp>
+#ifdef GUIER_PLATFORM_WINDOWS
+#include <Guier/Core/Windows/Win32/Win32WindowImpl.hpp>
+#else
+#error Unkown platform. Specify in Build.hpp
 #endif
 
 namespace Guier
@@ -36,42 +37,37 @@ namespace Guier
     namespace Core
     {
 
-        WindowBase::WindowBase(Context * context, const Vector2i & size, const String & title) :
-            RenderTarget(context->GetRenderer()),
-            Parent(),
-            m_WindowStyle(this),
-            m_pContext(context),
-            m_Size(size),
-            m_Position(-1, -1),
-            m_Title(title)
+        WindowBase::WindowBase(const Vector2i & size, const String & title, const std::initializer_list<Style> & styles) :
+            m_pImpl(nullptr)
         {
+            #ifdef GUIER_PLATFORM_WINDOWS
+                Win32WindowImpl * pWin32Impl = new Win32WindowImpl(this, size, title, styles);
+                m_pImpl = pWin32Impl;
+                pWin32Impl->LoadImplementation();
+            #else
+            #error Unkown platform. Specify in Build.hpp
+            #endif
         }
 
         WindowBase::~WindowBase()
         {
-
+            delete m_pImpl;
         }
 
-        bool WindowBase::Load(Renderer * renderer)
+        bool WindowBase::AddChild(Control * child, const Index & index)
         {
-            #if defined(GUIER_PLATFORM_WINDOWS)
-                m_pImpl = new Core::Win32WindowImpl(m_pContext, renderer, m_Size, m_Title);
-            #else
-                #error Unkown platform.
-            #endif
-
-            return true;
+            return m_pImpl->Add(child, index);
         }
 
-        void WindowBase::HandleEvents()
+        bool WindowBase::RemoveChild(Control * child)
         {
-            #if defined(GUIER_PLATFORM_WINDOWS)
-                Core::Win32WindowImpl::HandleEvents();
-            #else
-                #error Unkown platform.
-            #endif
+            return m_pImpl->Remove(child);
         }
-        
+
+        Control * WindowBase::RemoveChild(const Index & index)
+        {
+            return m_pImpl->Remove(index);
+        }
 
     }
 

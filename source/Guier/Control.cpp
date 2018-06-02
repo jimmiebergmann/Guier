@@ -116,18 +116,18 @@ namespace Guier
         return true;
     }
 
-    bool Parent::Remove(const Index & index)
+    Control * Parent::Remove(const Index & index)
     {
         Control * pChild = RemoveChild(index);
             
         if (pChild == nullptr)
         {
-            return false;
+            return nullptr;
         }
 
         delete pChild;
 
-        return true;
+        return pChild;
     }
 
     Parent::Parent()

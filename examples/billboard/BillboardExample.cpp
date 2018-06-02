@@ -53,17 +53,14 @@ int main()
 
 
     // Example
-    Context * context = new Context();
+    Window * window = new Window({ 800, 600 }, L"My window 1!");
 
-    Window * window = new Window(context, { 800, 600 }, L"My window 1!");
-    window->Style()->Enable(WindowStyle::Close);
-    window->Show();
+    /*window->Style()->Enable(WindowStyle::Close);
+    window->Show();*/
 
     Button * button = new Button(window, Size::Fit);
     Button * button2 = new Button(window);
     button->Add(button2);
-
-    std::cout << Size::Fit.x << "  " << Size::Fit.y << std::endl;
 
     button->Remove(button2);
     //delete button2;

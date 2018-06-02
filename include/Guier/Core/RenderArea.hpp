@@ -22,7 +22,7 @@
 * SOFTWARE.
 *
 */
-
+/*
 #pragma once
 
 #include <Guier/Vector2.hpp>
@@ -33,27 +33,8 @@ namespace Guier
     namespace Core
     {
 
-        /**
-        * Render area class.
-        *
-        */
-        class RenderArea
-        {
 
-        public:
-
-            RenderArea(const Vector2i & position, const Vector2i & size) :
-                Position(position),
-                Size(size)
-            {
-
-            }
-
-            Vector2i Position;
-            Vector2i Size;
-
-        };
 
     }
 
-}
+}*/

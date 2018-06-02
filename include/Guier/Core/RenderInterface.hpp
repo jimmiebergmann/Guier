@@ -24,7 +24,7 @@
 */
 
 #pragma once
-
+/*
 #include <Guier/Core/Build.hpp>
 #include <Guier/Core/RenderArea.hpp>
 #include <Guier/Core/Texture.hpp>
@@ -38,39 +38,8 @@ namespace Guier
     namespace Core
     {
 
-        class GUIER_API RenderInterface
-        {
-
-        public:
-
-            /**
-            * Virtual destructor.
-            *
-            */
-            virtual ~RenderInterface();
-
-            /**
-            * Render Controller.
-            *
-            */
-            virtual void RenderControl(Control * control, const RenderArea & renderArea);
-
-            /**
-            * Render Rectangle.
-            *
-            */
-            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Texture * texture) = 0;
-            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Texture * texture, const Vector2i & portionPosition, const Vector2i & portionSize) = 0;
-            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, const Color & color) = 0;
-
-            /**
-            * Render font.
-            *
-            */
-            virtual void RenderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color = Color::Black);
-
-        };
+   
 
     }
 
-}
+}*/

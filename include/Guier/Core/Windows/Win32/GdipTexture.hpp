@@ -23,29 +23,65 @@
 *
 */
 
-#include <Guier/Renderers/Win32/Win32OpenGLRenderer.hpp>
+#pragma once
+
+#include <Guier/Core/Texture.hpp>
+#include <Guier/String.hpp>
+
+#include <Windows.h>
+#include <gdiplus.h>
+#include <Gdiplusheaders.h>
 
 namespace Guier
 {
 
-    namespace Renderers
+    namespace Core
     {
 
-        Win32OpenGLRenderer::Win32OpenGLRenderer()
+        class GUIER_API GdipTexture : public Texture
         {
 
-        }
+        public:
 
-        Win32OpenGLRenderer::~Win32OpenGLRenderer()
-        {
+            /**
+            * Constructor.
+            *
+            */
+            GdipTexture(const String & filename);
+            GdipTexture(const void * data, const Vector2i & size, const Format format);
 
-        }
+            /**
+            * Virtual destructor.
+            *
+            */
+            ~GdipTexture();
 
-        bool Win32OpenGLRenderer::Load()
-        {
+            /**
+            * Get format of texture.
+            *
+            */
+            Format GetFormat() const;
 
-            return true;
-        }
+            /**
+            * Get size of texture.
+            *
+            */
+            const Vector2i & GetSize() const;
+
+            /**
+            * Get underlying bitmap class.
+            *
+            */
+            Gdiplus::Bitmap * GetBitmap() const;
+
+        private:
+
+            Gdiplus::Bitmap *   m_pBitmap;
+            Vector2i            m_Size;
+            Format              m_Format;
+
+        };
 
     }
+
 }

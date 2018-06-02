@@ -23,70 +23,62 @@
 *
 */
 
-#include <Guier/Renderers/Win32/GdipRenderer.hpp>
+#include <Guier/Core/Windows/Win32/GdipTexture.hpp>
 
 #ifdef GUIER_PLATFORM_WINDOWS
 
-#include <gdiplus.h>
-#include <Gdiplusheaders.h>
-#include <atlstr.h> 
-#include <ShellScalingAPI.h>
 
 namespace Guier
 {
 
-    namespace Renderers
+    namespace Core
     {
 
-        // Interface
-        void GdipInterface::RenderControl(Control * control, const Core::RenderArea & renderArea)
-        {
-            ::
-        }
 
-        void GdipInterface::RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture)
+        GdipTexture::GdipTexture(const String & filename) :
+            m_pBitmap(nullptr)
         {
 
         }
 
-        void GdipInterface::RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture,
-            const Vector2i & portionPosition, const Vector2i & portionSize)
+        GdipTexture::GdipTexture(const void * data, const Vector2i & size, const Format format) :
+            m_pBitmap(nullptr)
         {
+            BITMAPINFO bmi;
+            memset(&bmi, 0, sizeof(bmi));
+            bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+            bmi.bmiHeader.biWidth = size.x;
+            bmi.bmiHeader.biHeight = size.y;
+            bmi.bmiHeader.biPlanes = 1;
+            bmi.bmiHeader.biCompression = BI_RGB;
+            bmi.bmiHeader.biBitCount = 24;
 
+            char buffer[32 * 32 * 3];
+            // Write pixels to 'data' however you want...
+            m_pBitmap = new Gdiplus::Bitmap(&bmi, const_cast<void *>(data));
         }
 
-        void GdipInterface::RenderRectangle(const Vector2i & position, const Vector2i & size, const Color & color)
+        GdipTexture::~GdipTexture()
         {
-
+            if (m_pBitmap)
+            {
+                delete m_pBitmap;
+            }
         }
 
-        GdipInterface::GdipInterface(HWND windowHandle) :
-            m_WindowHandle(windowHandle)
+        Texture::Format GdipTexture::GetFormat() const
         {
-
+            return m_Format;
         }
 
-        // Renderer
-        GdipRenderer::GdipRenderer(HWND windowHandle) :
-            GdipInterface(windowHandle)
+        const Vector2i & GdipTexture::GetSize() const
         {
-
+            return m_Size;
         }
 
-        GdipRenderer::~GdipRenderer()
+        Gdiplus::Bitmap * GdipTexture::GetBitmap() const
         {
-
-        }
-
-        bool GdipRenderer::Load()
-        {
-
-            return true;
-        }
-
-        Core::RenderInterface * GdipRenderer::GetInterface()
-        {
-            return this;
+            return m_pBitmap;
         }
 
     }

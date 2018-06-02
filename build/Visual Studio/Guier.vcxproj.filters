@@ -22,26 +22,16 @@
     <Filter Include="Skins">
       <UniqueIdentifier>{021a4fb5-9250-44e4-85ea-d4c5836644a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderers">
-      <UniqueIdentifier>{bd88e728-fd86-4467-bc9b-a87579168f25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Window">
+    <Filter Include="Core\Windows">
       <UniqueIdentifier>{049d5976-98dd-416b-bb29-18001d84aad3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderers\Win32">
-      <UniqueIdentifier>{02858996-28e6-42c3-b310-b8821b00da80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Textures">
-      <UniqueIdentifier>{e90d8e66-c503-4c8f-adf7-d055ac662f51}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Textures\Win32">
-      <UniqueIdentifier>{3eaafcbb-42e2-4fb1-bf54-285f38074ee6}</UniqueIdentifier>
+    <Filter Include="Core\Windows\Win32">
+      <UniqueIdentifier>{64fbaea5-b973-48a0-98c4-c3f8f9552a2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Guier\Guier.hpp" />
     <ClInclude Include="..\..\include\Guier\Input.hpp" />
-    <ClInclude Include="..\..\include\Guier\Renderer.hpp" />
     <ClInclude Include="..\..\include\Guier\Skin.hpp" />
     <ClInclude Include="..\..\include\Guier\Vector2.hpp" />
     <ClInclude Include="..\..\include\Guier\Window.hpp" />
@@ -52,9 +42,6 @@
       <Filter>Control</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Guier\Core\Matrix4x4.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\RenderTarget.hpp">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\glext.h">
@@ -78,7 +65,6 @@
     <ClInclude Include="..\..\include\Guier\Skins\DefaultSkin.hpp">
       <Filter>Skins</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Context.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\WindowBase.hpp">
       <Filter>Core</Filter>
     </ClInclude>
@@ -86,25 +72,12 @@
     <ClInclude Include="..\..\include\Guier\Core\Semaphore.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\ContextBase.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\WindowStyle.hpp" />
     <ClInclude Include="..\..\include\Guier\Index.hpp" />
     <ClInclude Include="..\..\include\Guier\String.hpp" />
     <ClInclude Include="..\..\include\Guier\Control\VerticalGrid.hpp">
       <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\ControlHelpers.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\Guier\Control.hpp" />
-    <ClInclude Include="..\..\include\Guier\Core\Window\Win32WindowImpl.hpp">
-      <Filter>Core\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\WindowImpl.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\Guier\Core\Safe.hpp">
       <Filter>Core</Filter>
     </ClInclude>
@@ -113,38 +86,32 @@
     <ClInclude Include="..\..\include\Guier\Core\Texture.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\Textures\Win32\GdipTexture.hpp">
-      <Filter>Core\Textures\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\Textures\Win32\Win32OpenGLTexture.hpp">
-      <Filter>Core\Textures\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\Textures\OpenGLTexture.hpp">
-      <Filter>Core\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Renderers\OpenGLRenderer.hpp">
-      <Filter>Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Renderers\Win32\GdipRenderer.hpp">
-      <Filter>Renderers\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Renderers\Win32\Win32OpenGLRenderer.hpp">
-      <Filter>Renderers\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\RenderInterface.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\Guier\Core\ControlTree.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Guier\Core\RenderArea.hpp">
+    <ClInclude Include="..\..\include\Guier\Core\WindowImpl.hpp">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\WindowManager.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Windows\Win32\GdipRenderer.hpp">
+      <Filter>Core\Windows\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Windows\Win32\GdipTexture.hpp">
+      <Filter>Core\Windows\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Windows\Win32\Win32WindowImpl.hpp">
+      <Filter>Core\Windows\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Core\Renderer.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Control\Plane.hpp">
+      <Filter>Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\source\Guier\Core\RenderTarget.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\Guier\Core\Thirdparty\Lodepng\lodepng.cpp">
       <Filter>Core\Thirdparty\LodePng</Filter>
     </ClCompile>
@@ -156,13 +123,11 @@
     </ClCompile>
     <ClCompile Include="..\..\source\Guier\Font.cpp" />
     <ClCompile Include="..\..\source\Guier\Input.cpp" />
-    <ClCompile Include="..\..\source\Guier\Renderer.cpp" />
     <ClCompile Include="..\..\source\Guier\Skin.cpp" />
     <ClCompile Include="..\..\source\Guier\Window.cpp" />
     <ClCompile Include="..\..\source\Guier\Skins\DefaultSkin.cpp">
       <Filter>Skins</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Context.cpp" />
     <ClCompile Include="..\..\source\Guier\Core\WindowBase.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -170,46 +135,39 @@
     <ClCompile Include="..\..\source\Guier\Core\Semaphore.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Core\ContextBase.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\Guier\WindowStyle.cpp" />
     <ClCompile Include="..\..\source\Guier\Index.cpp" />
     <ClCompile Include="..\..\source\Guier\String.cpp" />
     <ClCompile Include="..\..\source\Guier\Control\VerticalGrid.cpp">
       <Filter>Control</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Guier\Control.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\ControlHelpers.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Core\Window\Win32WindowImpl.cpp">
-      <Filter>Core\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Core\WindowImpl.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\Guier\Color.cpp" />
-    <ClCompile Include="..\..\source\Guier\Core\Textures\Win32\GdipTexture.cpp">
-      <Filter>Core\Textures\Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Core\Textures\Win32\Win32OpenGLTexture.cpp">
-      <Filter>Core\Textures\Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Renderers\Win32\GdipRenderer.cpp">
-      <Filter>Renderers\Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Renderers\Win32\Win32OpenGLRenderer.cpp">
-      <Filter>Renderers\Win32</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\Guier\Core\Texture.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\Guier\Core\RenderInterface.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Guier\Core\ControlTree.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\WindowImpl.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\WindowManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Windows\Win32\GdipTexture.cpp">
+      <Filter>Core\Windows\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Windows\Win32\Win32WindowImpl.cpp">
+      <Filter>Core\Windows\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Windows\Win32\GdipRenderer.cpp">
+      <Filter>Core\Windows\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Core\Renderer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Control\Plane.cpp">
+      <Filter>Control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -220,9 +178,6 @@
       <Filter>Core</Filter>
     </None>
     <None Include="..\..\include\Guier\Core\Callback.inl">
-      <Filter>Core</Filter>
-    </None>
-    <None Include="..\..\include\Guier\Core\Context.inl">
       <Filter>Core</Filter>
     </None>
   </ItemGroup>

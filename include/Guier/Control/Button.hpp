@@ -36,7 +36,7 @@ namespace Guier
     /**
     * Base class of controls.
     */
-    class GUIER_API Button : public Control, public Parent//Core::VerticalGridHelper
+    class GUIER_API Button : public Control, public Parent
     {
 
     public:
@@ -83,16 +83,15 @@ namespace Guier
         * Render the control.
         *
         */
-        virtual void Render(Core::RenderInterface * renderInterface, const Core::RenderArea & renderArea);
+        virtual void Render(Core::Renderer::Interface * renderInterface);
 
         /**
-        * Internal function for adding label via constructor.
+        * Add label to button, if label.size() > 0.
         *
         */
-        void CreateText(const String & label);
+        void AddLabel(const String & label);
 
-        Control *       m_pChild;           ///< Child item added.
-        Vector2i        m_Size;             ///< Size of the button.
+        VerticalGrid *       m_pVerticalGrid; ///< Vertical grid child.
 
     };
 

@@ -24,278 +24,124 @@
 */
 
 #include <Guier/Window.hpp>
-#include <Guier/Context.hpp>
+#include <Guier/Core/WindowImpl.hpp>
 
 namespace Guier
 {
 
-    Window::Window(Context * context, const Vector2i & size, const String & title) :
-        WindowBase(context, size, title)
+    Window::Window(const Vector2i & size, const String & title) :
+        WindowBase(size, title, {})
     {
-        context->Add(this);
     }
 
-
-    const WindowStyle * Window::Style() const
+    Window::Window(const Vector2i & size, const String & title, const std::initializer_list<Style> & styles) :
+        WindowBase(size, title, styles)
     {
-        return &m_WindowStyle;
-    }
 
-    WindowStyle * Window::Style()
-    {
-        return &m_WindowStyle;
     }
 
     Window::~Window()
     {
-        Deleted(this);
+       
     }
 
-    bool Window::AddChild(Control * child, const Index & index)
-    {
-        return true;
-    }
-
-    bool Window::RemoveChild(Control * child)
-    {
-        return true;
-    }
-
-    Control * Window::RemoveChild(const Index & index)
-    {
-        return nullptr;
-    }
-    
     const Vector2i & Window::Size() const
     {
-        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            return m_pImpl->Size();
-        }*/
-
-        return m_Size;
+        return m_pImpl->Size();
     }
 
     Window * Window::Size(const Vector2i & size)
     {
-       /* std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->Size(size);
-        }*/
-        
-        return this;
-    }
-
-    const String & Window::Title() const
-    {
-        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-        m_pImpl->Title(title);
-        }
-        */
-
-        return m_Title;
-    }
-
-    Window * Window::Title(const String & title)
-    {
-        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->Title(title);
-        }*/
-
-        m_Title = title;
+        m_pImpl->Size(size);
         return this;
     }
 
     const Vector2i & Window::Position() const
     {
-        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            return m_pImpl->Position();
-        }
-        */
-        return m_Position;
+        return m_pImpl->Position();
     }
 
     Window * Window::Position(const Vector2i & position)
     {
-        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
+        m_pImpl->Position(position);
+        return this;
+    }
+    
+    const String & Window::Title() const
+    {
+        return m_pImpl->Title();
+    }
 
-        if (m_pImpl)
-        {
-            m_pImpl->Position(position);
-        }
-        */
-        m_Position = position;
+    Window * Window::Title(const String & title)
+    {
+        m_pImpl->Title(title);
         return this;
     }
 
+    Window * Window::SetStyle(const Style style)
+    {
+        m_pImpl->SetStyle(style);
+        return this;
+    }
+
+    Window * Window::SetStyle(const std::initializer_list<Style> & styles)
+    {
+        m_pImpl->SetStyle(styles);
+        return this;
+    }
+
+    Window * Window::AddStyle(const Style style)
+    {
+        m_pImpl->AddStyle(style);
+        return this;
+    }
+
+    Window * Window::AddStyle(const std::initializer_list<Style> & styles)
+    {
+        m_pImpl->AddStyle(styles);
+        return this;
+    }
+
+    Window * Window::RemoveStyle(const Style style)
+    {
+        m_pImpl->RemoveStyle(style);
+        return this;
+    }
+
+    Window * Window::RemoveStyle(const std::initializer_list<Style> & styles)
+    {
+        m_pImpl->RemoveStyle(styles);
+        return this;
+    }
+   
     Window * Window::Show()
     {
-        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->Show();
-        }
-        */
+        m_pImpl->Show();
         return this;
     }
 
     Window * Window::Hide()
     {
-       /* std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->Hide();
-        }
-        */
+        m_pImpl->Hide();
         return this;
     }
     
     Window * Window::Minimize()
     {
-       /* std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->Minimize();
-        }*/
-
+        m_pImpl->Minimize();
         return this;
     }
 
     Window * Window::Maximize()
     {
-        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->Maximize();
-        }*/
-
+        m_pImpl->Maximize();
         return this;
     }
 
     Window * Window::Close()
     {
-        /*std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->Close();
-        }*/
-        
+        m_pImpl->Close();
         return this;
     }
 
-    /*
-    unsigned int Window::Style() const
-    {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->GetStyle();
-        }
-
-        return Styles::Default;
-    }
-
-    Window & Window::Style(const unsigned int styles)
-    {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->NewStyle(styles);
-        }
-
-        return *this;
-    }
-
-    Window & Window::Enable(const Styles::eStyle style)
-    {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->EnableStyles(static_cast<unsigned int>(style));
-        }
-
-        return *this;
-    }
-
-    Window & Window::Enable(const unsigned int styles)
-    {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->EnableStyles(styles);
-        }
-
-        return *this;
-    }
-
-    Window & Window::Disable(const Styles::eStyle style)
-    {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->DisableStyles(static_cast<unsigned int>(style));
-        }
-
-        return *this;
-    }
-    Window & Window::Disable(const unsigned int styles)
-    {
-        std::lock_guard<std::mutex> sm(m_ImplMutex);
-
-        if (m_pImpl)
-        {
-            m_pImpl->DisableStyles(styles);
-        }
-
-        return *this;
-    }
-
-    Window::Window(const Vector2i & size, const std::wstring & title) :
-        WindowBase(size, title)
-    {
-    }
-
-    Window::Window(const std::wstring & title, const Vector2i & size) :
-        Window(size, title)
-    {
-
-    }
-    Window::Window(const int sizeX, const int sizeY, const std::wstring & title) :
-        Window(Vector2i(sizeX, sizeY), title)
-    {
-
-    }
-    Window::Window(const std::wstring & title, const int sizeX, const int sizeY) :
-        Window(Vector2i(sizeX, sizeY), title)
-    {
-
-    }
-
-    Window::~Window()
-    {
-
-    }*/
 }

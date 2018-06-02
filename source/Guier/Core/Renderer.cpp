@@ -23,52 +23,51 @@
 *
 */
 
-#include <Guier/Renderer.hpp>
-
-// Has default renderer type?
-#ifdef GUIER_DEFAULT_RENDERER
-    #if GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
-        #ifdef GUIER_PLATFORM_WINDOWS
-            #include <Guier/Renderers/Win32/GdipRenderer.hpp>
-        #else
-            #error Unkown platform.
-        #endif
-    #elif GUIER_DEFAULT_RENDERER == GUIER_HARDWARE_RENDERER
-        #error Not supporting hardware renderers yet.
-    #endif
-#endif
-
+#include <Guier/Core/Renderer.hpp>
+#include <Guier/Control.hpp>
+#include <Guier/Font.hpp>
 
 namespace Guier
 {
 
-    Renderer::~Renderer()
+    namespace Core
     {
 
-    }
+        // Render area
+        Renderer::RenderArea::RenderArea(const Vector2i & position, const Vector2i & size) :
+            Position(position),
+            Size(size)
+        {
 
-    Renderer * Renderer::CreateDefaultRenderer(const Type defaultRendererType)
-    {
-        #ifdef GUIER_DEFAULT_RENDERER
-            #if defined(GUIER_PLATFORM_WINDOWS) && GUIER_DEFAULT_RENDERER == GUIER_SOFTWARE_RENDERER
-                return new Renderers::GdipRenderer;
-            #endif
-        #endif
+        }
+
+        // Interface
+        Renderer::Interface::~Interface()
+        {
+
+        }
+
+        void Renderer::Interface::RenderControl(Control * control, const RenderArea & renderArea)
+        {
+            control->Render(this);
+        }
+
+        void Renderer::Interface::RenderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color)
+        {
+      
+        }
 
 
-        /*
-        #if GUIER_DEFAULT_RENDERER == GUIER_RENDERER_OPENGL
-             return new Renderers::OpenGLRenderer;
-        #else
-            throw std::runtime_error("Missing default renderer.");
-        #endif;
-        */
+        // Renderer
+        Renderer::~Renderer()
+        {
 
-        return nullptr;
-    }
+        }
 
-    Renderer::Renderer()
-    {
+        Renderer::Renderer()
+        {
+        }
+
 
     }
 }

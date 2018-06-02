@@ -25,15 +25,23 @@
 
 #pragma once
 
-#include <Guier/Renderer.hpp>
+#include <Guier/Core/Build.hpp>
+#include <Guier/Core/Semaphore.hpp>
+#include <thread>
+#include <mutex>
+#include <list>
+#include <set>
+#include <atomic>
 
 namespace Guier
 {
 
-    namespace Renderers
+    namespace Core
     {
 
-        class GUIER_API Win32OpenGLRenderer : public Renderer
+        class WindowImpl;
+
+        class GUIER_API WindowManager
         {
 
         public:
@@ -41,24 +49,50 @@ namespace Guier
             /**
             * Constructor.
             *
-            * @brief No loading should be done whatsoever in constructor. Use Load method instead.
-            *
             */
-            Win32OpenGLRenderer();
+            WindowManager();
 
             /**
             * Destructor.
             *
             */
-            ~Win32OpenGLRenderer();
+            ~WindowManager();
 
             /**
-            * Load the renderer.
+            * Call this function to load window implementation.
             *
-            * @return True if succeeded, else false.
+            * @brief    All windows should be created in the same thread.
             *
             */
-            virtual bool Load();
+            void LoadWindowImpl(WindowImpl * windowImpl);
+
+            /**
+            * Call this function to unload window implementation.
+            *
+            * @brief    All windows should be created in the same thread.
+            *           
+            *
+            */
+            void UnloadWindowImpl(WindowImpl * windowImpl);
+
+        private:
+
+            void StartThread();
+            void StopThread();
+            void HandleEvents();
+            void InterruptEvents();
+            void HandleNewWindow();
+
+            std::thread         m_Thread;
+            std::mutex          m_Mutex;
+            std::mutex          m_LoadMutex;
+            Semaphore           m_Semaphore;
+            
+            std::atomic<bool>       m_Running;
+            std::set<WindowImpl*>   m_Windows;
+            WindowImpl*             m_NextLoadWindow;
+
+
 
 
         };

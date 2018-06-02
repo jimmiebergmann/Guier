@@ -26,15 +26,17 @@
 #pragma once
 
 #include <Guier/Control.hpp>
+#include <list>
 
 namespace Guier
 {
 
+    class VerticalGrid;
+
     /**
-    * Vertical grid controller.
-    *
+    * Base class of controls.
     */
-    class GUIER_API VerticalGrid : public Control, public Parent
+    class GUIER_API Plane : public Control, public Parent
     {
 
     public:
@@ -43,20 +45,20 @@ namespace Guier
         * Constructor.
         *
         * @param parent         Parent object to add this control to.
-        * @param index          Index of parents container where to control should be added to.
-        * @param size           Size of button. Size::Fit by default.
+        * @param size           Size of button.
+        * @param position       Position of button. {0,0} by default.
         *
         * @throw std::runtime_error If parent is nullptr.
         *
         */
-        VerticalGrid(Parent * parent, const Index & index = Index::Last, const Vector2i & size = Size::Fit);
-        VerticalGrid(Parent * parent, const Vector2i & size, const Index & index = Index::Last);
+        Plane(Parent * parent, const Vector2i & size = Size::Fit);
+        Plane(Parent * parent, const Vector2i & position, const Vector2i & size);
 
         /**
         * Destructor.
         *
         */
-        ~VerticalGrid();
+        ~Plane();
 
         /**
         * Get type of controller.
@@ -64,14 +66,12 @@ namespace Guier
         */
         virtual unsigned int Type() const;
 
-        /**
-        * Get child count.
-        *
-        */
-        size_t Count() const;
-
     private:
 
+        /**
+        * Internal function, executed by Parent.
+        *
+        */
         virtual bool AddChild(Control * child, const Index & index);
         virtual bool RemoveChild(Control * child);
         virtual Control * RemoveChild(const Index & index);
@@ -81,6 +81,8 @@ namespace Guier
         *
         */
         virtual void Render(Core::Renderer::Interface * renderInterface);
+
+        std::list<Control *>       m_Childs;           ///< Childs of plane.
 
     };
 

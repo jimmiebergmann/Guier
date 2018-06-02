@@ -26,33 +26,49 @@
 #pragma once
 
 #include <Guier/Core/Build.hpp>
-#include <Guier/Core/WindowManager.hpp>
+
+#ifdef GUIER_PLATFORM_WINDOWS
+
+#include <Guier/Core/WindowImpl.hpp>
+#include <Guier/Core/Windows/Win32/GdipRenderer.hpp>
 #include <Guier/Window.hpp>
-#include <Guier/Vector2.hpp>
-#include <Guier/String.hpp>
+#include <Windows.h>
 
 namespace Guier
 {
 
+    class Plane;
+
     namespace Core
     {
 
-        class GUIER_API WindowImpl
+        class WindowBase;
+
+        class GUIER_API Win32WindowImpl : public WindowImpl
         {
 
         public:
 
             /**
+            * Constructor.
+            *
+            */
+            Win32WindowImpl(WindowBase * window, const Vector2i & size, const String & title, const std::initializer_list<Window::Style> & styles);
+
+            /**
             * Destructor.
             *
             */
-            virtual ~WindowImpl();
+            virtual ~Win32WindowImpl();
 
             /**
-            * Load native window.
+            * Load the implementation.
+            *
+            * @brief    Internally triggers the window manager loading mechanism.
+            *           Function wont return until window manager is done loading the window.
             *
             */
-            virtual void Load() = 0;
+            void LoadImplementation();
 
             /**
             * Get or set current size of window.
@@ -60,8 +76,8 @@ namespace Guier
             * @param size   New size of window.
             *
             */
-            virtual const Vector2i & Size() const = 0;
-            virtual void Size(const Vector2i & size) = 0;
+            const Vector2i & Size() const;
+            void Size(const Vector2i & size);
 
             /**
             * Get or set the current position of the window.
@@ -69,8 +85,8 @@ namespace Guier
             * @param position   New position of window.
             *
             */
-            virtual const Vector2i & Position() const = 0;
-            virtual void Position(const Vector2i & position) = 0;
+            const Vector2i & Position() const;
+            void Position(const Vector2i & position);
 
             /**
             * Get or set current title of window.
@@ -78,8 +94,8 @@ namespace Guier
             * @param title   New title of window.
             *
             */
-            virtual const String & Title() const = 0;
-            virtual void Title(const String & title) = 0;
+            const String & Title() const;
+            void Title(const String & title);
 
             /**
             * Set window style. Overridig any previously added styles.
@@ -88,8 +104,8 @@ namespace Guier
             * @param styles     Multiple styles to set.
             *
             */
-            virtual void SetStyle(const Window::Style style) = 0;
-            virtual void SetStyle(const std::initializer_list<Window::Style> & styles) = 0;
+            void SetStyle(const Window::Style style);
+            void SetStyle(const std::initializer_list<Window::Style> & styles);
 
 
             /**
@@ -99,8 +115,8 @@ namespace Guier
             * @param styles     Multiple styles to add to window.
             *
             */
-            virtual void AddStyle(const Window::Style style) = 0;
-            virtual void AddStyle(const std::initializer_list<Window::Style> & styles) = 0;
+            void AddStyle(const Window::Style style);
+            void AddStyle(const std::initializer_list<Window::Style> & styles);
 
             /**
             * Remove window style.
@@ -109,8 +125,8 @@ namespace Guier
             * @param styles     Multiple styles to remove from window.
             *
             */
-            virtual void RemoveStyle(const Window::Style style) = 0;
-            virtual void RemoveStyle(const std::initializer_list<Window::Style> & styles) = 0;
+            void RemoveStyle(const Window::Style style);
+            void RemoveStyle(const std::initializer_list<Window::Style> & styles);
 
             /**
             * Show minimized window.
@@ -121,7 +137,7 @@ namespace Guier
             *           Window is restored and shown if minimized.
             *
             */
-            virtual void Show() = 0;
+            void Show();
 
             /**
             * Hide window window.
@@ -130,7 +146,7 @@ namespace Guier
             *        Restore window via Show() method.
             *
             */
-            virtual void Hide() = 0;
+            void Hide();
 
             /**
             * Minimize window.
@@ -139,7 +155,7 @@ namespace Guier
             *           found in task bar if HideFromTaskbar is set to false.
             *
             */
-            virtual void Minimize() = 0;
+            void Minimize();
 
             /**
             * Maximize window.
@@ -147,7 +163,7 @@ namespace Guier
             * @brief    Window is created if called for the first time.
             *
             */
-            virtual void Maximize() = 0;
+            void Maximize();
 
             /**
             * Close the window.
@@ -156,22 +172,56 @@ namespace Guier
             *        Use the setting HideWhenClosed to connect hide and minimize logics to signal.
             *
             */
-            virtual void Close() = 0;
+            void Close();
 
             /**
             * Perform child operations, add or remove childs.
             *
             */
-            virtual bool Add(Control * child, const Index & index) = 0;
-            virtual bool Remove(Control * child) = 0;
-            virtual Control * Remove(const Index & index) = 0;
+            bool Add(Control * child, const Index & index);
+            bool Remove(Control * child);
+            Control * Remove(const Index & index);
 
-        protected:
+        private:
 
-            static WindowManager Manager;
+            /**
+            * Load native window.
+            *
+            */
+            void Load();
+            
+            /**
+            * Internal function used for setting style of window.
+            *
+            */
+            void SetStyleInternal(const unsigned int styles);
+
+            /**
+            * Window event functions.
+            *
+            */
+            static LRESULT WindowProcStatic(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
+            LRESULT WindowProc(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
+            
+            GdipRenderer *      m_pRenderer;            ///< Pointer to renderer;
+            Vector2i        m_Size;                 ///< Current size of window.
+            Vector2i        m_Position;             ///< Position of window.
+            String          m_Title;                ///< Title of window.
+            unsigned int    m_Styles;               ///< Bitfield of styles.
+            int             m_DPI;                  ///< Current window dpi.
+            HWND		    m_WindowHandle;
+            HDC			    m_DeviceContextHandle;
+            DWORD           m_Win32Style;           ///< Win32 style of window.
+            DWORD           m_Win32ExtendedStyle;   ///< Win32 extended style of window.
+            std::wstring	m_WindowClassName;   
+
+            WindowBase *    m_pWindow;
+            Plane *         m_pPlane;               ///< Plane containing all childs.
 
         };
 
     }
 
 }
+
+#endif

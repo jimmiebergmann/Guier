@@ -25,36 +25,45 @@
 
 #pragma once
 
-#include <Guier/Core/RenderTarget.hpp>
 #include <Guier/Control.hpp>
-#include <Guier/WindowStyle.hpp>
-#include <Guier/Callback.hpp>
 #include <Guier/Vector2.hpp>
 #include <Guier/String.hpp>
-
+#include <initializer_list>
 
 namespace Guier
-{
-
-    /**
-    * Forward declarations.
-    *
-    */
-    class Context;
-    class Renderer;    
+{ 
     
     namespace Core
     {
 
         class WindowImpl;
-        class ContextBase;
 
         /**
         * Base class of renderable window.
         *
         */
-        class GUIER_API WindowBase : public RenderTarget, public Parent
+        class GUIER_API WindowBase : public RootParent
         {
+
+        public:
+
+            /**
+            * Styles of window.
+            *
+            */
+            enum class Style : unsigned int
+            {
+                None            = 0,
+                Default         = 127,
+
+                TitleBar        = 1,  ///< Includes border.
+                Border          = 2,
+                Close           = 4,
+                Minimize        = 8,
+                Maximize        = 16,
+                Resize          = 32,
+                Taskbar         = 64, ///< Is the wíndow visible in the taskbar?
+            };
 
         protected:
 
@@ -64,52 +73,22 @@ namespace Guier
             * @throw std::runtime_error If context == nullptr.
             *
             */
-            WindowBase(Context * context, const Vector2i & size, const String & title);
+            WindowBase(const Vector2i & size, const String & title, const std::initializer_list<Style> & styles);
 
             /**
             * Destructor.
             *
             */
-            ~WindowBase();
+            virtual ~WindowBase();
 
-            WindowImpl *            m_pImpl;        ///< Implementation of platform dependent functionality.
-            WindowStyle             m_WindowStyle;  ///< Style of window.
-            Context *               m_pContext;     ///< Current context.
-            Vector2i                m_Size;         ///< Size of window.
-            Vector2i                m_Position;     ///< Position of window.
-            String                  m_Title;        ///< Window title.
-
+            WindowImpl * m_pImpl;   ///< Implementation of platform window.
            
         private:
 
-            virtual bool AddChild(Control * child, const Index & index) = 0;
-            virtual bool RemoveChild(Control * child) = 0;
-            virtual Control * RemoveChild(const Index & index) = 0;
-
-            /**
-            * Load window, Internally create platform specific code.
-            *
-            * @param renderer      Renderer used. If nullptr, use available system renderer.
-            *
-            */
-            bool Load(Renderer * renderer);
-
-            /**
-            * Handle platform specific window events, of all windows created in Context.
-            *
-            */
-            static void HandleEvents();
-
-            /**
-            * Friend classs
-            *
-            */
-            friend class ContextBase;
-            friend class Guier::Context;
-            friend class Guier::WindowStyle;
-
+            bool AddChild(Control * child, const Index & index);
+            bool RemoveChild(Control * child);
+            Control * RemoveChild(const Index & index);           
             
-
         };
 
     }

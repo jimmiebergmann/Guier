@@ -62,7 +62,7 @@ namespace Guier
         m_Content = content;
     }
 
-    void Text::Render(Core::RenderInterface * renderInterface, const Core::RenderArea & renderArea)
+    void Text::Render(Core::Renderer::Interface * renderInterface)
     {
 
     }

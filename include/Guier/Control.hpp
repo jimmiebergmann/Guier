@@ -26,7 +26,7 @@
 #pragma once
 
 #include <Guier/Core/Build.hpp>
-#include <Guier/Core/RenderArea.hpp>
+#include <Guier/Core/Renderer.hpp>
 #include <Guier/Index.hpp>
 
 namespace Guier
@@ -36,9 +36,7 @@ namespace Guier
     * Forward declarations
     *
     */
-    class Context;
     class Parent;
-    namespace Core { class RenderInterface; class WindowImpl; }
  
     /**
     * Size namespace, containing methods for sizing of controls.
@@ -46,8 +44,8 @@ namespace Guier
     */
     namespace Size
     {
-        extern const Vector2i Fit;  ///< Fit the size of the child/s.
-        extern const Vector2i Max;  ///< Use maximum possible space given by parent.
+        extern const Vector2i GUIER_API Fit;  ///< Fit the size of the child/s.
+        extern const Vector2i GUIER_API Max;  ///< Use maximum possible space given by parent.
 
     }
 
@@ -85,6 +83,7 @@ namespace Guier
         */
         enum class Types : unsigned int
         {
+            Plane,
             Button,
             VerticalGrid,
             Text,
@@ -123,7 +122,7 @@ namespace Guier
         * Render the control.
         *
         */
-        virtual void Render(Core::RenderInterface * renderInterface, const Core::RenderArea & renderArea) = 0;
+        virtual void Render(Core::Renderer::Interface * renderInterface) = 0;
 
         Parent *    m_pParent;      ///< Parent of control.
         Vector2i    m_RenderSize;   ///< Actual render size of control.
@@ -133,8 +132,7 @@ namespace Guier
         *
         */
         friend class Parent;
-        friend class Core::RenderInterface;
-        friend class Core::WindowImpl;
+        friend class Core::Renderer::Interface;
 
     };
 
@@ -169,16 +167,15 @@ namespace Guier
         *
         * @brief    The child is destroyed and unallocated.
         *           Do not access the child pointer after execution of this function.
-        *       
         *
-        * @return True if removed, false if child is nullptr or not child of parent, or index is invalid.
+        * @return True if removed, false if child is nullptr or not child of parent,.
+        *         Pointer to removed control if removed, else nullptr.
         *
         */
         bool Remove(Control * child);
-        bool Remove(const Index & index);
+        Control * Remove(const Index & index);
 
     protected:
-
 
         /**
         * Constructor.
@@ -197,6 +194,25 @@ namespace Guier
         *
         */
         void BecomeParentOf(Control * child);
+
+    };
+
+    /**
+    * Root control base class.
+    *
+    * @brief The root of a controller tree.
+    *        For example Windows.
+    *
+    */
+    class GUIER_API RootParent : public Parent
+    {
+
+    private:
+
+        virtual bool AddChild(Control * child, const Index & index) = 0;
+        virtual bool RemoveChild(Control * child) = 0;
+        virtual Control * RemoveChild(const Index & index) = 0;
+
 
     };
 

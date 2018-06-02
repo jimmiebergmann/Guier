@@ -24,7 +24,6 @@
 */
 
 #include <Guier/Core/WindowImpl.hpp>
-#include <Guier/Renderer.hpp>
 #include <Guier/Control.hpp>
 
 namespace Guier
@@ -38,10 +37,7 @@ namespace Guier
 
         }
 
-        void WindowImpl::Render(Control * control, Renderer * renderer, int windowHandle)
-        {
-            control->Render(nullptr, )
-        }
+        WindowManager WindowImpl::Manager;
 
     }
 

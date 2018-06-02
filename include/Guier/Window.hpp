@@ -34,29 +34,27 @@ namespace Guier
     * Drawable window. Currently appearing as a platform independent window.
     *
     */
-    class GUIER_API Window : public Core::WindowBase
+    class GUIER_API Window : public Core::WindowBase// public Core::PlatformWindow
     {
 
     public:
 
         /**
-        * Constructor
+        * Constructor.
         *
-        * @param constructor    Pointer to context.
         * @param size           Size of window.
         * @param title          Title of window.
-        *
-        * @throw std::runtime_error If context == nullptr.
+        * @param styles         List of styles. Using default window style if omitted.
         *
         */
-        Window(Context * context, const Vector2i & size, const String & title);
+        Window(const Vector2i & size, const String & title = L"");
+        Window(const Vector2i & size, const String & title, const std::initializer_list<Style> & styles);
 
         /**
-        * Get window style.
+        * Private destructor.
         *
         */
-        WindowStyle * Style();
-        const WindowStyle * Style() const;
+        ~Window();
 
         /**
         * Get or set current size of window.
@@ -68,9 +66,17 @@ namespace Guier
         Window * Size(const Vector2i & size);
 
         /**
+        * Get or set the current position of the window.
+        *
+        * @param position   New position of window.
+        *
+        */
+        const Vector2i & Position() const;
+        Window * Position(const Vector2i & position);
+
+        /**
         * Get or set current title of window.
-        * Allowed templates are std::string and std::wstring.
-        * 
+        *
         * @param title   New title of window.
         *
         */
@@ -78,15 +84,35 @@ namespace Guier
         Window * Title(const String & title);
 
         /**
-        * Get or set the current position of the window.
+        * Set window style. Overridig any previously added styles.
         *
-        * @brief Has no effect if the window is closed.
-        *
-        * @param position   New position of window.
+        * @param style      Style to set.
+        * @param styles     Multiple styles to set.
         *
         */
-        const Vector2i & Position() const;
-        Window * Position(const Vector2i & position);
+        Window * SetStyle(const Style style);
+        Window * SetStyle(const std::initializer_list<Style> & styles);
+
+
+        /**
+        * Add window style.
+        *
+        * @param style      Style to add to window.
+        * @param styles     Multiple styles to add to window.
+        *
+        */
+        Window * AddStyle(const Style style);
+        Window * AddStyle(const std::initializer_list<Style> & styles);
+
+        /**
+        * Remove window style.
+        *
+        * @param style      Style to remove from window.
+        * @param styles     Multiple styles to remove from window.
+        *
+        */
+        Window * RemoveStyle(const Style style);
+        Window * RemoveStyle(const std::initializer_list<Style> & styles);
 
         /**
         * Show minimized window.
@@ -111,9 +137,8 @@ namespace Guier
         /**
         * Minimize window.
         *
-        * @brief    Window is created if called for the first time.
-        *
-        *           Window is found in task bar if HideFromTaskbar is set to false.
+        * @brief    The window will disappear from screen and is
+        *           found in task bar if HideFromTaskbar is set to false.
         *
         */
         Window * Minimize();
@@ -141,7 +166,7 @@ namespace Guier
         * @param Vector2i   New size of window.
         *
         */
-        Callback::Signal<void(const Vector2i &)> Resized;
+//      Callback::Signal<void(const Vector2i &)> Resized;
 
         /**
         * Signal called when the window is moved.
@@ -149,43 +174,43 @@ namespace Guier
         * @param Vector2i   New position of window.
         *
         */
-        Callback::Signal<void(const Vector2i &)> Moved;
+//      Callback::Signal<void(const Vector2i &)> Moved;
 
         /**
         * Signal called when the window is showing.
         *
         */
-        Callback::Signal<void()> Showing;
+//       Callback::Signal<void()> Showing;
 
         /**
         * Signal called when the window is hiding.
         *
         */
-        Callback::Signal<void()> Hiding;
+ //       Callback::Signal<void()> Hiding;
 
         /**
         * Signal called when the window is minimized.
         *
         */
-        Callback::Signal<void()> Minimized;
+//       Callback::Signal<void()> Minimized;
 
         /**
         * Signal called when the window is maximized.
         *
         */
-        Callback::Signal<void()> Maximized;
+//        Callback::Signal<void()> Maximized;
 
         /**
         * Signal called when the window is focused.
         *
         */
-        Callback::Signal<void()> Focused;
+ //       Callback::Signal<void()> Focused;
 
         /**
         * Signal called when the window lose focus
         *
         */
-        Callback::Signal<void()> Unfocusing;
+ //       Callback::Signal<void()> Unfocusing;
 
         /**
         * Signal called when the window is closed via X button or code.
@@ -194,7 +219,7 @@ namespace Guier
         *        Disconnect all connection of this signal to override behaivour.
         *
         */
-        Callback::Signal<void()> Closed;
+        //        Callback::Signal<void()> Closed;
 
         /**
         * Signal called when the window is unallocated via delete keyword.
@@ -203,29 +228,9 @@ namespace Guier
         * @param Window Pointer of deleted window.
         *
         */
-        Callback::Signal<void(Window *)> Deleted;
+//        Callback::Signal<void(Window *)> Deleted;
 
-    private:
 
-        /**
-        * Private destructor.
-        *
-        */
-        ~Window();
-
-        /**
-        * Internal function, executed by ControlParent.
-        *
-        */
-        virtual bool AddChild(Control * control, const Index & index);
-        virtual bool RemoveChild(Control * control);
-        virtual Control * RemoveChild(const Index & index);
-
-        /**
-        * Friend class of Context.
-        *
-        */
-        friend class Context;
 
     };
 

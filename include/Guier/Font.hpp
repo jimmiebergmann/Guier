@@ -31,9 +31,7 @@
 
 namespace Guier
 {
-
-    class Context;
-    namespace Core { class RenderInterface; }
+    //namespace Core { class RenderInterface; }
 
 
     class GUIER_API Font
@@ -55,28 +53,25 @@ namespace Guier
         * @throw std::runtime_error If the font is not found.
         *
         */
-        Font(Context * context, const String & name);
-        Font(Context * context, const unsigned char * data, const size_t dataSize);
+       // Font(Context * context, const String & name);
+       // Font(Context * context, const unsigned char * data, const size_t dataSize);
 
         /**
         * Constructors.
         *
         */
-        virtual ~Font();
+       // virtual ~Font();
 
     private:
 
 
-        Context * m_pContext; ///< Pointer to 
+      /*  Context * m_pContext; ///< Pointer to 
 
-        /**
-        * Render font.
-        *
-        */
+
         virtual void Render(const String & string, const unsigned int size, const Vector2i & position, const Color & color = Color::Black) = 0;
 
         friend class Text;                  ///< Friend class of text.
-        friend class Core::RenderInterface;
+        friend class Core::Renderer::Interface;*/
 
     };
 

@@ -30,10 +30,7 @@
 namespace Guier
 {
 
-    namespace Core
-    {
-        class WindowBase;
-    }
+  /*  namespace Core { class WindowImpl; }
 
     class GUIER_API WindowStyle
     {
@@ -44,7 +41,7 @@ namespace Guier
         * Styles of window.
         *
         */
-        enum eStyle
+        /*enum eStyle
         {
             None = 0,
             TitleBar = 1, ///< Includes border.
@@ -64,7 +61,7 @@ namespace Guier
         * @param Bitfield of styles, defined in eStyle.
         *
         */
-        WindowStyle * Set(const unsigned int styles);
+        //WindowStyle * Set(const unsigned int styles);
 
         /**
         * Enable styles.
@@ -72,7 +69,7 @@ namespace Guier
         * @param Bitfield of styles, defined in eStyle.
         *
         */
-        WindowStyle * Enable(const unsigned int styles);
+      //  WindowStyle * Enable(const unsigned int styles);
 
         /**
         * Disable styles.
@@ -80,7 +77,7 @@ namespace Guier
         * @param Bitfield of styles, defined in eStyle.
         *
         */
-        WindowStyle * Disable(const unsigned int styles);
+      /*  WindowStyle * Disable(const unsigned int styles);
 
     private:
 
@@ -90,13 +87,13 @@ namespace Guier
         * Constructor.
         *
         */
-        WindowStyle(Core::WindowBase * windowBase);
+       // WindowStyle(Core::WindowImpl * windowImpl);
 
         /**
         * Destructor.
         *
         */
-        ~WindowStyle();
+      //  ~WindowStyle();
 
         /**
         * Copy constructor.
@@ -104,10 +101,10 @@ namespace Guier
         * @brief No implementation is defined.
         *
         */
-        WindowStyle(const WindowStyle & windowStyle);
+      /*  WindowStyle(const WindowStyle & windowStyle);
 
-        Core::WindowBase * const m_pWindowBase; ///< Pointer to parent.
+        Core::WindowImpl * const m_pWindowImpl; ///< Pointer to parent.
 
-    };
+    };*/
 
 }

@@ -25,7 +25,6 @@
 
 #pragma once
 
-#include <Guier/Context.hpp>
 #include <Guier/Window.hpp>
 #include <Guier/Control/VerticalGrid.hpp>
 #include <Guier/Control/Text.hpp>

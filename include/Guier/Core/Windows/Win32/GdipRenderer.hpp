@@ -25,57 +25,74 @@
 
 #pragma once
 
-#include <Guier/Renderer.hpp>
+#include <Guier/Core/Build.hpp>
+
 
 #ifdef GUIER_PLATFORM_WINDOWS
 
-#include <Guier/Core/RenderInterface.hpp>
+#include <Guier/Core/Renderer.hpp>
 #include <Windows.h>
+#include <gdiplus.h>
+#include <Gdiplusheaders.h>
+#include <atlstr.h> 
+#include <ShellScalingAPI.h>
 
 namespace Guier
 {
 
-    namespace Core { class Win32WindowImp; }
-
-    namespace Renderers
+    namespace Core
     {
 
-        class GdipInterface : public Core::RenderInterface
+        class GdipInterface : public Renderer::Interface
         {
 
         public:
-
-            /**
-            * Render Controller.
-            *
-            */
-            virtual void RenderControl(Control * control, const Core::RenderArea & renderArea);
 
             /**
             * Render rectangle.
             *
             */
             virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture);
-            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture, const Vector2i & portionPosition, const Vector2i & portionSize);
+            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture, const Vector2i & sourcePosition, const Vector2i & sourceSize);
             virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, const Color & color);
 
-        protected:
+        private:
 
             /**
             * Constructor
             *
             */
-            GdipInterface(HWND windowHandle);
+            GdipInterface();
 
-        private:
+            /**
+            * Begin rendering.
+            *
+            * @brief internally setting device handle and initialize Gdiplus::Graphics
+            *
+            */
+            void BeginRendering(HDC deviceContextHandle);
 
-            HWND m_WindowHandle; ///< Handle to window.
+            /**
+            * End rendering.
+            *
+            * @brief Internally clearing old rendering information.
+            *
+            */
+            void EndRendering();
+
+            HDC                 m_DeviceContextHandle;
+            Gdiplus::Graphics * m_pGraphics;
 
             friend class GdipRenderer; ///< Friend class of parent.
 
         };
 
-        class GUIER_API GdipRenderer : private GdipInterface, public Renderer
+
+        /**
+        * Gdip render class. Used in Win32WindowImp.
+        *
+        */
+        class GUIER_API GdipRenderer : public Renderer, public GdipInterface
         {
 
         public:
@@ -94,7 +111,21 @@ namespace Guier
             */
             ~GdipRenderer();
 
-        private:
+            /**
+            * Begin rendering.
+            *
+            * @brief Internally setting device handle and initialize Gdiplus::Graphics
+            *
+            */
+            void BeginRendering();
+
+            /**
+            * End rendering.
+            *
+            * @brief Internally clearing old rendering information.
+            *
+            */
+            void EndRendering();
 
             /**
             * Load the renderer.
@@ -108,9 +139,12 @@ namespace Guier
             * Get renderer interface.
             *
             */
-            virtual Core::RenderInterface * GetInterface();          
+            Renderer::Interface * GetInterface();
 
-            friend class Core::Win32WindowImp;
+        private:
+
+            const HWND          m_WindowHandle; ///< Window handle.
+            PAINTSTRUCT         m_PaintStructure;
 
         };
 
