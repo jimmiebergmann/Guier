@@ -54,30 +54,24 @@ namespace Guier
         }
     }
 
-    Control::Control(Control * child, Parent * parent, const Index & parentIndex, const Vector2i & size) :
+    Control::Control(Parent * parent, const Index & parentIndex, const Vector2i & size) :
         m_pParent(parent),
         m_Size(size),
         m_RenderSize(0, 0)
     {
-        if (child == nullptr)
-        {
-            throw std::runtime_error("Child is nullptr.");
-        }
         if (parent == nullptr)
         {
             throw std::runtime_error("Parent is nullptr.");
         }
 
-        parent->Add(child, parentIndex);
+        parent->Add(this, parentIndex);
     }
-    
- 
-    // Parent class
-   /* Context * Parent::GetContext() const
-    {
-        return m_pContext;
-    }*/
 
+    ParentRoot * Control::GetParentRoot() const
+    {
+        return m_pParent->GetRoot();
+    }
+   
     bool Parent::Add(Control * child, const Index & index)
     {
         if (child == nullptr)
@@ -130,14 +124,52 @@ namespace Guier
         return pChild;
     }
 
-    Parent::Parent()
+    // Parent.
+    Parent::Parent(ParentRoot * parentRoot) :
+        m_pParentRoot(parentRoot)
     {
-        
+
+    }
+
+    Parent::Parent(Parent * parent) :
+        m_pParentRoot(parent->GetRoot())
+    {
+
+    }
+
+    ParentRoot * Parent::GetRoot() const
+    {
+        return m_pParentRoot;
     }
 
     void Parent::BecomeParentOf(Control * child)
     {
             
+    }
+
+    // Parent control.
+    ParentControl::~ParentControl()
+    {
+
+    }
+
+    ParentControl::ParentControl(Parent * parent, const Index & parentIndex, const Vector2i & size) :
+        Parent(parent),
+        Control(parent, parentIndex, size)
+    {
+
+    }
+
+    // Parent root.
+    ParentRoot::ParentRoot(Skin * skin) :
+        Parent(this),
+        m_pSkin(skin)
+    {
+    }
+
+    Skin * ParentRoot::GetSkin()
+    {
+        return m_pSkin;
     }
 
 }

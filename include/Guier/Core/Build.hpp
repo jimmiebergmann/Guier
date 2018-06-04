@@ -1,12 +1,12 @@
 #pragma once
 
+#include <exception>
+
 // Define the platform
 #if defined( _WIN32 ) || defined( __WIN32__ ) || defined( _WIN64 ) || defined( __WIN64__ )
     #define GUIER_PLATFORM_WINDOWS
-
     #pragma comment(lib, "gdiplus")
     #pragma comment(lib, "Shcore")
-
 #elif defined( linux ) || defined( __linux )
     #define GUIER_PLATFORM_LINUX
 #else
@@ -42,12 +42,11 @@
     #define GUIER_API
 #endif
 
-#include <exception>
+#define GUIER_DEFAULT_SKIN ///< Comment out this line to remove default skin from build.
+
 
 // Macro for creating unique control IDs.
 /*#define GUIER_CUSTOM_CONTROLLER_ID(name) static const unsigned int TypeId = \
-    static_cast<unsigned int>(Guier::Control::Types::Custom) + \
-    static_cast<unsigned int>(__COUNTER__)
+static_cast<unsigned int>(Guier::Control::Types::Custom) + \
+static_cast<unsigned int>(__COUNTER__)
 */
-
-#define GUIER_DEFAULT_SKIN ///< Comment out this line to remove default skin from build.

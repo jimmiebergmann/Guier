@@ -28,6 +28,9 @@
     <Filter Include="Core\Windows\Win32">
       <UniqueIdentifier>{64fbaea5-b973-48a0-98c4-c3f8f9552a2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Win32">
+      <UniqueIdentifier>{01319aa6-a7bf-4c2f-bea8-0a40920072eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Guier\Guier.hpp" />
@@ -110,6 +113,10 @@
     <ClInclude Include="..\..\include\Guier\Control\Plane.hpp">
       <Filter>Control</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Guier\Bitmap.hpp" />
+    <ClInclude Include="..\..\include\Guier\Core\Win32\WindowsHeaders.hpp">
+      <Filter>Core\Win32</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\Guier\Core\Thirdparty\Lodepng\lodepng.cpp">
@@ -169,6 +176,7 @@
     <ClCompile Include="..\..\source\Guier\Control\Plane.cpp">
       <Filter>Control</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\Guier\Bitmap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\Guier\Core\Matrix4x4.inl">

@@ -29,15 +29,16 @@
 
 #ifdef GUIER_PLATFORM_WINDOWS
 
+#include <Guier/Core/Win32/WindowsHeaders.hpp>
 #include <Guier/Core/WindowImpl.hpp>
 #include <Guier/Core/Windows/Win32/GdipRenderer.hpp>
 #include <Guier/Window.hpp>
-#include <Windows.h>
 
 namespace Guier
 {
 
     class Plane;
+    class Skin;
 
     namespace Core
     {
@@ -53,7 +54,7 @@ namespace Guier
             * Constructor.
             *
             */
-            Win32WindowImpl(WindowBase * window, const Vector2i & size, const String & title, const std::initializer_list<Window::Style> & styles);
+            Win32WindowImpl(WindowBase * window, Skin * skin, const Vector2i & size, const String & title, const std::initializer_list<Window::Style> & styles);
 
             /**
             * Destructor.
@@ -216,6 +217,7 @@ namespace Guier
             std::wstring	m_WindowClassName;   
 
             WindowBase *    m_pWindow;
+            Skin *          m_pSkin;                ///< Pointer to skin.
             Plane *         m_pPlane;               ///< Plane containing all childs.
 
         };

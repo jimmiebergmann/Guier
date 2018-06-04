@@ -34,6 +34,7 @@ namespace Guier
 {
 
     class Control;
+    class Skin;
     class Font;
 
     namespace Core
@@ -96,7 +97,16 @@ namespace Guier
                 * Render Controller.
                 *
                 */
-                virtual void RenderControl(Control * control, const RenderArea & renderArea);
+                void RenderControl(Control * control, const Vector2i & position, const Vector2i & size);
+
+                /**
+                * Render chunk.
+                *
+                * @return true if skin is valid and chunk is found, or if the default skin is available,
+                *         else false.
+                *
+                */
+                bool RenderChunk(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size);
 
                 /**
                 * Render Rectangle.
@@ -111,6 +121,12 @@ namespace Guier
                 *
                 */
                 virtual void RenderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color = Color::Black);
+
+                /**
+                * Get skin attached to interface.
+                *
+                */
+                virtual Skin * GetSkin() const = 0;
 
             };
 

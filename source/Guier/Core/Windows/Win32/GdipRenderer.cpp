@@ -35,7 +35,48 @@ namespace Guier
     namespace Core
     {
 
+        // Hacky way of initializing GdiPlus one and also cleaning it up.
+        static ULONG_PTR m_GdipStartupToken = 0;
+        inline int GdpiInitializerHelper()
+        {
+            Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+            Gdiplus::GdiplusStartup(&m_GdipStartupToken, &gdiplusStartupInput, NULL);
+            return 1;
+        }
+        static const int g_GdipInitializerHelper = GdpiInitializerHelper();
+        class GdipFinalizerHelper
+        {
+        public:
+            inline GdipFinalizerHelper() {}
+            inline ~GdipFinalizerHelper()
+            {
+                if (m_GdipStartupToken != 0)
+                {
+                    Gdiplus::GdiplusShutdown(m_GdipStartupToken);
+                }
+            }
+        } g_Finalizer;
+
         // Interface
+        GdipInterface::GdipInterface(Skin * skin) :
+            m_DeviceContextHandle(0),
+            m_pGraphics(nullptr),
+            m_pSkin(skin)
+        {
+
+        }
+
+        void GdipInterface::BeginRendering(HDC deviceContextHandle)
+        {
+            m_DeviceContextHandle = deviceContextHandle;
+            m_pGraphics = new Gdiplus::Graphics(m_DeviceContextHandle);
+        }
+
+        void GdipInterface::EndRendering()
+        {
+            delete m_pGraphics;
+        }
+
         void GdipInterface::RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture)
         {
             // m_pGraphics->SetInterpolationMode(Gdiplus::InterpolationModeNearestNeighbor);
@@ -61,32 +102,17 @@ namespace Guier
             m_pGraphics->FillRectangle(&solidbrush, position.x, position.y, size.x, size.y);
         }
 
-        GdipInterface::GdipInterface() :
-            m_DeviceContextHandle(0),
-            m_pGraphics(nullptr)
+        Skin * GdipInterface::GetSkin() const
         {
-
+            return m_pSkin;
         }
 
-        void GdipInterface::BeginRendering(HDC deviceContextHandle)
-        {
-            m_DeviceContextHandle = deviceContextHandle;
-            m_pGraphics = new Gdiplus::Graphics(m_DeviceContextHandle);
-        }
-
-        void GdipInterface::EndRendering()
-        {
-            delete m_pGraphics;
-        }
 
         // Renderer
-        GdipRenderer::GdipRenderer(HWND windowHandle) :
+        GdipRenderer::GdipRenderer(HWND windowHandle, Skin * skin) :
+            GdipInterface(skin),
             m_WindowHandle(windowHandle)
         {
-            // Startup GDIP.
-            ULONG_PTR gdiplusToken;
-            Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-            GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
         }
 
         GdipRenderer::~GdipRenderer()

@@ -53,9 +53,48 @@ namespace Guier
             bmi.bmiHeader.biCompression = BI_RGB;
             bmi.bmiHeader.biBitCount = 24;
 
-            char buffer[32 * 32 * 3];
-            // Write pixels to 'data' however you want...
-            m_pBitmap = new Gdiplus::Bitmap(&bmi, const_cast<void *>(data));
+            // Should we really const case this?
+           // m_pBitmap = new Gdiplus::Bitmap(&bmi, const_cast<void *>(data));
+
+            //Bitmap(
+            /*[in]  INT width,
+                [in]  INT height,
+                [in]  INT stride,
+                [in]  PixelFormat format,
+                [in]  BYTE *scan0
+                );
+
+                PixelFormat32bppARGB
+
+                */
+
+            const int stride = 4 * size.x;
+            const size_t pixelDataSize = 4 * size.x * size.y;
+            BYTE * pixelData = new BYTE[pixelDataSize];
+
+            const BYTE * cdata = static_cast<const BYTE *>(data);
+
+            for (int y = 0; y < size.y; y++)
+            {
+                for (int x = 0; x < size.x; x++)
+                {
+                    const int pixelPos = (size.x * 4 * y) + (4 * x);
+                    /*pixelData[pixelPos] = cdata[pixelPos + 3];
+                    pixelData[pixelPos + 1] = cdata[pixelPos];
+                    pixelData[pixelPos + 2] = cdata[pixelPos + 1];
+                    pixelData[pixelPos + 3] = cdata[pixelPos + 2];*/
+
+                    pixelData[pixelPos] = 255;
+                    pixelData[pixelPos + 1] = 255;
+                    pixelData[pixelPos + 2] = 0;
+                    pixelData[pixelPos + 3] = 0;
+                }
+
+            }
+
+            m_pBitmap = new Gdiplus::Bitmap(size.x, size.y, stride, PixelFormat32bppARGB, pixelData);
+
+            delete pixelData;
         }
 
         GdipTexture::~GdipTexture()

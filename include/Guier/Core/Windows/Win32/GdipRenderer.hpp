@@ -27,15 +27,11 @@
 
 #include <Guier/Core/Build.hpp>
 
-
 #ifdef GUIER_PLATFORM_WINDOWS
 
+#include <Guier/Core/Win32/WindowsHeaders.hpp>
 #include <Guier/Core/Renderer.hpp>
-#include <Windows.h>
-#include <gdiplus.h>
-#include <Gdiplusheaders.h>
-#include <atlstr.h> 
-#include <ShellScalingAPI.h>
+
 
 namespace Guier
 {
@@ -49,20 +45,10 @@ namespace Guier
         public:
 
             /**
-            * Render rectangle.
-            *
-            */
-            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture);
-            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture, const Vector2i & sourcePosition, const Vector2i & sourceSize);
-            virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, const Color & color);
-
-        private:
-
-            /**
             * Constructor
             *
             */
-            GdipInterface();
+            GdipInterface(Skin * skin);
 
             /**
             * Begin rendering.
@@ -80,10 +66,25 @@ namespace Guier
             */
             void EndRendering();
 
+            /**
+            * Render rectangle.
+            *
+            */
+            void RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture);
+            void RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture, const Vector2i & sourcePosition, const Vector2i & sourceSize);
+            void RenderRectangle(const Vector2i & position, const Vector2i & size, const Color & color);
+
+            /**
+            * Get skin attached to interface.
+            *
+            */
+            Skin * GetSkin() const;
+
+        private:
+
             HDC                 m_DeviceContextHandle;
             Gdiplus::Graphics * m_pGraphics;
-
-            friend class GdipRenderer; ///< Friend class of parent.
+            Skin *              m_pSkin;
 
         };
 
@@ -103,7 +104,7 @@ namespace Guier
             * @brief No loading should be done whatsoever in constructor. Use Load method instead.
             *
             */
-            GdipRenderer(HWND windowHandle);
+            GdipRenderer(HWND windowHandle, Skin * skin);
 
             /**
             * Destructor.

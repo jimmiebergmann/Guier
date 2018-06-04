@@ -36,7 +36,7 @@ namespace Guier
     /**
     * Base class of controls.
     */
-    class GUIER_API Button : public Control, public Parent
+    class GUIER_API Button : public ParentControl
     {
 
     public:
@@ -83,7 +83,7 @@ namespace Guier
         * Render the control.
         *
         */
-        virtual void Render(Core::Renderer::Interface * renderInterface);
+        virtual void Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size);
 
         /**
         * Add label to button, if label.size() > 0.

@@ -26,7 +26,10 @@
 #pragma once
 
 #include <Guier/Control.hpp>
+#include <Guier/Bitmap.hpp>
+#include <Guier/Core/Renderer.hpp>
 #include <map>
+#include <set>
 
 namespace Guier
 {
@@ -35,12 +38,10 @@ namespace Guier
     * Forward declaratios.
     *
     */
-    class Renderer;
     namespace Core
     {
         class Texture;
     }
-
 
     /**
     * Base class of skin.
@@ -97,45 +98,45 @@ namespace Guier
 
 
         /**
-        * Set control dimensions.
+        ** @brief Set or update existing chunk dimensions.
         *
-        * @param item   Id of item.
-        * @param state  Id of state.
+        *
+        * @param item       Id of item.
+        * @param state      Id of state.
+        * @param texture    Pointer to texture. The skin
+        * 
+        * @return False if not passing any texture and the chunk is not yet set.
+        *         False if bitmap == nullptr,
+        *         else false.
         *
         */
-        void SetChunk(const unsigned int item, const unsigned int state,
+        bool SetChunk(const unsigned int item, const unsigned int state,
+            const Vector2i & position, const Vector2i & size);
+        bool SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap,
             const Vector2i & position, const Vector2i & size);
 
-        void SetChunk(const unsigned int item, const unsigned int state,
+        bool SetChunk(const unsigned int item, const unsigned int state,
+            const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
+        bool SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap,
             const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
 
         /**
-        * Create default skin.
+        * Set control dimensions.
         *
-        * @return Pointer to allocated default skin.
+        * @param item   Chunk item id to remove from skin.
+        * @param state  Chunk items state id to remove from skin.
         *
-        * @throw std::runtime_error If there is no default skin available.
+        * @return true if removed, false if item-state is not found in skin.
         *
         */
-        static Skin * CreateDefaultSkin();
+        bool UnsetChunk(const unsigned int item, const unsigned int state);
 
     private:
 
-        class Chunk;
-        typedef std::map<unsigned int, Chunk *> ChunkState;         ///< Map of chunk items, item id as key.
-        typedef std::map<unsigned int, ChunkState *> Chunks;   ///< Map of chunk states, state id as key.
-
-        Chunks m_Chunks;
-
         /**
-        * Internal function for creating or getting chunk state map.
+        * Skin chunk class.
         *
-        */
-        ChunkState * GetItemState(const unsigned int state);
-
-
-        /**
-        * Internal base class of chunk.
+        * @param Controller's skinning information are stored in chunks.
         *
         */
         class Chunk
@@ -143,11 +144,46 @@ namespace Guier
 
         public:
 
+            Chunk(Core::Texture * texture);
+
             virtual ~Chunk();
 
-            virtual void Render(Renderer * renderer, const Vector2i & position, const Vector2i & Size) = 0;
+            virtual void Render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size) = 0;
+
+            /**
+            * Get or set texture.
+            *
+            */
+            Core::Texture * texture() const;
+            void texture(Core::Texture * texture);
+
+        private:
+
+            Core::Texture * m_pTexture;
 
         };
+
+        /**
+        * Get chunk.
+        *
+        * @return   Pointer of chunk if found or if default skin is available, else nullptr.
+        *
+        */
+        Skin::Chunk * GetChunk(const unsigned int item, const unsigned int state);
+
+        typedef std::map<unsigned int, Chunk *> ChunkState;     ///< Map of chunk items, item id as key.
+        typedef std::map<unsigned int, ChunkState *> Chunks;    ///< Map of chunk states, state id as key.
+
+        Chunks                              m_Chunks;                   ///< All the chunks of .... PLEASE FIX THE NAMING OF ChunkState AND Chunks...
+        std::map<Bitmap *, Core::Texture *> m_BitmapTextures;
+
+        /**
+        * Internal function for creating or getting chunk state map.
+        *
+        */
+ ///       ChunkState * GetOrCreateItemState(const unsigned int state);
+
+        friend class Core::Renderer::Interface;
 
         /**
         * Chunk class for dimension of 3x3 chunks.
@@ -158,10 +194,11 @@ namespace Guier
 
         public:
 
-            Chunk3x3(const Vector2i & leftTopPos, const Vector2i & leftTopSize,
+            Chunk3x3(Core::Texture * texture,
+                const Vector2i & leftTopPos, const Vector2i & leftTopSize,
                 const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
 
-            virtual void Render(Renderer * renderer, const Vector2i & position, const Vector2i & Size);
+            virtual void Render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size);
 
         private:
 
@@ -178,9 +215,9 @@ namespace Guier
 
         public:
 
-            Chunk1x1(const Vector2i & position, const Vector2i & size);
+            Chunk1x1(Core::Texture * texture, const Vector2i & position, const Vector2i & size);
 
-            virtual void Render(Renderer * renderer, const Vector2i & position, const Vector2i & Size);
+            virtual void Render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size);
 
         private:
 

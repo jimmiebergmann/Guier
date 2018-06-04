@@ -34,7 +34,7 @@ namespace Guier
     * Vertical grid controller.
     *
     */
-    class GUIER_API VerticalGrid : public Control, public Parent
+    class GUIER_API VerticalGrid : public ParentControl
     {
 
     public:
@@ -80,7 +80,7 @@ namespace Guier
         * Render the control.
         *
         */
-        virtual void Render(Core::Renderer::Interface * renderInterface);
+        virtual void Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size);
 
     };
 

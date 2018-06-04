@@ -53,7 +53,15 @@ int main()
 
 
     // Example
-    Window * window = new Window({ 800, 600 }, L"My window 1!");
+    /*Texture * texture = new Texture("file.png");
+
+    Skin * skin = new Skin;
+
+    skin->SetChunk(static_cast<unsigned int>(Skin::Item::Button), static_cast<unsigned int>(Skin::State::Normal), texture,
+        {0, 0}, {0, 0});
+
+*/
+    Window * window = new Window(/*skin,*/ { 800, 600 }, L"My window 1!");
 
     /*window->Style()->Enable(WindowStyle::Close);
     window->Show();*/

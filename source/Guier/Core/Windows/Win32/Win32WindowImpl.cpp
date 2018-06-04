@@ -108,9 +108,10 @@ namespace Guier
 
 
         // Win32 implementation.
-        Win32WindowImpl::Win32WindowImpl(WindowBase * window, const Vector2i & size, const String & title, const std::initializer_list<Window::Style> & styles) :
+        Win32WindowImpl::Win32WindowImpl(WindowBase * window, Skin * skin, const Vector2i & size, const String & title, const std::initializer_list<Window::Style> & styles) :
             m_pWindow(window),
             m_pPlane(nullptr),
+            m_pSkin(skin),
             m_pRenderer(nullptr),
             m_Size(size),
             m_Position(-1, -1),
@@ -360,7 +361,7 @@ namespace Guier
             // Get the device context
             m_DeviceContextHandle = GetDC(m_WindowHandle);
             m_DPI = GetDpiForWindow(m_WindowHandle);
-            m_pRenderer = new GdipRenderer(m_WindowHandle);
+            m_pRenderer = new GdipRenderer(m_WindowHandle, m_pSkin);
 
             // Create plane control
             m_pPlane = new Plane(m_pWindow);
@@ -437,12 +438,14 @@ namespace Guier
             {
                // SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE);
             }
+            case WM_ERASEBKGND:
+                return 1;
             break;
                 case WM_PAINT:
                 {
                     m_pRenderer->BeginRendering();
                     Renderer::RenderArea a({}, {});
-                    m_pRenderer->RenderControl(m_pPlane, a);
+                    m_pRenderer->RenderControl(m_pPlane, Vector2i(0, 0), m_Size);
                     m_pRenderer->EndRendering();
                 }
                 break;

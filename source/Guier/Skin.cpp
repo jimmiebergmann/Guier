@@ -42,10 +42,54 @@ namespace Guier
 
     }
 
-    void Skin::SetChunk(const unsigned int item, const unsigned int state,
-        const Vector2i & position, const Vector2i & size)
+    bool Skin::SetChunk(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size)
     {
-        ChunkState * pChunkState = GetItemState(state);
+        auto it = m_Chunks.find(state);
+        if (it != m_Chunks.end())
+        {
+            ChunkState * pChunkState = it->second;
+
+            auto it2 = pChunkState->find(item);
+            if (it2 != pChunkState->end())
+            {
+                Chunk * pChunk = it2->second;
+                Core::Texture * pTexture = pChunk->texture();
+                delete pChunk;
+                pChunkState->insert({ item, new Chunk1x1(pTexture, position, size) });
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool Skin::SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap, const Vector2i & position, const Vector2i & size)
+    {
+        // Create item if unkown.
+        auto it = m_Chunks.find(state);
+        if (it == m_Chunks.end())
+        {
+            ChunkState * pNewState = new ChunkState;
+            m_Chunks.insert({ state, pNewState });
+            return pNewState;
+        }
+
+        // Find texture, or create one.
+        Core::Texture * pTexture = nullptr;
+        auto btIt = m_BitmapTextures.find(bitmap);
+        if (btIt != m_BitmapTextures.end())
+        {
+            pTexture = btIt->second;
+        }
+        else
+        {
+            //pTexture = new Core::Texture
+        }
+
+        
+
+       /* ChunkState * pChunkState = GetOrCreateItemState(state);
 
         auto it = pChunkState->find(item);
         if (it != pChunkState->end())
@@ -54,13 +98,15 @@ namespace Guier
             pChunkState->erase(it);
         }
 
-        pChunkState->insert({ item, new Chunk1x1(position, size) });
+        pChunkState->insert({ item, new Chunk1x1(nullptr, position, size) });*/
+
+        return false;
     }
 
-    void Skin::SetChunk(const unsigned int item, const unsigned int state,
+    bool Skin::SetChunk(const unsigned int item, const unsigned int state,
         const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize)
     {
-        ChunkState * pChunkState = GetItemState(state);
+        /*ChunkState * pChunkState = GetOrCreateItemState(state);
 
         auto it = pChunkState->find(item);
         if (it != pChunkState->end())
@@ -69,21 +115,64 @@ namespace Guier
             pChunkState->erase(it);
         }
 
-        pChunkState->insert({ item, new Chunk3x3(leftTopPos, leftTopSize, RightBottomPos, RightBottomSize) });
+        pChunkState->insert({ item, new Chunk3x3(nullptr, leftTopPos, leftTopSize, RightBottomPos, RightBottomSize) });*/
+
+        return false;
     }
 
-    Skin * Skin::CreateDefaultSkin()
+    bool Skin::SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap,
+        const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize)
     {
-        #if defined(GUIER_DEFAULT_SKIN)
-            return new Skins::DefaultSkin;
-        #else
-            throw std::runtime_error("Missing default skin.");
-        #endif;
+        return false;
+    }
+
+    bool Skin::UnsetChunk(const unsigned int item, const unsigned int state)
+    {
+        // Find chunk
+        auto it = m_Chunks.find(state);
+        if (it != m_Chunks.end())
+        {
+            ChunkState * pChunkState = it->second;
+
+            auto it2 = pChunkState->find(state);
+            if (it2 != pChunkState->end())
+            {
+                Chunk * pChunk = it2->second;
+                delete pChunk;
+                pChunkState->erase(it2);
+                
+                if (pChunkState->size() == 0)
+                {
+                    delete pChunkState;
+                    m_Chunks.erase(it);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    Skin::Chunk * Skin::GetChunk(const unsigned int item, const unsigned int state)
+    {
+        // Find chunk
+        auto it = m_Chunks.find(state);
+        if (it != m_Chunks.end())
+        {
+            ChunkState * chunkState = it->second;
+
+            auto it2 = chunkState->find(state);
+            if (it2 != chunkState->end())
+            {
+                return it2->second;
+            }
+        }
 
         return nullptr;
     }
 
-    Skin::ChunkState * Skin::GetItemState(const unsigned int state)
+   /* Skin::ChunkState * Skin::GetOrCreateItemState(const unsigned int state)
     {
         // Create item if unkown.
         auto it = m_Chunks.find(state);
@@ -95,6 +184,12 @@ namespace Guier
         }
 
         return it->second;
+    }*/
+
+
+    Skin::Chunk::Chunk(Core::Texture * texture) :
+        m_pTexture(texture)
+    {
     }
 
     Skin::Chunk::~Chunk()
@@ -102,25 +197,36 @@ namespace Guier
 
     }
 
-    Skin::Chunk3x3::Chunk3x3(const Vector2i & leftTopPos, const Vector2i & leftTopSize,
-        const Vector2i & RightBottomPos, const Vector2i & RightBottomSize)
+    Core::Texture * Skin::Chunk::texture() const
+    {
+        return m_pTexture;
+    }
+    void Skin::Chunk::texture(Core::Texture * texture)
+    {
+        m_pTexture = texture;
+    }
+
+    Skin::Chunk3x3::Chunk3x3(Core::Texture * texture, const Vector2i & leftTopPos, const Vector2i & leftTopSize,
+        const Vector2i & RightBottomPos, const Vector2i & RightBottomSize) :
+        Chunk(texture)
     {
 
     }
 
-    void Skin::Chunk3x3::Render(Renderer * renderer, const Vector2i & position, const Vector2i & Size)
+    void Skin::Chunk3x3::Render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size)
+    {
+        rendererInterface->RenderRectangle(position, size, Color::Green);
+    }
+
+    Skin::Chunk1x1::Chunk1x1(Core::Texture * texture, const Vector2i & position, const Vector2i & size) :
+        Chunk(texture)
     {
 
     }
 
-    Skin::Chunk1x1::Chunk1x1(const Vector2i & position, const Vector2i & size)
+    void Skin::Chunk1x1::Render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size)
     {
-
-    }
-
-    void Skin::Chunk1x1::Render(Renderer * renderer, const Vector2i & position, const Vector2i & Size)
-    {
-
+        rendererInterface->RenderRectangle(position, size, Color::Blue);
     }
 
 }

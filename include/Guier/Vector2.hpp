@@ -90,5 +90,6 @@ namespace Guier
 
     ///< Typedefs of common vector types.
     typedef Vector2<int> Vector2i;
+    typedef Vector2<unsigned int> Vector2ui;
 
 }

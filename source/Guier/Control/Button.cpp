@@ -32,32 +32,28 @@ namespace Guier
 {
 
     Button::Button(Parent * parent, const String & label) :
-        Control(this, parent, Index::Last, Size::Fit),
-        Parent(),
+        ParentControl(parent, Index::Last, Size::Fit),
         m_pVerticalGrid(new VerticalGrid(this))
     {
         AddLabel(label);
     }
 
     Button::Button(Parent * parent, const Index & index, const String & label) :
-        Control(this, parent, index, Size::Fit),
-        Parent(),
+        ParentControl(parent, index, Size::Fit),
         m_pVerticalGrid(new VerticalGrid(this))
     {
         AddLabel(label);
     }
 
     Button::Button(Parent * parent, const Index & index, const Vector2i & size, const String & label) :
-        Control(this, parent, index, size),
-        Parent(),
+        ParentControl(parent, index, size),
         m_pVerticalGrid(new VerticalGrid(this))
     {
         AddLabel(label);
     }
 
     Button::Button(Parent * parent, const Vector2i & size, const String & label) :
-        Control(this, parent, Index::Last, size),
-        Parent(),
+        ParentControl(parent, Index::Last, size),
         m_pVerticalGrid(new VerticalGrid(this))
     {
         AddLabel(label);
@@ -93,9 +89,10 @@ namespace Guier
         return m_pVerticalGrid->Remove(index);
     }
 
-    void Button::Render(Core::Renderer::Interface * renderInterface)
+    void Button::Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
     {
-        renderInterface->RenderRectangle(Vector2i(40, 40), Vector2i(100, 40), Color::Red);
+
+        renderInterface->RenderChunk(static_cast<unsigned int>(Skin::Item::Button), static_cast<unsigned int>(Skin::State::Normal), position, size);
     }
 
     void Button::AddLabel(const String & label)

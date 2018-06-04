@@ -29,15 +29,13 @@ namespace Guier
 {
 
     VerticalGrid::VerticalGrid(Parent * parent, const Index & index, const Vector2i & size) :
-        Control(this, parent, index, size),
-        Parent()
+        ParentControl(parent, index, size)
     {
 
     }
 
     VerticalGrid::VerticalGrid(Parent * parent, const Vector2i & size, const Index & index) :
-        Control(this, parent, index, size),
-        Parent()
+        ParentControl(parent, index, size)
     {
 
     }
@@ -75,7 +73,7 @@ namespace Guier
         return nullptr;
     }
 
-    void VerticalGrid::Render(Core::Renderer::Interface * renderInterface)
+    void VerticalGrid::Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
     {
 
     }

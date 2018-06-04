@@ -26,6 +26,7 @@
 #include <Guier/Core/Renderer.hpp>
 #include <Guier/Control.hpp>
 #include <Guier/Font.hpp>
+#include <Guier/Skin.hpp>
 
 namespace Guier
 {
@@ -47,9 +48,28 @@ namespace Guier
 
         }
 
-        void Renderer::Interface::RenderControl(Control * control, const RenderArea & renderArea)
+        void Renderer::Interface::RenderControl(Control * control, const Vector2i & position, const Vector2i & size)
         {
-            control->Render(this);
+            control->Render(this, position, size);
+        }
+
+        bool Renderer::Interface::RenderChunk(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size)
+        {
+            if (GetSkin() == nullptr)
+            {
+                throw std::runtime_error("Missing skin.");
+                return false;
+            }
+
+            Skin::Chunk * chunk = GetSkin()->GetChunk(item, state);
+
+            if (chunk == nullptr)
+            {
+                return false;
+            }
+
+            chunk->Render(this, position, size);
+            return true;
         }
 
         void Renderer::Interface::RenderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color)

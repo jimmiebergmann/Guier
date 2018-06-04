@@ -28,6 +28,7 @@
 #include <Guier/Core/Build.hpp>
 #include <Guier/Core/Renderer.hpp>
 #include <Guier/Index.hpp>
+#include <Guier/Skin.hpp>
 
 namespace Guier
 {
@@ -37,6 +38,7 @@ namespace Guier
     *
     */
     class Parent;
+    class ParentRoot;
  
     /**
     * Size namespace, containing methods for sizing of controls.
@@ -91,7 +93,6 @@ namespace Guier
 
         };
 
-
         /**
         * Destructor.
         *
@@ -112,7 +113,13 @@ namespace Guier
         * @throw std::runtime_error If child or parent is nullptr.
         *
         */
-        Control(Control * child, Parent * parent, const Index & parentIndex, const Vector2i & size);
+        Control(Parent * parent, const Index & parentIndex, const Vector2i & size);
+
+        /**
+        * Get root from parent.
+        *
+        */
+        ParentRoot * GetParentRoot() const;
 
         Vector2i m_Size; ///< Requested size of control.
 
@@ -122,10 +129,10 @@ namespace Guier
         * Render the control.
         *
         */
-        virtual void Render(Core::Renderer::Interface * renderInterface) = 0;
+        virtual void Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size) = 0;
 
-        Parent *    m_pParent;      ///< Parent of control.
-        Vector2i    m_RenderSize;   ///< Actual render size of control.
+        Parent *        m_pParent;      ///< Parent of control.
+        Vector2i        m_RenderSize;   ///< Actual render size of control.
 
         /**
         * Friend classes.
@@ -181,7 +188,14 @@ namespace Guier
         * Constructor.
         *
         */
-        Parent();
+        Parent(ParentRoot * parentRoot);
+        Parent(Parent * parent);
+
+        /**
+        * Get root parent.
+        *
+        */
+        ParentRoot * GetRoot() const;
 
     private:
 
@@ -195,7 +209,47 @@ namespace Guier
         */
         void BecomeParentOf(Control * child);
 
+        ParentRoot * m_pParentRoot;   ///< Pointer to parent root.
+
+        /**
+        * Friend classes.
+        *
+        */
+        friend class Control;
+    
     };
+
+
+    /**
+    * Parent controll class.
+    *
+    * @brief    Iherit this class if your parent also is a controller.
+    *
+    */
+    class GUIER_API ParentControl : public Parent, public Control
+    {
+
+    public:
+
+
+        /**
+        * Destructor.
+        *
+        */
+        virtual ~ParentControl();
+
+    protected:
+
+        /**
+        * Constructor.
+        *
+        * @throw std::runtime_error If child or parent is nullptr.
+        *
+        */
+        ParentControl(Parent * parent, const Index & parentIndex, const Vector2i & size);
+
+    };
+
 
     /**
     * Root control base class.
@@ -204,8 +258,29 @@ namespace Guier
     *        For example Windows.
     *
     */
-    class GUIER_API RootParent : public Parent
+    class GUIER_API ParentRoot : public Parent
     {
+
+    protected:
+
+        /**
+        * Constructor.
+        *
+        * @param skin   Skin used for rendering childs of root parent.
+        *              If skin == nullpt, default skin is used if available(check Build.hpp)
+        *
+        */
+        ParentRoot(Skin * skin);
+
+        Skin *  m_pSkin;    ///< Pointer of skin.
+        
+    protected:
+
+        /**
+        * Get skin of parent root.
+        *
+        */
+        Skin * GetSkin();
 
     private:
 
@@ -213,6 +288,8 @@ namespace Guier
         virtual bool RemoveChild(Control * child) = 0;
         virtual Control * RemoveChild(const Index & index) = 0;
 
+        friend class Control;
+        friend class Parent;
 
     };
 

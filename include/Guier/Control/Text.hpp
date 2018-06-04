@@ -75,7 +75,7 @@ namespace Guier
         * Render the control.
         *
         */
-        virtual void Render(Core::Renderer::Interface * renderInterface);
+        virtual void Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size);
 
         String m_Content;    ///< Text content.
 

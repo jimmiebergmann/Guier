@@ -33,10 +33,12 @@ namespace Guier
 
         DefaultSkin::DefaultSkin()
         {
-            SetChunk(static_cast<unsigned int>(Item::Button), static_cast<unsigned int>(State::Normal),
+            Bitmap * pBitmap = new Bitmap("../skins/TestSkin.png");
+
+            SetChunk(static_cast<unsigned int>(Item::Button), static_cast<unsigned int>(State::Normal), pBitmap,
                 Vector2i(0, 0), Vector2i(2, 2), Vector2i(6, 6), Vector2i(2, 2));
 
-            SetChunk(static_cast<unsigned int>(Item::TextInput), static_cast<unsigned int>(State::Normal),
+            SetChunk(static_cast<unsigned int>(Item::TextInput), static_cast<unsigned int>(State::Normal), pBitmap,
                 Vector2i(10, 0), Vector2i(2, 2), Vector2i(19, 6), Vector2i(2, 2));
         }
 

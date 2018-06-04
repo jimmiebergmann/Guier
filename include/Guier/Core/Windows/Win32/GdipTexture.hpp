@@ -25,12 +25,14 @@
 
 #pragma once
 
+#include <Guier/Core/Build.hpp>
+
+#ifdef GUIER_PLATFORM_WINDOWS
+
+#include <Guier/Core/Win32/WindowsHeaders.hpp>
 #include <Guier/Core/Texture.hpp>
 #include <Guier/String.hpp>
 
-#include <Windows.h>
-#include <gdiplus.h>
-#include <Gdiplusheaders.h>
 
 namespace Guier
 {
@@ -85,3 +87,5 @@ namespace Guier
     }
 
 }
+
+#endif

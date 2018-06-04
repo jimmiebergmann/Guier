@@ -30,12 +30,23 @@ namespace Guier
 {
 
     Window::Window(const Vector2i & size, const String & title) :
-        WindowBase(size, title, {})
+        WindowBase(nullptr, size, title, { Style::Default })
     {
     }
 
     Window::Window(const Vector2i & size, const String & title, const std::initializer_list<Style> & styles) :
-        WindowBase(size, title, styles)
+        WindowBase(nullptr, size, title, styles)
+    {
+
+    }
+
+    Window::Window(Skin * skin, const Vector2i & size, const String & title) :
+        WindowBase(skin, size, title, { Style::Default })
+    {
+
+    }
+    Window::Window(Skin * skin, const Vector2i & size, const String & title, const std::initializer_list<Style> & styles) :
+        WindowBase(skin, size, title, styles)
     {
 
     }

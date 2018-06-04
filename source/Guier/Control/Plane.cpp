@@ -29,14 +29,12 @@ namespace Guier
 {
 
     Plane::Plane(Parent * parent, const Vector2i & size) :
-        Control(this, parent, Index::Last, Size::Fit),
-        Parent()
+        ParentControl(parent, Index::Last, Size::Fit)
     {
 
     }
         Plane::Plane(Parent * parent, const Vector2i & position, const Vector2i & size) :
-        Control(this, parent, Index::Last, Size::Fit),
-        Parent()
+            ParentControl(parent, Index::Last, Size::Fit)
     {
 
     }
@@ -97,11 +95,11 @@ namespace Guier
         return pControl;
     }
 
-    void Plane::Render(Core::Renderer::Interface * renderInterface)
+    void Plane::Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
     {
         for (auto it = m_Childs.begin(); it != m_Childs.end(); it++)
         {
-            renderInterface->RenderControl(*it, { {},{} });
+            renderInterface->RenderControl(*it, position, size);
         }
     }
 

@@ -25,6 +25,11 @@
 
 #include <Guier/Core/WindowBase.hpp>
 
+#ifdef GUIER_DEFAULT_SKIN
+    #include <Guier/Skins/DefaultSkin.hpp>
+    static Guier::Skin * g_pDefaultSkin = nullptr;
+#endif
+
 #ifdef GUIER_PLATFORM_WINDOWS
 #include <Guier/Core/Windows/Win32/Win32WindowImpl.hpp>
 #else
@@ -34,14 +39,21 @@
 namespace Guier
 {
 
+    static Skin * g_pDefaultSkin = nullptr;
+
     namespace Core
     {
 
-        WindowBase::WindowBase(const Vector2i & size, const String & title, const std::initializer_list<Style> & styles) :
+        WindowBase::WindowBase(Skin * skin, const Vector2i & size, const String & title, const std::initializer_list<Style> & styles) :
+            ParentRoot(skin),
             m_pImpl(nullptr)
         {
             #ifdef GUIER_PLATFORM_WINDOWS
-                Win32WindowImpl * pWin32Impl = new Win32WindowImpl(this, size, title, styles);
+                if (skin == nullptr)
+                {
+                    skin = GetDefaultSkin();
+                }
+                Win32WindowImpl * pWin32Impl = new Win32WindowImpl(this, skin, size, title, styles);
                 m_pImpl = pWin32Impl;
                 pWin32Impl->LoadImplementation();
             #else
@@ -52,6 +64,19 @@ namespace Guier
         WindowBase::~WindowBase()
         {
             delete m_pImpl;
+        }
+
+        Skin * WindowBase::GetDefaultSkin()
+        {
+            #ifdef GUIER_DEFAULT_SKIN
+                if (g_pDefaultSkin == nullptr)
+                {
+                    g_pDefaultSkin = new Skins::DefaultSkin();
+                }
+                return g_pDefaultSkin;
+            #endif
+
+            return nullptr;
         }
 
         bool WindowBase::AddChild(Control * child, const Index & index)

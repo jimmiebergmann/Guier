@@ -23,48 +23,16 @@
 *
 */
 
-#include <Guier/Control/Text.hpp>
+#pragma once
 
-namespace Guier
-{
+#if defined( _WIN32 ) || defined( __WIN32__ ) || defined( _WIN64 ) || defined( __WIN64__ )
 
-    Text::Text(Parent * parent, const String & content) :
-        Control(parent, Index::Last, Size::Fit),
-        m_Content(content)
-    {
+#include <Windows.h>
+#include <gdiplus.h>
+//#include <atlstr.h> 
+//#include <ShellScalingAPI.h>
 
-    }
+#undef min
+#undef max
 
-    Text::Text(Parent * parent, const Index & index, const String & content) :
-        Control(parent, index, Size::Fit),
-        m_Content(content)
-    {
-
-    }
-
-    Text::~Text()
-    {
-
-    }
-
-    unsigned int Text::Type() const
-    {
-        return static_cast<unsigned int>(Types::Text);
-    }
-
-    const String & Text::Content() const
-    {
-        return m_Content;
-    }
-
-    void Text::Content(const String & content)
-    {
-        m_Content = content;
-    }
-
-    void Text::Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
-    {
-
-    }
-
-}
+#endif

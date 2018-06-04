@@ -30,8 +30,8 @@
 namespace Guier
 {
 
-    static const int g_First = std::numeric_limits<int>::min();
-    static const int g_Last = std::numeric_limits<int>::max();
+    static const int g_First    = std::numeric_limits<int>::min();
+    static const int g_Last     = std::numeric_limits<int>::max();
 
     const Index Index::First(g_First);
     const Index Index::Last(g_Last);
@@ -70,6 +70,11 @@ namespace Guier
     Index::~Index()
     {
 
+    }
+
+    Index::eType Index::Type() const
+    {
+        return m_Type;
     }
 
     int Index::GetSingleInteger() const

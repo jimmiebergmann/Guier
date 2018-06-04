@@ -32,6 +32,8 @@
 
 namespace Guier
 { 
+
+    class Skin;
     
     namespace Core
     {
@@ -42,7 +44,7 @@ namespace Guier
         * Base class of renderable window.
         *
         */
-        class GUIER_API WindowBase : public RootParent
+        class GUIER_API WindowBase : public ParentRoot
         {
 
         public:
@@ -73,7 +75,7 @@ namespace Guier
             * @throw std::runtime_error If context == nullptr.
             *
             */
-            WindowBase(const Vector2i & size, const String & title, const std::initializer_list<Style> & styles);
+            WindowBase(Skin * skin, const Vector2i & size, const String & title, const std::initializer_list<Style> & styles);
 
             /**
             * Destructor.
@@ -81,7 +83,10 @@ namespace Guier
             */
             virtual ~WindowBase();
 
+            static Skin * GetDefaultSkin();
+
             WindowImpl * m_pImpl;   ///< Implementation of platform window.
+            Skin       * m_pSkin;   ///< Skin of window controllers.
            
         private:
 

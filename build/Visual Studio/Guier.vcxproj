@@ -35,6 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\Guier\Bitmap.hpp" />
     <ClInclude Include="..\..\include\Guier\Color.hpp" />
     <ClInclude Include="..\..\include\Guier\Control.hpp" />
     <ClInclude Include="..\..\include\Guier\Control\Button.hpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\glext.h" />
     <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\glxext.h" />
     <ClInclude Include="..\..\include\Guier\Core\Thirdparty\OpenGL\wglext.h" />
+    <ClInclude Include="..\..\include\Guier\Core\Win32\WindowsHeaders.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\WindowBase.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\WindowImpl.hpp" />
     <ClInclude Include="..\..\include\Guier\Core\WindowManager.hpp" />
@@ -71,6 +73,7 @@
     <ClInclude Include="..\..\include\Guier\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\Guier\Bitmap.cpp" />
     <ClCompile Include="..\..\source\Guier\Color.cpp" />
     <ClCompile Include="..\..\source\Guier\Control.cpp" />
     <ClCompile Include="..\..\source\Guier\Control\Button.cpp" />

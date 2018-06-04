@@ -34,7 +34,7 @@ namespace Guier
     * Drawable window. Currently appearing as a platform independent window.
     *
     */
-    class GUIER_API Window : public Core::WindowBase// public Core::PlatformWindow
+    class GUIER_API Window : public Core::WindowBase
     {
 
     public:
@@ -44,11 +44,14 @@ namespace Guier
         *
         * @param size           Size of window.
         * @param title          Title of window.
+        * @param skin           Custom skin of window controllers.
         * @param styles         List of styles. Using default window style if omitted.
         *
         */
         Window(const Vector2i & size, const String & title = L"");
         Window(const Vector2i & size, const String & title, const std::initializer_list<Style> & styles);
+        Window(Skin * skin, const Vector2i & size, const String & title = L"");
+        Window(Skin * skin, const Vector2i & size, const String & title, const std::initializer_list<Style> & styles);
 
         /**
         * Private destructor.
