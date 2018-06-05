@@ -110,15 +110,10 @@ namespace Guier
         *         else false.
         *
         */
-        bool SetChunk(const unsigned int item, const unsigned int state,
-            const Vector2i & position, const Vector2i & size);
-        bool SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap,
-            const Vector2i & position, const Vector2i & size);
-
-        bool SetChunk(const unsigned int item, const unsigned int state,
-            const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
-        bool SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap,
-            const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
+        bool SetChunk(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size);
+        bool SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap, const Vector2i & position, const Vector2i & size);
+        bool SetChunk(const unsigned int item, const unsigned int state, const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
+        bool SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap, const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
 
         /**
         * Set control dimensions.

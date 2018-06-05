@@ -76,7 +76,7 @@ namespace Guier
         }
     }
 
-    bool Bitmap::load(const String & filename)
+    bool Bitmap::load(const String & filename, const Format format)
     {
         // open the file:
         std::ifstream file(filename.Get(), std::ios::binary);
@@ -108,7 +108,7 @@ namespace Guier
 
         std::vector<unsigned char> image; //the raw pixels
         unsigned width, height;
-        unsigned int error = lodepng::decode(image, width, height, png, LodePNGColorType::LCT_RGBA, 8U);
+        unsigned int error = lodepng::decode(image, width, height, png, g_LodeColorType[static_cast<size_t>(format)], 8U);
         if (error)
         {
             return false;
@@ -127,20 +127,6 @@ namespace Guier
         memcpy(m_pData, image.data(), dataSize);
 
         return true;
-    }
-
-    bool Bitmap::load(const String & filename, const Format force)
-    {
-        /*if (load(filename) == false)
-        {
-            return false;
-        }
-
-        convert(force);
-        return true;*/
-
-        throw std::runtime_error("Can not load bitmap from file and force format.");
-        return false;
     }
 
     void Bitmap::load(const void * memory, const Vector2ui & dimensions, const Format format)
@@ -181,6 +167,11 @@ namespace Guier
     const Vector2ui & Bitmap::dimensions() const
     {
         return m_Dimensions;
+    }
+
+    const size_t Bitmap::size() const
+    {
+        return static_cast<size_t>(m_Dimensions.x) * static_cast<size_t>(m_Dimensions.y) * g_DataSize[static_cast<size_t>(m_Format)];
     }
 
     unsigned char * Bitmap::data() const

@@ -81,8 +81,7 @@ namespace Guier
         * @return true if filename were found and the file is a vaild bitmap file, else false.
         *
         */
-        bool load(const String & filename);
-        bool load(const String & filename, const Format force);
+        bool load(const String & filename, const Format force = Format::RGBA);
         void load(const void * memory, const Vector2ui & dimensions, const Format format);
         void load(const void * memory, const Vector2ui & dimensions, const Format format, const Format force);
 
@@ -107,6 +106,12 @@ namespace Guier
         const Vector2ui & dimensions() const;
 
         /**
+        * Get data size of bitmap.
+        *
+        */
+        const size_t size() const;
+
+        /**
         * Get data of bitmap.
         *
         */
@@ -124,7 +129,7 @@ namespace Guier
         * Copy data from memory.
         *
         */
-        void copyData(const void * memory, const Vector2ui & dimensions, const Format format );
+        void copyData(const void * memory, const Vector2ui & dimensions, const Format format);
 
         /**
         * Convert functions
