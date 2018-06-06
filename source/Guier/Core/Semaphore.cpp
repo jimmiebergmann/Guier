@@ -36,23 +36,23 @@ namespace Guier
         {
         }
 
-        void Semaphore::NotifyOne()
+        void Semaphore::notifyOne()
         {
-            std::unique_lock<decltype(m_Mutex)> lock(m_Mutex);
+            std::unique_lock<std::mutex> lock(m_Mutex);
             ++m_Count;
             m_Condition.notify_one();
         }
 
-        void Semaphore::NotifyAll()
+        void Semaphore::notifyAll()
         {
-            std::unique_lock<decltype(m_Mutex)> lock(m_Mutex);
+            std::unique_lock<std::mutex> lock(m_Mutex);
             m_Count = 0;
             m_Condition.notify_all();
         }
 
-        void Semaphore::Wait()
+        void Semaphore::wait()
         {
-            std::unique_lock<decltype(m_Mutex)> lock(m_Mutex);
+            std::unique_lock<std::mutex> lock(m_Mutex);
             while (!m_Count)
             {
                 m_Condition.wait(lock);
@@ -60,9 +60,9 @@ namespace Guier
             --m_Count;
         }
 
-        bool Semaphore::TryWait()
+        bool Semaphore::tryWait()
         {
-            std::unique_lock<decltype(m_Mutex)> lock(m_Mutex);
+            std::unique_lock<std::mutex> lock(m_Mutex);
             if (m_Count)
             {
                 --m_Count;
@@ -72,9 +72,9 @@ namespace Guier
             return false;
         }
 
-        bool Semaphore::WaitFor(const unsigned int microseconds)
+       /* bool Semaphore::waitFor(const unsigned int microseconds)
         {
-            std::unique_lock<decltype(m_Mutex)> lock(m_Mutex);
+            std::unique_lock<std::mutex> lock(m_Mutex);
             if (!m_Count)
             {
                 // Ugly hack for inifinity wait time.
@@ -93,7 +93,7 @@ namespace Guier
             }
 
             return false;
-        }
+        }*/
 
     }
 

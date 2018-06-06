@@ -103,7 +103,7 @@ namespace Guier
         * Get type of controller.
         *
         */
-        virtual unsigned int Type() const = 0;
+        virtual unsigned int type() const = 0;
 
     protected:
 
@@ -119,7 +119,7 @@ namespace Guier
         * Get root from parent.
         *
         */
-        ParentRoot * GetParentRoot() const;
+        ParentRoot * parentRoot() const;
 
         Vector2i m_Size; ///< Requested size of control.
 
@@ -129,9 +129,9 @@ namespace Guier
         * Render the control.
         *
         */
-        virtual void Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size) = 0;
+        virtual void render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size) = 0;
 
-        Parent *        m_pParent;      ///< Parent of control.
+        Parent *        m_pParent;      ///< Parent of control...
         Vector2i        m_RenderSize;   ///< Actual render size of control.
 
         /**
@@ -167,7 +167,7 @@ namespace Guier
         *           or if AddChild returns false.
         *
         */
-        bool Add(Control * child, const Index & index = Index::Last);
+        bool add(Control * child, const Index & index = Index::Last);
 
         /**
         * Remove child from parent.
@@ -179,8 +179,8 @@ namespace Guier
         *         Pointer to removed control if removed, else nullptr.
         *
         */
-        bool Remove(Control * child);
-        Control * Remove(const Index & index);
+        bool remove(Control * child);
+        Control * remove(const Index & index);
 
     protected:
 
@@ -188,26 +188,20 @@ namespace Guier
         * Constructor.
         *
         */
-        Parent(ParentRoot * parentRoot);
         Parent(Parent * parent);
+        Parent(ParentRoot * parentRoot);
 
         /**
-        * Get root parent.
+        * Get parent root.
         *
         */
-        ParentRoot * GetRoot() const;
+        ParentRoot * root() const;
 
     private:
 
-        virtual bool AddChild(Control * child, const Index & index) = 0;
-        virtual bool RemoveChild(Control * child) = 0;
-        virtual Control * RemoveChild(const Index & index) = 0;
-
-        /**
-        * Become parent over controller.
-        *
-        */
-        void BecomeParentOf(Control * child);
+        virtual bool addChild(Control * child, const Index & index) = 0;
+        virtual bool removeChild(Control * child) = 0;
+        virtual Control * removeChild(const Index & index) = 0;
 
         ParentRoot * m_pParentRoot;   ///< Pointer to parent root.
 
@@ -216,6 +210,7 @@ namespace Guier
         *
         */
         friend class Control;
+        friend class ParentControl;
     
     };
 
@@ -266,30 +261,28 @@ namespace Guier
         /**
         * Constructor.
         *
-        * @param skin   Skin used for rendering childs of root parent.
-        *              If skin == nullpt, default skin is used if available(check Build.hpp)
+        * @param skin        Skin used for rendering childs of root parent.
+        * @param parentRoot  Parent root to copy skin pointer from.
         *
         */
         ParentRoot(Skin * skin);
-
-        Skin *  m_pSkin;    ///< Pointer of skin.
+        ParentRoot(ParentRoot * parentRoot);
         
-    protected:
-
         /**
-        * Get skin of parent root.
+        * Create texture from bitmap.
         *
         */
-        Skin * GetSkin();
+        virtual Core::Texture * createTexture(Bitmap * bitmap) = 0;
+
+        Skin * m_pSkin;    ///< Pointer of skin.
 
     private:
 
-        virtual bool AddChild(Control * child, const Index & index) = 0;
-        virtual bool RemoveChild(Control * child) = 0;
-        virtual Control * RemoveChild(const Index & index) = 0;
+        virtual bool addChild(Control * child, const Index & index) = 0;
+        virtual bool removeChild(Control * child) = 0;
+        virtual Control * removeChild(const Index & index) = 0;
 
-        friend class Control;
-        friend class Parent;
+        friend class Skin;
 
     };
 

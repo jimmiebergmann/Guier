@@ -64,24 +64,24 @@ namespace Guier
             * @brief    All windows should be created in the same thread.
             *
             */
-            void LoadWindowImpl(WindowImpl * windowImpl);
+            void loadWindowImpl(WindowImpl * windowImpl);
 
             /**
             * Call this function to unload window implementation.
             *
             * @brief    All windows should be created in the same thread.
-            *           
+            *
             *
             */
-            void UnloadWindowImpl(WindowImpl * windowImpl);
+            void unloadWindowImpl(WindowImpl * windowImpl);
 
         private:
 
-            void StartThread();
-            void StopThread();
-            void HandleEvents();
-            void InterruptEvents();
-            void HandleNewWindow();
+            void startThread();
+            void stopThread();
+            void handleEvents();
+            void interruptEvents();
+            void handleNewWindow();
 
             std::thread         m_Thread;
             std::mutex          m_Mutex;

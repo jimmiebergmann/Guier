@@ -39,7 +39,7 @@ namespace Guier
         * Enumerator of different index types, depending on what constructor is being used.
         *
         */
-        enum eType
+        enum class Type
         {
             SingleInteger,
             DoubleInteger
@@ -64,31 +64,31 @@ namespace Guier
         * Get type of index.
         *
         */
-        eType Type() const;
+        Type type() const;
 
         /**
         * Get single integer index.
         *
         */
-        int GetSingleInteger() const;
+        int singleInteger() const;
 
         /**
         * Get double integer index.
         *
         */
-        Vector2i GetDoubleInteger() const;
+        Vector2i doubleInteger() const;
 
         /**
         * Check if index is the first.
         *
         */
-        bool IsFirst() const;
+        bool isFirst() const;
 
         /**
         * Check if index is the last.
         *
         */
-        bool IsLast() const;
+        bool isLast() const;
 
         /**
         * First index.
@@ -111,7 +111,7 @@ namespace Guier
 
     private:
 
-        const eType m_Type; ///< Type of index.
+        const Type  m_Type; ///< Type of index.
         int         m_X;
         int         m_Y;
 

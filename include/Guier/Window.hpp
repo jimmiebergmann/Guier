@@ -65,8 +65,8 @@ namespace Guier
         * @param size   New size of window.
         *
         */
-        const Vector2i & Size() const;
-        Window * Size(const Vector2i & size);
+        const Vector2i & size() const;
+        Window * size(const Vector2i & size);
 
         /**
         * Get or set the current position of the window.
@@ -74,8 +74,8 @@ namespace Guier
         * @param position   New position of window.
         *
         */
-        const Vector2i & Position() const;
-        Window * Position(const Vector2i & position);
+        const Vector2i & position() const;
+        Window * position(const Vector2i & position);
 
         /**
         * Get or set current title of window.
@@ -83,8 +83,8 @@ namespace Guier
         * @param title   New title of window.
         *
         */
-        const String & Title() const;
-        Window * Title(const String & title);
+        const String & title() const;
+        Window * title(const String & title);
 
         /**
         * Set window style. Overridig any previously added styles.
@@ -93,8 +93,8 @@ namespace Guier
         * @param styles     Multiple styles to set.
         *
         */
-        Window * SetStyle(const Style style);
-        Window * SetStyle(const std::initializer_list<Style> & styles);
+        Window * setStyle(const Style style);
+        Window * setStyle(const std::initializer_list<Style> & styles);
 
 
         /**
@@ -104,8 +104,8 @@ namespace Guier
         * @param styles     Multiple styles to add to window.
         *
         */
-        Window * AddStyle(const Style style);
-        Window * AddStyle(const std::initializer_list<Style> & styles);
+        Window * addStyle(const Style style);
+        Window * addStyle(const std::initializer_list<Style> & styles);
 
         /**
         * Remove window style.
@@ -114,8 +114,8 @@ namespace Guier
         * @param styles     Multiple styles to remove from window.
         *
         */
-        Window * RemoveStyle(const Style style);
-        Window * RemoveStyle(const std::initializer_list<Style> & styles);
+        Window * removeStyle(const Style style);
+        Window * removeStyle(const std::initializer_list<Style> & styles);
 
         /**
         * Show minimized window.
@@ -126,7 +126,7 @@ namespace Guier
         *           Window is restored and shown if minimized.
         *
         */
-        Window * Show();
+        Window * show();
 
         /**
         * Hide window window.
@@ -135,7 +135,7 @@ namespace Guier
         *        Restore window via Show() method.
         *
         */
-        Window * Hide();
+        Window * hide();
 
         /**
         * Minimize window.
@@ -144,7 +144,7 @@ namespace Guier
         *           found in task bar if HideFromTaskbar is set to false.
         *
         */
-        Window * Minimize();
+        Window * minimize();
 
         /**
         * Maximize window.
@@ -152,7 +152,7 @@ namespace Guier
         * @brief    Window is created if called for the first time.
         *
         */
-        Window * Maximize();
+        Window * maximize();
 
         /**
         * Close the window.
@@ -161,7 +161,7 @@ namespace Guier
         *        Use the setting HideWhenClosed to connect hide and minimize logics to signal.
         *
         */
-        Window * Close();
+        Window * close();
 
         /**
         * Signal called when the window is resized.

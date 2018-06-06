@@ -78,7 +78,7 @@ namespace Guier
 
         template <typename U> Vector2<T> operator / (const U & value) const;
 
-        Vector2<T> Absolute() const;
+        Vector2<T> absolute() const;
 
         T x; ///< x-component of vector.
         T y; ///< y-component of vector.

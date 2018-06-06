@@ -69,7 +69,7 @@ namespace Guier
             *           Function wont return until window manager is done loading the window.
             *
             */
-            void LoadImplementation();
+            void loadImplementation();
 
             /**
             * Get or set current size of window.
@@ -77,8 +77,8 @@ namespace Guier
             * @param size   New size of window.
             *
             */
-            const Vector2i & Size() const;
-            void Size(const Vector2i & size);
+            const Vector2i & size() const;
+            void size(const Vector2i & size);
 
             /**
             * Get or set the current position of the window.
@@ -86,8 +86,8 @@ namespace Guier
             * @param position   New position of window.
             *
             */
-            const Vector2i & Position() const;
-            void Position(const Vector2i & position);
+            const Vector2i & position() const;
+            void position(const Vector2i & position);
 
             /**
             * Get or set current title of window.
@@ -95,8 +95,8 @@ namespace Guier
             * @param title   New title of window.
             *
             */
-            const String & Title() const;
-            void Title(const String & title);
+            const String & title() const;
+            void title(const String & title);
 
             /**
             * Set window style. Overridig any previously added styles.
@@ -105,8 +105,8 @@ namespace Guier
             * @param styles     Multiple styles to set.
             *
             */
-            void SetStyle(const Window::Style style);
-            void SetStyle(const std::initializer_list<Window::Style> & styles);
+            void setStyle(const Window::Style style);
+            void setStyle(const std::initializer_list<Window::Style> & styles);
 
 
             /**
@@ -116,8 +116,8 @@ namespace Guier
             * @param styles     Multiple styles to add to window.
             *
             */
-            void AddStyle(const Window::Style style);
-            void AddStyle(const std::initializer_list<Window::Style> & styles);
+            void addStyle(const Window::Style style);
+            void addStyle(const std::initializer_list<Window::Style> & styles);
 
             /**
             * Remove window style.
@@ -126,8 +126,8 @@ namespace Guier
             * @param styles     Multiple styles to remove from window.
             *
             */
-            void RemoveStyle(const Window::Style style);
-            void RemoveStyle(const std::initializer_list<Window::Style> & styles);
+            void removeStyle(const Window::Style style);
+            void removeStyle(const std::initializer_list<Window::Style> & styles);
 
             /**
             * Show minimized window.
@@ -138,7 +138,7 @@ namespace Guier
             *           Window is restored and shown if minimized.
             *
             */
-            void Show();
+            void show();
 
             /**
             * Hide window window.
@@ -147,7 +147,7 @@ namespace Guier
             *        Restore window via Show() method.
             *
             */
-            void Hide();
+            void hide();
 
             /**
             * Minimize window.
@@ -156,7 +156,7 @@ namespace Guier
             *           found in task bar if HideFromTaskbar is set to false.
             *
             */
-            void Minimize();
+            void minimize();
 
             /**
             * Maximize window.
@@ -164,7 +164,7 @@ namespace Guier
             * @brief    Window is created if called for the first time.
             *
             */
-            void Maximize();
+            void maximize();
 
             /**
             * Close the window.
@@ -173,15 +173,21 @@ namespace Guier
             *        Use the setting HideWhenClosed to connect hide and minimize logics to signal.
             *
             */
-            void Close();
+            void close();
 
             /**
             * Perform child operations, add or remove childs.
             *
             */
-            bool Add(Control * child, const Index & index);
-            bool Remove(Control * child);
-            Control * Remove(const Index & index);
+            bool add(Control * child, const Index & index);
+            bool remove(Control * child);
+            Control * remove(const Index & index);
+
+            /**
+            * Create texture from bitmap.
+            *
+            */
+            Core::Texture * createTexture(Bitmap * bitmap);
 
         private:
 
@@ -189,20 +195,20 @@ namespace Guier
             * Load native window.
             *
             */
-            void Load();
+            void load();
             
             /**
             * Internal function used for setting style of window.
             *
             */
-            void SetStyleInternal(const unsigned int styles);
+            void setStyleInternal(const unsigned int styles);
 
             /**
             * Window event functions.
             *
             */
-            static LRESULT WindowProcStatic(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
-            LRESULT WindowProc(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
+            static LRESULT windowProcStatic(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
+            LRESULT windowProc(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
             
             GdipRenderer *      m_pRenderer;            ///< Pointer to renderer;
             Vector2i        m_Size;                 ///< Current size of window.

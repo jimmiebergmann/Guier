@@ -56,7 +56,7 @@ namespace Guier
             * @brief internally setting device handle and initialize Gdiplus::Graphics
             *
             */
-            void BeginRendering(HDC deviceContextHandle);
+            void beginRendering(HDC deviceContextHandle);
 
             /**
             * End rendering.
@@ -64,27 +64,37 @@ namespace Guier
             * @brief Internally clearing old rendering information.
             *
             */
-            void EndRendering();
+            void endRendering();
 
             /**
             * Render rectangle.
             *
             */
-            void RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture);
-            void RenderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture, const Vector2i & sourcePosition, const Vector2i & sourceSize);
-            void RenderRectangle(const Vector2i & position, const Vector2i & size, const Color & color);
+            void renderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture);
+            void renderRectangle(const Vector2i & position, const Vector2i & size, Core::Texture * texture, const Vector2i & sourcePosition, const Vector2i & sourceSize);
+            void renderRectangle(const Vector2i & position, const Vector2i & size, const Color & color);
 
             /**
             * Get skin attached to interface.
             *
             */
-            Skin * GetSkin() const;
+            Skin * skin() const;
+
+            /**
+            * Get/set screen DPI.
+            *
+            */
+            void Dpi(unsigned int dpi);
+            unsigned int Dpi() const;
 
         private:
 
             HDC                 m_DeviceContextHandle;
             Gdiplus::Graphics * m_pGraphics;
             Skin *              m_pSkin;
+
+            unsigned int        m_Dpi;
+            float               m_ScaleFactor;
 
         };
 
@@ -118,7 +128,7 @@ namespace Guier
             * @brief Internally setting device handle and initialize Gdiplus::Graphics
             *
             */
-            void BeginRendering();
+            void beginRendering();
 
             /**
             * End rendering.
@@ -126,7 +136,13 @@ namespace Guier
             * @brief Internally clearing old rendering information.
             *
             */
-            void EndRendering();
+            void endRendering();
+
+            /**
+            * Create texture.
+            *
+            */
+            Texture * createTexture();
 
             /**
             * Load the renderer.
@@ -134,13 +150,13 @@ namespace Guier
             * @return True if succeeded, else false.
             *
             */
-            virtual bool Load();
+            virtual bool load();
 
             /**
             * Get renderer interface.
             *
             */
-            Renderer::Interface * GetInterface();
+            Renderer::Interface * interface();
 
         private:
 

@@ -83,16 +83,19 @@ namespace Guier
             */
             virtual ~WindowBase();
 
-            static Skin * GetDefaultSkin();
-
             WindowImpl * m_pImpl;   ///< Implementation of platform window.
-            Skin       * m_pSkin;   ///< Skin of window controllers.
            
         private:
 
-            bool AddChild(Control * child, const Index & index);
-            bool RemoveChild(Control * child);
-            Control * RemoveChild(const Index & index);           
+            bool addChild(Control * child, const Index & index);
+            bool removeChild(Control * child);
+            Control * removeChild(const Index & index);     
+
+            /**
+            * Create texture from bitmap.
+            *
+            */
+            Core::Texture * createTexture(Bitmap * bitmap);
             
         };
 

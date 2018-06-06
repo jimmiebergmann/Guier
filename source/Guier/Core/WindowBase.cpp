@@ -44,29 +44,7 @@ namespace Guier
     namespace Core
     {
 
-        WindowBase::WindowBase(Skin * skin, const Vector2i & size, const String & title, const std::initializer_list<Style> & styles) :
-            ParentRoot(skin),
-            m_pImpl(nullptr)
-        {
-            #ifdef GUIER_PLATFORM_WINDOWS
-                if (skin == nullptr)
-                {
-                    skin = GetDefaultSkin();
-                }
-                Win32WindowImpl * pWin32Impl = new Win32WindowImpl(this, skin, size, title, styles);
-                m_pImpl = pWin32Impl;
-                pWin32Impl->LoadImplementation();
-            #else
-            #error Unkown platform. Specify in Build.hpp
-            #endif
-        }
-
-        WindowBase::~WindowBase()
-        {
-            delete m_pImpl;
-        }
-
-        Skin * WindowBase::GetDefaultSkin()
+        Skin * getDefaultSkin()
         {
             #ifdef GUIER_DEFAULT_SKIN
                 if (g_pDefaultSkin == nullptr)
@@ -79,19 +57,42 @@ namespace Guier
             return nullptr;
         }
 
-        bool WindowBase::AddChild(Control * child, const Index & index)
+        WindowBase::WindowBase(Skin * skin, const Vector2i & size, const String & title, const std::initializer_list<Style> & styles) :
+            ParentRoot(skin == nullptr ? getDefaultSkin() : skin ),
+            m_pImpl(nullptr)
         {
-            return m_pImpl->Add(child, index);
+            #ifdef GUIER_PLATFORM_WINDOWS
+                Win32WindowImpl * pWin32Impl = new Win32WindowImpl(this, m_pSkin, size, title, styles);
+                m_pImpl = pWin32Impl;
+                pWin32Impl->loadImplementation();
+            #else
+            #error Unkown platform. Specify in Build.hpp
+            #endif
         }
 
-        bool WindowBase::RemoveChild(Control * child)
+        WindowBase::~WindowBase()
         {
-            return m_pImpl->Remove(child);
+            delete m_pImpl;
         }
 
-        Control * WindowBase::RemoveChild(const Index & index)
+        bool WindowBase::addChild(Control * child, const Index & index)
         {
-            return m_pImpl->Remove(index);
+            return m_pImpl->add(child, index);
+        }
+
+        bool WindowBase::removeChild(Control * child)
+        {
+            return m_pImpl->remove(child);
+        }
+
+        Control * WindowBase::removeChild(const Index & index)
+        {
+            return m_pImpl->remove(index);
+        }
+
+        Core::Texture * WindowBase::createTexture(Bitmap * bitmap)
+        {
+            return m_pImpl->createTexture(bitmap);
         }
 
     }

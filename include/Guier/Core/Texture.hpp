@@ -26,6 +26,7 @@
 #pragma once
 
 #include <Guier/Vector2.hpp>
+#include <Guier/Bitmap.hpp>
 
 namespace Guier
 {
@@ -38,13 +39,6 @@ namespace Guier
 
         public:
 
-            enum class Format
-            {
-                Gray,
-                RGB,
-                RGBA
-            };
-
             /**
             * Virtual destructor.
             *
@@ -55,13 +49,13 @@ namespace Guier
             * Get format of texture.
             *
             */
-            virtual Format GetFormat() const = 0;
+            virtual Bitmap::Format format() const = 0;
 
             /**
             * Get size of texture.
             *
             */
-            virtual const Vector2i & GetSize() const = 0;
+            virtual const Vector2ui & size() const = 0;
 
         };
 

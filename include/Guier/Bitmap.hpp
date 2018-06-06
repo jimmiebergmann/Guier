@@ -53,15 +53,15 @@ namespace Guier
         * @param filename       Path of bitmap file to load.
         * @param force          Force the data to be stored in a specific format. Alpha channel is always 255 if original format is missing alpha channel.
         * @param memory         Pointer to data in memory to copy.
-        * @param dimensions     Dimensions of bitmap data.
+        * @param size           Dimensions of bitmap data.
         * @param format         Format of bitmap data. If passing filename, the content will be converted to the passed format.
         *
         */
         Bitmap();
         Bitmap(const String & filename);
         Bitmap(const String & filename, const Format force);
-        Bitmap(const void * memory, const Vector2ui & dimensions, const Format format);
-        Bitmap(const void * memory, const Vector2ui & dimensions, const Format format, const Format force);
+        Bitmap(const void * memory, const Vector2ui & size, const Format format);
+        Bitmap(const void * memory, const Vector2ui & size, const Format format, const Format force);
 
         /**
         * Destructor.
@@ -70,20 +70,44 @@ namespace Guier
         ~Bitmap();
 
         /**
+        * Copy constructor.
+        *
+        */
+        Bitmap(const Bitmap & bitmap);
+
+        /**
+        * Assign operator.
+        *
+        */
+        Bitmap & operator = (const Bitmap & bitmap);
+
+        /**
         * Load bitmap file or from memory.
         *
         * @param filename       Path of bitmap file to load.
         * @param force          Force the data to be stored in a specific format. Alpha channel is always 255 if original format is missing alpha channel.
         * @param memory         Pointer to data in memory to copy.
-        * @param dimensions     Dimensions of bitmap data.
+        * @param size           Dimensions of bitmap data.
         * @param format         Format of bitmap data. If passing filename, the content will be converted to the passed format.
         *
-        * @return true if filename were found and the file is a vaild bitmap file, else false.
+        * @return true if filename were found or the file is invalid, else false.
         *
         */
         bool load(const String & filename, const Format force = Format::RGBA);
-        void load(const void * memory, const Vector2ui & dimensions, const Format format);
-        void load(const void * memory, const Vector2ui & dimensions, const Format format, const Format force);
+        void load(const void * memory, const Vector2ui & size, const Format format);
+        void load(const void * memory, const Vector2ui & size, const Format format, const Format force);
+
+        /**
+        * Load specific file format.
+        *
+        * @param filename       Path of bitmap file to load.
+        * @param force          Force the data to be stored in a specific format. Alpha channel is always 255 if original format is missing alpha channel.
+        *
+        * @return true if filename were found or the file is invalid, else false.
+        *
+        */
+        bool loadPng(const String & filename, const Format force = Format::RGBA);
+        bool loadSvg(const String & filename, const Format force = Format::RGBA);
 
         /**
         * Unload bitmap.
@@ -103,13 +127,13 @@ namespace Guier
         * Get dimensions of bitmap.
         *
         */
-        const Vector2ui & dimensions() const;
+        const Vector2ui & size() const;
 
         /**
         * Get data size of bitmap.
         *
         */
-        const size_t size() const;
+        const size_t dataSize() const;
 
         /**
         * Get data of bitmap.
@@ -129,7 +153,7 @@ namespace Guier
         * Copy data from memory.
         *
         */
-        void copyData(const void * memory, const Vector2ui & dimensions, const Format format);
+        void copyData(const void * memory, const Vector2ui & size, const Format format);
 
         /**
         * Convert functions
@@ -144,7 +168,7 @@ namespace Guier
 
         Format          m_Format;
         unsigned char * m_pData;
-        Vector2ui       m_Dimensions;
+        Vector2ui       m_Size;
 
     };
 

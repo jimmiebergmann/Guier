@@ -35,9 +35,9 @@ namespace Guier
     {
 
         // Render area
-        Renderer::RenderArea::RenderArea(const Vector2i & position, const Vector2i & size) :
-            Position(position),
-            Size(size)
+        Renderer::RenderArea::RenderArea(const Vector2i & position_in, const Vector2i & size_in) :
+            position(position_in),
+            size(size_in)
         {
 
         }
@@ -48,31 +48,32 @@ namespace Guier
 
         }
 
-        void Renderer::Interface::RenderControl(Control * control, const Vector2i & position, const Vector2i & size)
+        void Renderer::Interface::renderControl(Control * control, const Vector2i & position, const Vector2i & size)
         {
-            control->Render(this, position, size);
+            control->render(this, position, size);
         }
 
-        bool Renderer::Interface::RenderChunk(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size)
+        bool Renderer::Interface::renderChunk(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size)
         {
-            if (GetSkin() == nullptr)
+            Skin * pSkin = skin();
+            if (pSkin == nullptr)
             {
                 throw std::runtime_error("Missing skin.");
                 return false;
             }
 
-            Skin::Chunk * chunk = GetSkin()->GetChunk(item, state);
+            Skin::Chunk * chunk = pSkin->getChunk(item, state);
 
             if (chunk == nullptr)
             {
                 return false;
             }
 
-            chunk->Render(this, position, size);
+            chunk->render(this, position, size);
             return true;
         }
 
-        void Renderer::Interface::RenderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color)
+        void Renderer::Interface::renderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color)
         {
       
         }

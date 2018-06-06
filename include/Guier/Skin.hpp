@@ -25,7 +25,6 @@
 
 #pragma once
 
-#include <Guier/Control.hpp>
 #include <Guier/Bitmap.hpp>
 #include <Guier/Core/Renderer.hpp>
 #include <map>
@@ -38,6 +37,7 @@ namespace Guier
     * Forward declaratios.
     *
     */
+    class ParentRoot;
     namespace Core
     {
         class Texture;
@@ -98,22 +98,21 @@ namespace Guier
 
 
         /**
-        ** @brief Set or update existing chunk dimensions.
+        ** Set or update existing chunk dimensions.
+        *
+        * @brief            The chunk is updated with the new bitmap if the chunk exists.
+        *                   
         *
         *
         * @param item       Id of item.
         * @param state      Id of state.
         * @param texture    Pointer to texture. The skin
         * 
-        * @return False if not passing any texture and the chunk is not yet set.
-        *         False if bitmap == nullptr,
-        *         else false.
+        * @return           True if new chunk is set or existing chunk is updated. 
         *
         */
-        bool SetChunk(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size);
-        bool SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap, const Vector2i & position, const Vector2i & size);
-        bool SetChunk(const unsigned int item, const unsigned int state, const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
-        bool SetChunk(const unsigned int item, const unsigned int state, Bitmap * bitmap, const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
+        void set(const unsigned int item, const unsigned int state, Bitmap * bitmap, const Vector2i & position, const Vector2i & size);
+        void set(const unsigned int item, const unsigned int state, Bitmap * bitmap, const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & rightBottomPos, const Vector2i & rightBottomSize);
 
         /**
         * Set control dimensions.
@@ -121,10 +120,23 @@ namespace Guier
         * @param item   Chunk item id to remove from skin.
         * @param state  Chunk items state id to remove from skin.
         *
-        * @return true if removed, false if item-state is not found in skin.
+        * @return true if unset, false if chunk is not found.
         *
         */
-        bool UnsetChunk(const unsigned int item, const unsigned int state);
+        bool unset(const unsigned int item, const unsigned int state);
+
+        /**
+        * Update existing chunk dimensions.
+        *
+        * @param item   Chunk item id to update.
+        * @param state  Chunk items state id to update.
+        *
+        * @return       True if updates, false if chunk is not found.
+        *
+        */
+        bool update(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size);
+        bool update(const unsigned int item, const unsigned int state, const Vector2i & leftTopPos, const Vector2i & leftTopSize, const Vector2i & rightBottomPos, const Vector2i & rightBottomSize);
+        
 
     private:
 
@@ -139,11 +151,18 @@ namespace Guier
 
         public:
 
-            Chunk(Core::Texture * texture);
+            enum class Type
+            {
+                Chunk1x1,
+                Chunk3x3
+            };
+
+            Chunk(Bitmap * bitmap, Core::Texture * texture);
 
             virtual ~Chunk();
 
-            virtual void Render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size) = 0;
+            virtual Type type() const = 0;
+            virtual void render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size) = 0;
 
             /**
             * Get or set texture.
@@ -152,52 +171,17 @@ namespace Guier
             Core::Texture * texture() const;
             void texture(Core::Texture * texture);
 
-        private:
+            /**
+            * Get or set bitmap.
+            *
+            */
+            Bitmap * bitmap() const;
+            void bitmap(Bitmap * bitmap);
+
+        protected:
 
             Core::Texture * m_pTexture;
-
-        };
-
-        /**
-        * Get chunk.
-        *
-        * @return   Pointer of chunk if found or if default skin is available, else nullptr.
-        *
-        */
-        Skin::Chunk * GetChunk(const unsigned int item, const unsigned int state);
-
-        typedef std::map<unsigned int, Chunk *> ChunkState;     ///< Map of chunk items, item id as key.
-        typedef std::map<unsigned int, ChunkState *> Chunks;    ///< Map of chunk states, state id as key.
-
-        Chunks                              m_Chunks;                   ///< All the chunks of .... PLEASE FIX THE NAMING OF ChunkState AND Chunks...
-        std::map<Bitmap *, Core::Texture *> m_BitmapTextures;
-
-        /**
-        * Internal function for creating or getting chunk state map.
-        *
-        */
- ///       ChunkState * GetOrCreateItemState(const unsigned int state);
-
-        friend class Core::Renderer::Interface;
-
-        /**
-        * Chunk class for dimension of 3x3 chunks.
-        *
-        */
-        class Chunk3x3 : public Chunk
-        {
-
-        public:
-
-            Chunk3x3(Core::Texture * texture,
-                const Vector2i & leftTopPos, const Vector2i & leftTopSize,
-                const Vector2i & RightBottomPos, const Vector2i & RightBottomSize);
-
-            virtual void Render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size);
-
-        private:
-
-            const Vector2i m_TextureCoords[4];
+            Bitmap * m_pBitmap;
 
         };
 
@@ -210,9 +194,10 @@ namespace Guier
 
         public:
 
-            Chunk1x1(Core::Texture * texture, const Vector2i & position, const Vector2i & size);
+            Chunk1x1(Bitmap * bitmap, Core::Texture * texture, const Vector2i & position, const Vector2i & size);
 
-            virtual void Render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size);
+            Type type() const;
+            void render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size);
 
         private:
 
@@ -220,6 +205,73 @@ namespace Guier
 
         };
 
+        /**
+        * Chunk class for dimension of 3x3 chunks.
+        *
+        */
+        class Chunk3x3 : public Chunk
+        {
+
+        public:
+
+            Chunk3x3(Bitmap * bitmap, Core::Texture * texture,
+                const Vector2i & leftTopPos, const Vector2i & leftTopSize,
+                const Vector2i & rightBottomPos, const Vector2i & rightBottomSize);
+
+            Type type() const;
+            void render(Core::Renderer::Interface * rendererInterface, const Vector2i & position, const Vector2i & size);
+
+        private:
+
+            const Vector2i m_TextureCoords[4];
+
+        };
+
+        /**
+        * Load textures.
+        *
+        * @throw std::runtime_error if parent root of this skin is not yet set.
+        *
+        */
+    public:
+        void load();
+    private:
+        /**
+        * Get chunk.
+        *
+        * @return   Pointer of chunk if found, else nullptr.
+        *
+        */
+        Skin::Chunk * getChunk(const unsigned int item, const unsigned int state);
+
+        /**
+        * Add chunk to load map.
+        *
+        */
+        void addChunkToTextureLoading(Bitmap * bitmap, Chunk * chunk);
+
+        /**
+        * Remove chunk from load map.
+        *
+        */
+        void removeChunkTFromTextureLoading(Chunk * chunk);
+
+        typedef std::map<unsigned int, Chunk *> ChunkItems;          ///< Map of chunk items, item id as key.
+        typedef std::map<unsigned int, ChunkItems *> ChunkStates;    ///< Map of chunk states, state id as key.
+
+        ChunkStates                         m_ChunkStates;           ///< All the chunks.
+        std::map<Bitmap *, Core::Texture *> m_Bitmaps;               ///< Map of bitmap and corresonding texture.
+        ParentRoot *                        m_pParentRoot;           ///< Parent root,
+
+
+        typedef std::set<Chunk *>           ChunkSet;
+        std::map<Bitmap *, ChunkSet*>       m_TextureLoading;       ///< Map of bitmaps without any corresonding textures.
+                                                                    ///< Secondary is the chunk the bitmap is attached to.
+        bool                                m_Loaded;
+
+        friend class ParentRoot;
+        friend class Core::Renderer::Interface;
+        
     };
 
 }

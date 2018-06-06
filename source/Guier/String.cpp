@@ -62,33 +62,33 @@ namespace Guier
 
     }
 
-    std::wstring & String::Get()
+    std::wstring & String::get()
     {
         return m_String;
     }
 
-    const std::wstring & String::Get() const
+    const std::wstring & String::get() const
     {
         return m_String;
     }
 
-    void String::Set(const std::string & string)
+    void String::set(const std::string & string)
     {
         m_String = std::wstring(string.begin(), string.end());
     }
 
-    void String::Set(const std::wstring & string)
+    void String::set(const std::wstring & string)
     {
         m_String = string;
     }
 
-    void String::Set(const char * chars)
+    void String::set(const char * chars)
     {
         std::string temp = chars;
         m_String = std::wstring(temp.begin(), temp.end());
     }
 
-    void String::Set(const wchar_t * chars)
+    void String::set(const wchar_t * chars)
     {
         m_String = chars;
     }

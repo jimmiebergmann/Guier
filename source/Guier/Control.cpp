@@ -43,6 +43,7 @@ namespace Guier
     }
 
 
+
     // Control class.
     Control::~Control()
     {
@@ -50,7 +51,7 @@ namespace Guier
         {
             Parent * oldParent = m_pParent;
             m_pParent = nullptr;
-            oldParent->Remove(this);
+            oldParent->remove(this);
         }
     }
 
@@ -64,88 +65,84 @@ namespace Guier
             throw std::runtime_error("Parent is nullptr.");
         }
 
-        parent->Add(this, parentIndex);
+        parent->add(this, parentIndex);
     }
 
-    ParentRoot * Control::GetParentRoot() const
+    ParentRoot * Control::parentRoot() const
     {
-        return m_pParent->GetRoot();
+        return m_pParent->m_pParentRoot;
     }
    
-    bool Parent::Add(Control * child, const Index & index)
+    bool Parent::add(Control * child, const Index & index)
     {
         if (child == nullptr)
         {
             return false;
         }
 
-        if (AddChild(child, index) == false)
+        if (addChild(child, index) == false)
         {
             return false;
         }
 
-        BecomeParentOf(child);
+        ///becomeParentOf(child);
         return true;
     }
 
-    bool Parent::Remove(Control * child)
+    bool Parent::remove(Control * child)
     {
         if (child == nullptr)
         {
             return false;
         }
 
-        if (RemoveChild(child) == false)
+        if (removeChild(child) == false)
         {
             return false;
         }
 
         // Actually unallocate child control.
-        if (child->m_pParent)
-        {
-            child->m_pParent = nullptr; //< Set parent to nullptr to ensure control destructor wont call this function again.
-        }
+        child->m_pParent = nullptr; /// Set parent to nullptr to ensure control destructor wont call this function again.
         delete child;
 
         return true;
     }
 
-    Control * Parent::Remove(const Index & index)
+    Control * Parent::remove(const Index & index)
     {
-        Control * pChild = RemoveChild(index);
+        Control * pChild = removeChild(index);
             
         if (pChild == nullptr)
         {
             return nullptr;
         }
 
+        pChild->m_pParent = nullptr; /// Set parent to nullptr to ensure control destructor wont call this function again.
         delete pChild;
 
         return pChild;
     }
 
+
+
     // Parent.
+    Parent::Parent(Parent * parent) :
+        m_pParentRoot(parent->root())
+    {
+
+    }
     Parent::Parent(ParentRoot * parentRoot) :
         m_pParentRoot(parentRoot)
     {
 
     }
 
-    Parent::Parent(Parent * parent) :
-        m_pParentRoot(parent->GetRoot())
-    {
-
-    }
-
-    ParentRoot * Parent::GetRoot() const
+    ParentRoot * Parent::root() const
     {
         return m_pParentRoot;
     }
 
-    void Parent::BecomeParentOf(Control * child)
-    {
-            
-    }
+
 
     // Parent control.
     ParentControl::~ParentControl()
@@ -154,22 +151,27 @@ namespace Guier
     }
 
     ParentControl::ParentControl(Parent * parent, const Index & parentIndex, const Vector2i & size) :
-        Parent(parent),
+        Parent(parent->root()),
         Control(parent, parentIndex, size)
     {
 
     }
+
+
 
     // Parent root.
     ParentRoot::ParentRoot(Skin * skin) :
         Parent(this),
         m_pSkin(skin)
     {
+        m_pSkin->m_pParentRoot = this;
     }
 
-    Skin * ParentRoot::GetSkin()
+    ParentRoot::ParentRoot(ParentRoot * parentRoot) :
+        Parent(this),
+        m_pSkin(parentRoot->m_pSkin)
     {
-        return m_pSkin;
+   
     }
 
 }

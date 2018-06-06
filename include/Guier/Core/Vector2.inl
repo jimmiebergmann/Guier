@@ -153,7 +153,7 @@ inline Vector2< T > Vector2< T >::operator / (const U & p_Value) const
 }
 
 template <typename T>
-inline Vector2<T> Vector2<T>::Absolute() const
+inline Vector2<T> Vector2<T>::absolute() const
 {
     return Vector2<T>((T)std::abs((T)x),
         (T)std::abs((T)y));

@@ -62,17 +62,17 @@ namespace Guier
         * Get wide string.
         *
         */
-        std::wstring & Get();
-        const std::wstring & Get() const;
+        std::wstring & get();
+        const std::wstring & get() const;
 
         /**
         * Set string.
         *
         */
-        void Set(const std::string & string);
-        void Set(const std::wstring & string);
-        void Set(const char * chars);
-        void Set(const wchar_t * chars);
+        void set(const std::string & string);
+        void set(const std::wstring & string);
+        void set(const char * chars);
+        void set(const wchar_t * chars);
 
     private:
 

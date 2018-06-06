@@ -37,7 +37,7 @@ namespace Guier
     const Index Index::Last(g_Last);
 
     Index::Index(const int index) :
-        m_Type(SingleInteger),
+        m_Type(Type::SingleInteger),
         m_X(index),
         m_Y(0)
     {
@@ -45,7 +45,7 @@ namespace Guier
     }
 
     Index::Index(const int x, const int y) :
-        m_Type(DoubleInteger),
+        m_Type(Type::DoubleInteger),
         m_X(x),
         m_Y(y)
     {
@@ -53,7 +53,7 @@ namespace Guier
     }
 
     Index::Index(const Vector2i & index) :
-        m_Type(DoubleInteger),
+        m_Type(Type::DoubleInteger),
         m_X(index.x),
         m_Y(index.y)
     {
@@ -72,23 +72,23 @@ namespace Guier
 
     }
 
-    Index::eType Index::Type() const
+    Index::Type Index::type() const
     {
         return m_Type;
     }
 
-    int Index::GetSingleInteger() const
+    int Index::singleInteger() const
     {
         return m_X;
     }
 
-    Vector2i Index::GetDoubleInteger() const
+    Vector2i Index::doubleInteger() const
     {
         switch (m_Type)
         {
-        case SingleInteger:
+        case Type::SingleInteger:
             return Vector2i(m_X, 0);
-        case DoubleInteger:
+        case Type::DoubleInteger:
             return Vector2i(m_X, m_Y);
         default:
             break;
@@ -97,12 +97,12 @@ namespace Guier
         return { 0, 0 };
     }
 
-    bool Index::IsFirst() const
+    bool Index::isFirst() const
     {
         return m_X == g_First;
     }
 
-    bool Index::IsLast() const
+    bool Index::isLast() const
     {
         return m_X == g_Last;
     }
@@ -111,12 +111,12 @@ namespace Guier
     {
         switch (m_Type)
         {
-            case SingleInteger:
+            case Type::SingleInteger:
             {
                 return m_X == index.m_X;
             }
             break;
-            case DoubleInteger:
+            case Type::DoubleInteger:
             {
                 return m_X == index.m_X && m_Y == index.m_Y;
             }

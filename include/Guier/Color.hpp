@@ -52,10 +52,10 @@ namespace Guier
         Color(const unsigned char red, const unsigned char green, const unsigned char blue, const unsigned char alpha = 255);
         Color(const unsigned char gray, const unsigned char alpha = 255);
 
-        unsigned char R;    ///< Red color component.
-        unsigned char G;    ///< Green color component.
-        unsigned char B;    ///< Blue color component.
-        unsigned char A;    ///< Alpha component.
+        unsigned char r;    ///< Red color component.
+        unsigned char g;    ///< Green color component.
+        unsigned char b;    ///< Blue color component.
+        unsigned char a;    ///< Alpha component.
 
         static const Color Black;
         static const Color White;

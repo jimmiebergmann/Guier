@@ -60,14 +60,14 @@ namespace Guier
         * Get type of controller.
         *
         */
-        virtual unsigned int Type() const;
+        virtual unsigned int type() const;
 
         /**
         * Get/set content of text.
         *
         */
-        const String & Content() const;
-        void Content(const String & content);
+        const String & get() const;
+        void set(const String & content);
 
     private:
 
@@ -75,7 +75,7 @@ namespace Guier
         * Render the control.
         *
         */
-        virtual void Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size);
+        virtual void render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size);
 
         String m_Content;    ///< Text content.
 

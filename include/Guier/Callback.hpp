@@ -24,7 +24,7 @@
 */
 
 #pragma once
-
+/*
 #include <Guier/Core/Build.hpp>
 
 #include <algorithm>
@@ -219,3 +219,5 @@ namespace std
     {
     };
 }
+
+*/

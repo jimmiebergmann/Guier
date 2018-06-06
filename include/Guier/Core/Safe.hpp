@@ -55,8 +55,8 @@ namespace Guier
             * @breif Assignment constructor.
             *
             */
-            Safe(const T & value) :
-                Value(value)
+            Safe(const T & value_in) :
+                value(value_in)
             {
             }
 
@@ -65,7 +65,7 @@ namespace Guier
             *
             */
             Safe(const Safe & safe) :
-                Value(safe.Get())
+                value(safe.get())
             {
             }
 
@@ -83,20 +83,20 @@ namespace Guier
             * @return Value.
             *
             */
-            const T Get()
+            const T get()
             {
-                std::lock_guard<std::mutex> gm(Mutex);
-                return Value;
+                std::lock_guard<std::mutex> gm(mutex);
+                return value;
             }
 
             /**
             * @breif Thread safe function for assigning value.
             *
             */
-            void Set(const T & value)
+            void Set(const T & value_in)
             {
-                std::lock_guard<std::mutex> gm(Mutex);
-                Value = value;
+                std::lock_guard<std::mutex> gm(mutex);
+                value = value_in;
             }
 
             /**
@@ -105,18 +105,18 @@ namespace Guier
             */
             const T & operator () ()
             {
-                std::lock_guard<std::mutex> gm(Mutex);
-                return Value;
+                std::lock_guard<std::mutex> gm(mutex);
+                return value;
             }
 
             /**
             * @breif Thread safe operation for assigning value.
             *
             */
-            Safe & operator = (const T & value)
+            Safe & operator = (const T & value_in)
             {
-                std::lock_guard<std::mutex> gm(Mutex);
-                Value = value;
+                std::lock_guard<std::mutex> gm(mutex);
+                value = value_in;
                 return *this;
             }
 
@@ -126,8 +126,8 @@ namespace Guier
             */
             Safe & operator = (const Safe & safe)
             {
-                std::lock_guard<std::mutex> gm(Mutex);
-                Value = safe.Get();
+                std::lock_guard<std::mutex> gm(mutex);
+                value = safe.get();
                 return *this;
             }
 
@@ -135,20 +135,20 @@ namespace Guier
             * @breif Thread safe operation for comparing value.
             *
             */
-            bool operator == (const T & value)
+            bool operator == (const T & value_in)
             {
-                std::lock_guard<std::mutex> gm(Mutex);
-                return Value == value;
+                std::lock_guard<std::mutex> gm(mutex);
+                return value == value_in;
             }
 
-            bool operator != (const T & value)
+            bool operator != (const T & value_in)
             {
-                std::lock_guard<std::mutex> gm(Mutex);
-                return Value != value;
+                std::lock_guard<std::mutex> gm(mutex);
+                return value != value_in;
             }
 
-            T			Value; ///< Template value.
-            std::mutex	Mutex; ///< Mutex locking in thread safe methods.
+            T			value; ///< Template value.
+            std::mutex	mutex; ///< Mutex locking in thread safe methods.
 
         };
 

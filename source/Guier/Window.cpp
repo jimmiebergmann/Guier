@@ -56,102 +56,102 @@ namespace Guier
        
     }
 
-    const Vector2i & Window::Size() const
+    const Vector2i & Window::size() const
     {
-        return m_pImpl->Size();
+        return m_pImpl->size();
     }
 
-    Window * Window::Size(const Vector2i & size)
+    Window * Window::size(const Vector2i & size_in)
     {
-        m_pImpl->Size(size);
+        m_pImpl->size(size_in);
         return this;
     }
 
-    const Vector2i & Window::Position() const
+    const Vector2i & Window::position() const
     {
-        return m_pImpl->Position();
+        return m_pImpl->position();
     }
 
-    Window * Window::Position(const Vector2i & position)
+    Window * Window::position(const Vector2i & position_in)
     {
-        m_pImpl->Position(position);
+        m_pImpl->position(position_in);
         return this;
     }
     
-    const String & Window::Title() const
+    const String & Window::title() const
     {
-        return m_pImpl->Title();
+        return m_pImpl->title();
     }
 
-    Window * Window::Title(const String & title)
+    Window * Window::title(const String & title_in)
     {
-        m_pImpl->Title(title);
+        m_pImpl->title(title_in);
         return this;
     }
 
-    Window * Window::SetStyle(const Style style)
+    Window * Window::setStyle(const Style style)
     {
-        m_pImpl->SetStyle(style);
+        m_pImpl->setStyle(style);
         return this;
     }
 
-    Window * Window::SetStyle(const std::initializer_list<Style> & styles)
+    Window * Window::setStyle(const std::initializer_list<Style> & styles)
     {
-        m_pImpl->SetStyle(styles);
+        m_pImpl->setStyle(styles);
         return this;
     }
 
-    Window * Window::AddStyle(const Style style)
+    Window * Window::addStyle(const Style style)
     {
-        m_pImpl->AddStyle(style);
+        m_pImpl->addStyle(style);
         return this;
     }
 
-    Window * Window::AddStyle(const std::initializer_list<Style> & styles)
+    Window * Window::addStyle(const std::initializer_list<Style> & styles)
     {
-        m_pImpl->AddStyle(styles);
+        m_pImpl->addStyle(styles);
         return this;
     }
 
-    Window * Window::RemoveStyle(const Style style)
+    Window * Window::removeStyle(const Style style)
     {
-        m_pImpl->RemoveStyle(style);
+        m_pImpl->removeStyle(style);
         return this;
     }
 
-    Window * Window::RemoveStyle(const std::initializer_list<Style> & styles)
+    Window * Window::removeStyle(const std::initializer_list<Style> & styles)
     {
-        m_pImpl->RemoveStyle(styles);
+        m_pImpl->removeStyle(styles);
         return this;
     }
    
-    Window * Window::Show()
+    Window * Window::show()
     {
-        m_pImpl->Show();
+        m_pImpl->show();
         return this;
     }
 
-    Window * Window::Hide()
+    Window * Window::hide()
     {
-        m_pImpl->Hide();
+        m_pImpl->hide();
         return this;
     }
     
-    Window * Window::Minimize()
+    Window * Window::minimize()
     {
-        m_pImpl->Minimize();
+        m_pImpl->minimize();
         return this;
     }
 
-    Window * Window::Maximize()
+    Window * Window::maximize()
     {
-        m_pImpl->Maximize();
+        m_pImpl->maximize();
         return this;
     }
 
-    Window * Window::Close()
+    Window * Window::close()
     {
-        m_pImpl->Close();
+        m_pImpl->close();
         return this;
     }
 

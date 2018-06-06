@@ -73,8 +73,8 @@ namespace Guier
                 */
                 RenderArea(const Vector2i & position, const Vector2i & size);
 
-                Vector2i Position;
-                Vector2i Size;
+                Vector2i position;
+                Vector2i size;
 
             };
 
@@ -97,7 +97,7 @@ namespace Guier
                 * Render Controller.
                 *
                 */
-                void RenderControl(Control * control, const Vector2i & position, const Vector2i & size);
+                void renderControl(Control * control, const Vector2i & position, const Vector2i & size);
 
                 /**
                 * Render chunk.
@@ -106,27 +106,34 @@ namespace Guier
                 *         else false.
                 *
                 */
-                bool RenderChunk(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size);
+                bool renderChunk(const unsigned int item, const unsigned int state, const Vector2i & position, const Vector2i & size);
 
                 /**
                 * Render Rectangle.
                 *
                 */
-                virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Texture * texture) = 0;
-                virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, Texture * texture, const Vector2i & sourcePosition, const Vector2i & sourceSize) = 0;
-                virtual void RenderRectangle(const Vector2i & position, const Vector2i & size, const Color & color) = 0;
+                virtual void renderRectangle(const Vector2i & position, const Vector2i & size, Texture * texture) = 0;
+                virtual void renderRectangle(const Vector2i & position, const Vector2i & size, Texture * texture, const Vector2i & sourcePosition, const Vector2i & sourceSize) = 0;
+                virtual void renderRectangle(const Vector2i & position, const Vector2i & size, const Color & color) = 0;
 
                 /**
                 * Render font.
                 *
                 */
-                virtual void RenderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color = Color::Black);
+                virtual void renderFont(Font * font, const String & string, const unsigned int size, const Vector2i & position, const Color & color = Color::Black);
 
                 /**
                 * Get skin attached to interface.
                 *
                 */
-                virtual Skin * GetSkin() const = 0;
+                virtual Skin * skin() const = 0;
+
+                /**
+                * Get/set screen DPI.
+                *
+                */
+                virtual void Dpi(unsigned int dpi) = 0;
+                virtual unsigned int Dpi() const = 0;
 
             };
 
@@ -142,7 +149,7 @@ namespace Guier
             * @brief Internally setting device handle and initialize Gdiplus::Graphics
             *
             */
-            virtual void BeginRendering() = 0;
+            virtual void beginRendering() = 0;
 
             /**
             * End rendering.
@@ -150,7 +157,13 @@ namespace Guier
             * @brief Internally clearing old rendering information.
             *
             */
-            virtual void EndRendering() = 0;
+            virtual void endRendering() = 0;
+
+            /**
+            * Create texture.
+            *
+            */
+            virtual Texture * createTexture() = 0;
 
         protected:
 
@@ -171,13 +184,13 @@ namespace Guier
             * @return True if succeeded, else false.
             *
             */
-            virtual bool Load() = 0;
+            virtual bool load() = 0;
 
             /**
             * Get renderer interface.
             *
             */
-            virtual Interface * GetInterface() = 0;
+            virtual Interface * interface() = 0;
 
         };
 

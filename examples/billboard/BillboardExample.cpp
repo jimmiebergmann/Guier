@@ -68,9 +68,9 @@ int main()
 
     Button * button = new Button(window, Size::Fit);
     Button * button2 = new Button(window);
-    button->Add(button2);
+    button->add(button2);
 
-    button->Remove(button2);
+    button->remove(button2);
     //delete button2;
 
 

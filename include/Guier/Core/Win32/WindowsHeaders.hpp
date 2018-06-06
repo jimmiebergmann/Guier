@@ -30,9 +30,10 @@
 #include <Windows.h>
 #include <gdiplus.h>
 //#include <atlstr.h> 
-//#include <ShellScalingAPI.h>
+#include <ShellScalingAPI.h>
 
 #undef min
 #undef max
+#undef interface
 
 #endif

@@ -45,11 +45,11 @@ namespace Guier
 
         WindowManager::~WindowManager()
         {
-            StopThread();
+            stopThread();
         }
 
 
-        void WindowManager::LoadWindowImpl(WindowImpl * windowImpl)
+        void WindowManager::loadWindowImpl(WindowImpl * windowImpl)
         {
             std::lock_guard<std::mutex> sm_1(m_LoadMutex);
             {
@@ -61,12 +61,12 @@ namespace Guier
                 }
                 m_NextLoadWindow = windowImpl;
 
-                StartThread();
+                startThread();
 
-                InterruptEvents();
+                interruptEvents();
             }
 
-            m_Semaphore.Wait();
+            m_Semaphore.wait();
 
             if (m_NextLoadWindow != nullptr)
             {
@@ -74,7 +74,7 @@ namespace Guier
             }
         }
 
-        void WindowManager::UnloadWindowImpl(WindowImpl * windowImpl)
+        void WindowManager::unloadWindowImpl(WindowImpl * windowImpl)
         {
             std::lock_guard<std::mutex> sm_1(m_LoadMutex);
             std::lock_guard<std::mutex> sm_2(m_Mutex);
@@ -87,11 +87,11 @@ namespace Guier
 
             if (m_Windows.size() == 0)
             {
-                StopThread();
+                stopThread();
             }
         }
 
-        void WindowManager::StartThread()
+        void WindowManager::startThread()
         {
             if (m_Running)
             {
@@ -101,23 +101,23 @@ namespace Guier
             Semaphore sem;
             m_Thread = std::thread([this, &sem]()
             {
-                sem.NotifyOne();
+                sem.notifyOne();
 
                 // Message loop.
                 m_Running = true;
 
                 while(m_Running)
                 {
-                    HandleNewWindow();
-                    HandleEvents();
+                    handleNewWindow();
+                    handleEvents();
                 }
 
             });
             
-            sem.Wait();
+            sem.wait();
         }
 
-        void WindowManager::StopThread()
+        void WindowManager::stopThread()
         {
             if (m_Running == false)
             {
@@ -125,11 +125,11 @@ namespace Guier
             }
 
             m_Running = false;
-            InterruptEvents();
+            interruptEvents();
             m_Thread.join();
         }
 
-        void WindowManager::HandleEvents()
+        void WindowManager::handleEvents()
         {
             #ifdef GUIER_PLATFORM_WINDOWS
                 // Go through all the window event messages
@@ -160,22 +160,22 @@ namespace Guier
             #endif
         }
 
-        void WindowManager::InterruptEvents()
+        void WindowManager::interruptEvents()
         {
             #if defined(GUIER_PLATFORM_WINDOWS)
                 ::PostThreadMessage(::GetThreadId(m_Thread.native_handle()), WM_QUIT, 0, 0);
             #endif
         }
 
-        void WindowManager::HandleNewWindow()
+        void WindowManager::handleNewWindow()
         {
             std::lock_guard<std::mutex> sm(m_Mutex);
 
             if (m_NextLoadWindow)
             {
-                m_NextLoadWindow->Load();
+                m_NextLoadWindow->load();
                 m_NextLoadWindow = nullptr;
-                m_Semaphore.NotifyOne();
+                m_Semaphore.notifyOne();
             }
 
            

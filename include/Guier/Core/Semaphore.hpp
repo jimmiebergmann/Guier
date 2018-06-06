@@ -52,19 +52,19 @@ namespace Guier
             * @breif Notify one wait.
             *
             */
-            void NotifyOne();
+            void notifyOne();
 
             /**
             * @breif Notify all waits.
             *
             */
-            void NotifyAll();
+            void notifyAll();
 
             /**
             * @breif Wait for notifies.
             *
             */
-            void Wait();
+            void wait();
 
             /**
             * @breif Try to wait.
@@ -72,7 +72,7 @@ namespace Guier
             * @return False if function call will result in a wait, else true.
             *
             */
-            bool TryWait();
+            bool tryWait();
 
             /**
             * @breif Wait until given timeout is reached.
@@ -80,7 +80,7 @@ namespace Guier
             * @return False if timeout is reached, else false.
             *
             */
-            bool WaitFor(const unsigned int microseconds);
+            //bool waitFor(const unsigned int microseconds);
 
         private:
 

@@ -47,22 +47,22 @@ namespace Guier
 
     }
 
-    unsigned int Text::Type() const
+    unsigned int Text::type() const
     {
         return static_cast<unsigned int>(Types::Text);
     }
 
-    const String & Text::Content() const
+    const String & Text::get() const
     {
         return m_Content;
     }
 
-    void Text::Content(const String & content)
+    void Text::set(const String & content)
     {
         m_Content = content;
     }
 
-    void Text::Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
+    void Text::render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
     {
 
     }

@@ -22,7 +22,7 @@
 * SOFTWARE.
 *
 */
-
+/*
 #include <Guier/Callback.hpp>
 
 namespace Guier
@@ -77,4 +77,4 @@ namespace Guier
 
     }
 
-}
+}*/

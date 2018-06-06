@@ -29,19 +29,19 @@ namespace Guier
 {
 
     Color::Color(const unsigned char red, const unsigned char green, const unsigned char blue, const unsigned char alpha) :
-        R(red),
-        G(green),
-        B(blue),
-        A(alpha)
+        r(red),
+        g(green),
+        b(blue),
+        a(alpha)
     {
 
     }
 
     Color::Color(const unsigned char gray, const unsigned char alpha) :
-        R(gray),
-        G(gray),
-        B(gray),
-        A(alpha)
+        r(gray),
+        g(gray),
+        b(gray),
+        a(alpha)
     {
 
     }

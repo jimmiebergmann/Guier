@@ -22,7 +22,7 @@
 * SOFTWARE.
 *
 */
-
+/*
 // Signal implementations
 template <typename Return, typename... Arguments>
 Signal<Return(Arguments...)>::~Signal()
@@ -143,3 +143,4 @@ void Signal<Return(Arguments...)>::DisconnectFromSlot(Connection * p_pConnection
     // ERROR!!!
     std::runtime_error("Could not find binding to disconnect.");
 }
+*/

@@ -37,6 +37,8 @@
 namespace Guier
 {
 
+    class Bitmap;
+
     namespace Core
     {
 
@@ -49,38 +51,43 @@ namespace Guier
             * Constructor.
             *
             */
-            GdipTexture(const String & filename);
-            GdipTexture(const void * data, const Vector2i & size, const Format format);
+            GdipTexture();
 
             /**
-            * Virtual destructor.
+            * Destructor.
             *
             */
             ~GdipTexture();
 
             /**
+            * Load texture
+            *
+            */
+            void load(Bitmap * bitmap);
+
+            /**
             * Get format of texture.
             *
             */
-            Format GetFormat() const;
+            Bitmap::Format format() const;
 
             /**
             * Get size of texture.
             *
             */
-            const Vector2i & GetSize() const;
+            const Vector2ui & size() const;
 
             /**
             * Get underlying bitmap class.
             *
             */
-            Gdiplus::Bitmap * GetBitmap() const;
+            Gdiplus::Bitmap * bitmap() const;
 
         private:
 
             Gdiplus::Bitmap *   m_pBitmap;
-            Vector2i            m_Size;
-            Format              m_Format;
+            Vector2ui           m_Size;
+            Bitmap::Format      m_Format;
 
         };
 

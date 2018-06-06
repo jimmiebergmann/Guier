@@ -45,35 +45,35 @@ namespace Guier
 
     }
 
-    unsigned int VerticalGrid::Type() const
+    unsigned int VerticalGrid::type() const
     {
         return static_cast<unsigned int>(Types::VerticalGrid);
     }
 
-    size_t VerticalGrid::Count() const
+    size_t VerticalGrid::count() const
     {
         return 0;
     }
 
-    bool VerticalGrid::AddChild(Control * child, const Index & index)
+    bool VerticalGrid::addChild(Control * child, const Index & index)
     {
 
         return false;
     }
 
-    bool VerticalGrid::RemoveChild(Control * child)
+    bool VerticalGrid::removeChild(Control * child)
     {
 
         return false;
     }
 
-    Control * VerticalGrid::RemoveChild(const Index & index)
+    Control * VerticalGrid::removeChild(const Index & index)
     {
 
         return nullptr;
     }
 
-    void VerticalGrid::Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
+    void VerticalGrid::render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
     {
 
     }

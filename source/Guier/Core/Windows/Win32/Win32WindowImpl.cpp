@@ -28,6 +28,7 @@
 
 #ifdef GUIER_PLATFORM_WINDOWS
 
+#include <Guier/Core/Windows/Win32/GdipTexture.hpp>
 #include <Guier/Core/WindowBase.hpp>
 #include <Guier/Control/Plane.hpp>
 
@@ -38,7 +39,7 @@ namespace Guier
     {
 
         // Helper functions
-        static std::wstring StringToWideString(const std::string & string)
+        static std::wstring stringToWideString(const std::string & string)
         {
             int len;
             int slength = static_cast<int>(string.length() + 1);
@@ -50,7 +51,7 @@ namespace Guier
             return r;
         }
 
-        static unsigned int ProcessStyle(const unsigned int style)
+        static unsigned int processStyle(const unsigned int style)
         {
             unsigned int newStyle = style;
 
@@ -62,7 +63,7 @@ namespace Guier
             return newStyle;
         }
 
-        static DWORD GetWin32Style(const unsigned int styles)
+        static DWORD getWin32Style(const unsigned int styles)
         {
             DWORD ret = 0;
 
@@ -94,7 +95,7 @@ namespace Guier
             return ret;
         }
 
-        static DWORD GetWin32ExtendedStyle(const unsigned int styles)
+        static DWORD getWin32ExtendedStyle(const unsigned int styles)
         {
             DWORD ret = WS_EX_APPWINDOW;
 
@@ -129,7 +130,7 @@ namespace Guier
 
         Win32WindowImpl::~Win32WindowImpl()
         {
-            Manager.UnloadWindowImpl(this);
+            Manager.unloadWindowImpl(this);
 
             HINSTANCE Hinstance = GetModuleHandle(NULL);
 
@@ -162,63 +163,47 @@ namespace Guier
             }
         }
 
-        void Win32WindowImpl::LoadImplementation()
+        void Win32WindowImpl::loadImplementation()
         {
-            Manager.LoadWindowImpl(this);
+            Manager.loadWindowImpl(this);
         }
 
-        const Vector2i & Win32WindowImpl::Size() const
+        const Vector2i & Win32WindowImpl::size() const
         {
             return m_Size;
         }
 
-        void Win32WindowImpl::Size(const Vector2i & size)
+        void Win32WindowImpl::size(const Vector2i & size)
         {
             m_Size = size;
         }
 
-        const Vector2i & Win32WindowImpl::Position() const
+        const Vector2i & Win32WindowImpl::position() const
         {
             return m_Position;
         }
 
-        void Win32WindowImpl::Position(const Vector2i & position)
+        void Win32WindowImpl::position(const Vector2i & position)
         {
             m_Position = position;
         }
 
-        const String & Win32WindowImpl::Title() const
+        const String & Win32WindowImpl::title() const
         {
             return m_Title;
         }
 
-        void Win32WindowImpl::Title(const String & title)
+        void Win32WindowImpl::title(const String & title)
         {
             m_Title = title;
         }
 
-        void Win32WindowImpl::SetStyle(const Window::Style style)
+        void Win32WindowImpl::setStyle(const Window::Style style)
         {
-            SetStyleInternal(ProcessStyle(static_cast<unsigned int>(style) ));
+            setStyleInternal(processStyle(static_cast<unsigned int>(style) ));
         }
 
-        void Win32WindowImpl::SetStyle(const std::initializer_list<Window::Style> & styles)
-        {
-            unsigned int style = 0;
-            for (auto it = styles.begin(); it != styles.end(); it++)
-            {
-                style += static_cast<unsigned int>(*it);
-            }
-
-            SetStyleInternal(ProcessStyle(static_cast<unsigned int>(style)));
-        }
-
-        void Win32WindowImpl::AddStyle(const Window::Style style)
-        {
-            SetStyleInternal(ProcessStyle(m_Styles | static_cast<unsigned int>(style)));
-        }
-
-        void Win32WindowImpl::AddStyle(const std::initializer_list<Window::Style> & styles)
+        void Win32WindowImpl::setStyle(const std::initializer_list<Window::Style> & styles)
         {
             unsigned int style = 0;
             for (auto it = styles.begin(); it != styles.end(); it++)
@@ -226,15 +211,15 @@ namespace Guier
                 style += static_cast<unsigned int>(*it);
             }
 
-            SetStyleInternal(ProcessStyle(m_Styles | static_cast<unsigned int>(style)));
+            setStyleInternal(processStyle(static_cast<unsigned int>(style)));
         }
 
-        void Win32WindowImpl::RemoveStyle(const Window::Style style)
+        void Win32WindowImpl::addStyle(const Window::Style style)
         {
-            SetStyleInternal(ProcessStyle(m_Styles & (~static_cast<unsigned int>(style) ) ));
+            setStyleInternal(processStyle(m_Styles | static_cast<unsigned int>(style)));
         }
 
-        void Win32WindowImpl::RemoveStyle(const std::initializer_list<Window::Style> & styles)
+        void Win32WindowImpl::addStyle(const std::initializer_list<Window::Style> & styles)
         {
             unsigned int style = 0;
             for (auto it = styles.begin(); it != styles.end(); it++)
@@ -242,56 +227,79 @@ namespace Guier
                 style += static_cast<unsigned int>(*it);
             }
 
-            SetStyleInternal(ProcessStyle(m_Styles & (~static_cast<unsigned int>(style))));
+            setStyleInternal(processStyle(m_Styles | static_cast<unsigned int>(style)));
         }
 
-        void Win32WindowImpl::Show()
+        void Win32WindowImpl::removeStyle(const Window::Style style)
+        {
+            setStyleInternal(processStyle(m_Styles & (~static_cast<unsigned int>(style) ) ));
+        }
+
+        void Win32WindowImpl::removeStyle(const std::initializer_list<Window::Style> & styles)
+        {
+            unsigned int style = 0;
+            for (auto it = styles.begin(); it != styles.end(); it++)
+            {
+                style += static_cast<unsigned int>(*it);
+            }
+
+            setStyleInternal(processStyle(m_Styles & (~static_cast<unsigned int>(style))));
+        }
+
+        void Win32WindowImpl::show()
         {
 
         }
 
-        void Win32WindowImpl::Hide()
+        void Win32WindowImpl::hide()
         {
         }
 
-        void Win32WindowImpl::Minimize()
+        void Win32WindowImpl::minimize()
         {
         }
 
-        void Win32WindowImpl::Maximize()
+        void Win32WindowImpl::maximize()
         {
         }
 
-        void Win32WindowImpl::Close()
+        void Win32WindowImpl::close()
         {
         }
 
-        bool Win32WindowImpl::Add(Control * child, const Index & index)
+        bool Win32WindowImpl::add(Control * child, const Index & index)
         {
             if (m_pPlane)
             {
-                return m_pPlane->Add(child, index);
+                return m_pPlane->add(child, index);
             }
 
             return false;
         }
 
-        bool Win32WindowImpl::Remove(Control * child)
+        bool Win32WindowImpl::remove(Control * child)
         {
-            return m_pPlane->Remove(child);
+            return m_pPlane->remove(child);
         }
 
-        Control * Win32WindowImpl::Remove(const Index & index)
+        Control * Win32WindowImpl::remove(const Index & index)
         {
-            return m_pPlane->Remove(index);
+            return m_pPlane->remove(index);
         }
 
-        void Win32WindowImpl::Load()
+        Core::Texture * Win32WindowImpl::createTexture(Bitmap * bitmap)
+        {
+            GdipTexture * pTexture = static_cast<GdipTexture *>(m_pRenderer->createTexture());
+            pTexture->load(bitmap);
+            return pTexture;
+        }
+
+        void Win32WindowImpl::load()
         {
             // Get default styles.
-            m_Styles = ProcessStyle(m_Styles);
-            m_Win32Style = GetWin32Style(m_Styles);
-            m_Win32ExtendedStyle = GetWin32ExtendedStyle(m_Styles);
+            m_Styles = processStyle(m_Styles);
+            m_Win32Style = getWin32Style(m_Styles);
+            m_Win32ExtendedStyle = getWin32ExtendedStyle(m_Styles);
 
             // Generate class name.
             GUID guid = { 0 };
@@ -305,7 +313,7 @@ namespace Guier
             WNDCLASS winClass;
             HINSTANCE winInstance = GetModuleHandle(NULL); // Grab any old handle
             winClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-            winClass.lpfnWndProc = (WNDPROC)Win32WindowImpl::WindowProcStatic;
+            winClass.lpfnWndProc = (WNDPROC)Win32WindowImpl::windowProcStatic;
             winClass.cbClsExtra = 0;
             winClass.cbWndExtra = 0;
             winClass.hInstance = winInstance;
@@ -337,7 +345,7 @@ namespace Guier
             m_WindowHandle = CreateWindowEx(
                 m_Win32ExtendedStyle,
                 className.c_str(),
-                m_Title.Get().c_str(),
+                m_Title.get().c_str(),
 
                 WS_CLIPSIBLINGS |
                 WS_CLIPCHILDREN |
@@ -362,24 +370,25 @@ namespace Guier
             m_DeviceContextHandle = GetDC(m_WindowHandle);
             m_DPI = GetDpiForWindow(m_WindowHandle);
             m_pRenderer = new GdipRenderer(m_WindowHandle, m_pSkin);
+            m_pRenderer->Dpi(m_DPI);
 
             // Create plane control
             m_pPlane = new Plane(m_pWindow);
-            
+            m_pSkin->load();
 
             ShowWindow(m_WindowHandle, SW_RESTORE);
             SetForegroundWindow(m_WindowHandle);
             SetFocus(m_WindowHandle);
         }
 
-        void Win32WindowImpl::SetStyleInternal(const unsigned int styles)
+        void Win32WindowImpl::setStyleInternal(const unsigned int styles)
         {
             const unsigned int oldStyle = m_Styles;
-            m_Styles = ProcessStyle(styles);
+            m_Styles = processStyle(styles);
             const unsigned int changes = oldStyle ^ m_Styles;
 
-            const DWORD newWin32Style = GetWin32Style(m_Styles);
-            const DWORD newWin32ExtendedStyle = GetWin32ExtendedStyle(m_Styles);
+            const DWORD newWin32Style = getWin32Style(m_Styles);
+            const DWORD newWin32ExtendedStyle = getWin32ExtendedStyle(m_Styles);
 
             if (m_Win32Style != newWin32Style)
             {
@@ -408,7 +417,7 @@ namespace Guier
             }
         }
 
-        LRESULT Win32WindowImpl::WindowProcStatic(HWND p_HWND, UINT p_Message,
+        LRESULT Win32WindowImpl::windowProcStatic(HWND p_HWND, UINT p_Message,
             WPARAM p_WParam, LPARAM p_LParam)
         {
             if (p_Message == WM_NCCREATE)
@@ -421,14 +430,14 @@ namespace Guier
 
                 if (pWnd != NULL)
                 {
-                    return pWnd->WindowProc(p_HWND, p_Message, p_WParam, p_LParam);
+                    return pWnd->windowProc(p_HWND, p_Message, p_WParam, p_LParam);
                 }
             }
 
             return DefWindowProc(p_HWND, p_Message, p_WParam, p_LParam);
         }
 
-        LRESULT Win32WindowImpl::WindowProc(HWND p_HWND, UINT p_Message,
+        LRESULT Win32WindowImpl::windowProc(HWND p_HWND, UINT p_Message,
             WPARAM p_WParam, LPARAM p_LParam)
         {
             switch (p_Message)
@@ -436,17 +445,20 @@ namespace Guier
 
             case WM_CREATE:
             {
-               // SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE);
+                SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE);
             }
             case WM_ERASEBKGND:
                 return 1;
             break;
                 case WM_PAINT:
                 {
-                    m_pRenderer->BeginRendering();
-                    Renderer::RenderArea a({}, {});
-                    m_pRenderer->RenderControl(m_pPlane, Vector2i(0, 0), m_Size);
-                    m_pRenderer->EndRendering();
+                    m_pRenderer->beginRendering();
+                    
+                    m_pRenderer->renderRectangle(Vector2i(0, 0), m_Size, Color::White);
+
+
+                    m_pRenderer->renderControl(m_pPlane, Vector2i(0, 0), m_Size);
+                    m_pRenderer->endRendering();
                 }
                 break;
                 default:

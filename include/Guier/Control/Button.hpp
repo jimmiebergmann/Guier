@@ -67,7 +67,7 @@ namespace Guier
         * Get type of controller.
         *
         */
-        virtual unsigned int Type() const;
+        virtual unsigned int type() const;
 
     private:
 
@@ -75,21 +75,21 @@ namespace Guier
         * Internal function, executed by Parent.
         *
         */
-        virtual bool AddChild(Control * child, const Index & index);
-        virtual bool RemoveChild(Control * child);
-        virtual Control * RemoveChild(const Index & index);
+        virtual bool addChild(Control * child, const Index & index);
+        virtual bool removeChild(Control * child);
+        virtual Control * removeChild(const Index & index);
 
         /**
         * Render the control.
         *
         */
-        virtual void Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size);
+        virtual void render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size);
 
         /**
         * Add label to button, if label.size() > 0.
         *
         */
-        void AddLabel(const String & label);
+        void addLabel(const String & label);
 
         VerticalGrid *       m_pVerticalGrid; ///< Vertical grid child.
 

@@ -44,12 +44,12 @@ namespace Guier
 
     }
 
-    unsigned int Plane::Type() const
+    unsigned int Plane::type() const
     {
         return static_cast<unsigned int>(Types::Plane);
     }
 
-    bool Plane::AddChild(Control * child, const Index & index)
+    bool Plane::addChild(Control * child, const Index & index)
     {
         for (auto it = m_Childs.begin(); it != m_Childs.end(); it++)
         {
@@ -64,7 +64,7 @@ namespace Guier
         return true;
     }
 
-    bool Plane::RemoveChild(Control * child)
+    bool Plane::removeChild(Control * child)
     {
         for (auto it = m_Childs.begin(); it != m_Childs.end(); it++)
         {
@@ -78,11 +78,11 @@ namespace Guier
         return false;
     }
 
-    Control * Plane::RemoveChild(const Index & index)
+    Control * Plane::removeChild(const Index & index)
     {
-        const int pos = index.GetSingleInteger();
+        const int pos = index.singleInteger();
 
-        if (pos > m_Childs.size())
+        if (pos < 0 || pos > static_cast<int>(m_Childs.size()))
         {
             return nullptr;
         }
@@ -95,11 +95,11 @@ namespace Guier
         return pControl;
     }
 
-    void Plane::Render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
+    void Plane::render(Core::Renderer::Interface * renderInterface, const Vector2i & position, const Vector2i & size)
     {
         for (auto it = m_Childs.begin(); it != m_Childs.end(); it++)
         {
-            renderInterface->RenderControl(*it, position, size);
+            renderInterface->renderControl(*it, position, size);
         }
     }
 
